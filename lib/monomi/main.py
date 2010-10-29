@@ -5,6 +5,7 @@ import sys
 
 class Actor(object):
     def __init__(self, game_engine):
+        self.game_engine = game_engine
         self.game_engine.actors.append(self)
 
     def delete(self):
@@ -16,9 +17,51 @@ class Actor(object):
     def draw(self):
         pass
 
+LEVEL = """
+ #
+ #  @
+##  #
+######
+"""
+
+class LevelActor(Actor):
+    def __init__(self, game_engine):
+        super(LevelActor, self).__init__(game_engine)
+        self.start = 0.0, 0.0
+        self.tiles = {}
+        for tile_y, line in enumerate(reversed(LEVEL.splitlines())):
+            for tile_x, char in enumerate(line):
+                if not char.isspace():
+                    self.tiles[tile_x, tile_y] = char
+                    if char == '@':
+                        self.start = self.get_tile_center(tile_x, tile_y)
+
+
+    def draw(self):
+        for tile_x, tile_y in self.tiles:
+            char = self.tiles[tile_x, tile_y]
+            if char == '#':
+                min_x, min_y, max_x, max_y = self.get_tile_bounds(tile_x, tile_y)
+                glBegin(GL_LINE_LOOP)
+                glVertex2f(min_x, min_y)
+                glVertex2f(max_x, min_y)
+                glVertex2f(max_x, max_y)
+                glVertex2f(min_x, max_y)
+                glEnd()
+            elif char == '@':
+                pass
+
+    def get_tile_center(self, tile_x, tile_y):
+        return float(tile_x), float(tile_y)
+
+    def get_tile_bounds(self, tile_x, tile_y):
+        x, y = self.get_tile_center(tile_x, tile_y)
+        return x - 0.5, y - 0.5, x + 0.5, y + 0.5
+
 class Camera(object):
     def __init__(self, window):
         self.window = window
+        self.position = 0.0, 0.0
         self.scale = 0.1
         self.half_width = 0.0
         self.half_height = 0.0
@@ -30,6 +73,8 @@ class Camera(object):
         glTranslatef(self.half_width, self.half_height, 0.0)
         scale = self.scale * min(self.half_width, self.half_height)
         glScalef(scale, scale, scale)
+        x, y = self.position
+        glTranslatef(-x, -y, 0.0)
         yield
         glPopMatrix()
 
@@ -43,6 +88,8 @@ class GameEngine(object):
         self.camera = Camera(window)
         self.actors = []
         self.time = 0.0
+        level_actor = LevelActor(self)
+        self.camera.position = level_actor.start
 
     def delete(self):
         pass
@@ -56,12 +103,8 @@ class GameEngine(object):
             self.draw_actors()
 
     def draw_actors(self):
-        glBegin(GL_LINE_LOOP)
-        glVertex2f(-1.0, -1.0)
-        glVertex2f(1.0, -1.0)
-        glVertex2f(1.0, 1.0)
-        glVertex2f(-1.0, 1.0)
-        glEnd()
+        for actor in self.actors:
+            actor.draw()
 
     def on_resize(self, width, height):
         self.camera.on_resize(width, height)
