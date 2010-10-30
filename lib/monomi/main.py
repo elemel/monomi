@@ -1,7 +1,33 @@
+from geometry import *
+
 from contextlib import contextmanager
 import pyglet
 from pyglet.gl import *
 import sys
+
+class DebugGraphics(object):
+    def draw_polygon(self, vertices):
+        glBegin(GL_LINE_LOOP)
+        for x, y in vertices:
+            glVertex2f(x, y)
+        glEnd()
+
+    def draw_bounds(self, bounds):
+        min_x, min_y, max_x, max_y = bounds
+        vertices = [(min_x, min_y), (max_x, min_y),
+                    (max_x, max_y), (min_x, max_y)]
+        self.draw_polygon(vertices)
+
+    def draw_circle(self, center, radius):
+        cx, cy = center
+        vertices = []
+        vertex_count = 16
+        for i in xrange(vertex_count):
+            angle = 2.0 * math.pi * float(i) / float(vertex_count)
+            vx = cx + radius * math.cos(angle)
+            vy = cy + radius * math.sin(angle)
+            vertices.append((vx, vy))
+        self.draw_polygon(vertices)
 
 class Actor(object):
     def __init__(self, game_engine):
@@ -17,6 +43,9 @@ class Actor(object):
     def draw(self):
         pass
 
+    def debug_draw(self, debug_graphics):
+        pass
+
 LEVEL = """
  #
  #  @
@@ -29,34 +58,32 @@ class LevelActor(Actor):
         super(LevelActor, self).__init__(game_engine)
         self.start = 0.0, 0.0
         self.tiles = {}
-        for tile_y, line in enumerate(reversed(LEVEL.splitlines())):
-            for tile_x, char in enumerate(line):
+        for row, line in enumerate(reversed(LEVEL.splitlines())):
+            for col, char in enumerate(line):
                 if not char.isspace():
-                    self.tiles[tile_x, tile_y] = char
+                    self.tiles[col, row] = char
                     if char == '@':
-                        self.start = self.get_tile_center(tile_x, tile_y)
+                        self.start = self.get_tile_center(col, row)
+                    key = col, row
+                    bounds = self.get_tile_bounds(col, row)
+                    masks = (0, 0, 0)
+                    self.game_engine.grid.add(key, bounds, masks)
 
-
-    def draw(self):
-        for tile_x, tile_y in self.tiles:
-            char = self.tiles[tile_x, tile_y]
+    def debug_draw(self, debug_graphics):
+        for col, row in self.tiles:
+            char = self.tiles[col, row]
             if char == '#':
-                min_x, min_y, max_x, max_y = self.get_tile_bounds(tile_x, tile_y)
-                glBegin(GL_LINE_LOOP)
-                glVertex2f(min_x, min_y)
-                glVertex2f(max_x, min_y)
-                glVertex2f(max_x, max_y)
-                glVertex2f(min_x, max_y)
-                glEnd()
+                bounds = self.get_tile_bounds(col, row)
+                debug_graphics.draw_bounds(bounds)
             elif char == '@':
                 pass
 
-    def get_tile_center(self, tile_x, tile_y):
-        return float(tile_x), float(tile_y)
+    def get_tile_center(self, col, row):
+        return float(col) + 0.5, float(row) + 0.5
 
-    def get_tile_bounds(self, tile_x, tile_y):
-        x, y = self.get_tile_center(tile_x, tile_y)
-        return x - 0.5, y - 0.5, x + 0.5, y + 0.5
+    def get_tile_bounds(self, col, row):
+        cx, cy = self.get_tile_center(col, row)
+        return cx - 0.5, cy - 0.5, cx + 0.5, cy + 0.5
 
 class Camera(object):
     def __init__(self, window):
@@ -88,23 +115,33 @@ class GameEngine(object):
         self.camera = Camera(window)
         self.actors = []
         self.time = 0.0
+        self.grid = Grid(3.0, 3.0)
         level_actor = LevelActor(self)
         self.camera.position = level_actor.start
-
-    def delete(self):
-        pass
 
     def step(self, dt):
         self.time += dt
 
     def on_draw(self):
         self.window.clear()
-        with self.camera.manage_transform():
-            self.draw_actors()
+        self.debug_draw()
 
-    def draw_actors(self):
+    def debug_draw(self):
+        debug_graphics = DebugGraphics()
+        with self.camera.manage_transform():
+            self.debug_draw_grid(debug_graphics)
+            self.debug_draw_actors(debug_graphics)
+
+    def debug_draw_grid(self, debug_graphics):
+        for col, row in self.grid.cells:
+            bounds = self.grid.get_cell_bounds(col, row)
+            debug_graphics.draw_bounds(bounds)
+        for bounds in self.grid.bounds.itervalues():
+            debug_graphics.draw_bounds(bounds)
+
+    def debug_draw_actors(self, debug_graphics):
         for actor in self.actors:
-            actor.draw()
+            actor.debug_draw(debug_graphics)
 
     def on_resize(self, width, height):
         self.camera.on_resize(width, height)

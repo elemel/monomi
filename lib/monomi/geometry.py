@@ -1,3 +1,4 @@
+from collections import defaultdict
 import math
 
 class Matrix(object):
@@ -42,7 +43,7 @@ class Matrix(object):
         sin_angle = math.sin(angle)
         return cls(cos_angle, sin_angle, -sin_angle, cos_angle, 0.0, 0.0)
 
-class BoundingBox(object):
+class Bounds(object):
     def __init__(self, min_x=float('inf'), min_y=float('inf'),
                  max_x=float('-inf'), max_y=float('-inf')):
         self.min_x = min_x
@@ -51,15 +52,15 @@ class BoundingBox(object):
         self.max_y = max_y
 
     def __repr__(self):
-        return ('BoundingBox(min_x=%r, min_y=%r, max_x=%r, max_y=%r)' %
+        return ('Bounds(min_x=%r, min_y=%r, max_x=%r, max_y=%r)' %
                 (self.min_x, self.min_y, self.max_x, self.max_y))
 
     def add_point(self, point):
-        x, y = point
-        self.min_x = min(self.min_x, x)
-        self.min_y = min(self.min_y, y)
-        self.max_x = max(self.max_x, x)
-        self.max_y = max(self.max_y, y)
+        px, py = point
+        self.min_x = min(self.min_x, px)
+        self.min_y = min(self.min_y, py)
+        self.max_x = max(self.max_x, px)
+        self.max_y = max(self.max_y, py)
 
     def add(self, other):
         self.min_x = min(self.min_x, other.min_x)
@@ -68,13 +69,13 @@ class BoundingBox(object):
         self.max_y = max(self.max_y, other.max_y)
 
     def contains_point(self, point):
-        x, y = point
-        return (self.min_x <= x and x <= self.max_x and
-                self.min_y <= y and y <= self.max_y)
+        px, py = point
+        return (self.min_x <= px <= self.max_x and
+                self.min_y <= py <= self.max_y)
 
     def intersects(self, other):
-        return (self.min_x <= other.max_x and other.min_x <= self.max_x and
-                self.min_y <= other.max_y and other.min_y <= self.max_y)
+        return (self.min_x < other.max_x and other.min_x < self.max_x and
+                self.min_y < other.max_y and other.min_y < self.max_y)
 
 class Shape(object):
     def get_bounding_box(self, matrix):
@@ -93,24 +94,60 @@ class ConvexPolygon(Shape):
         self.vertices = list(vertices)
 
 class Grid(object):
-    def __init__(self):
+    def __init__(self, cell_width=1.0, cell_height=1.0):
+        self.cell_width = cell_width
+        self.cell_height = cell_height
         self.bounds = {}
         self.masks = {}
         self.seeds = set()
+        self.cells = defaultdict(set)
 
     def add(self, key, bounds, masks):
         self.remove(key)
-        min_x, min_y, max_x, max_y = bounds
-        mask, include_mask, exclude_mask = masks
+        self.add_bounds(key, bounds)
+        self.add_masks(key, masks)
+
+    def add_bounds(self, key, bounds):
         self.bounds[key] = bounds
+        min_x, min_y, max_x, max_y = bounds
+        min_col, min_row, max_col, max_row = self.hash_bounds(bounds)
+        for col in xrange(min_col, max_col + 1):
+            for row in xrange(min_row, max_row + 1):
+                self.cells[col, row].add(key)
+
+    def add_masks(self, key, masks):
         self.masks[key] = masks
+        mask, include_mask, exclude_mask = masks
         if include_mask:
             self.seeds.add(key)
 
     def remove(self, key):
-        self.seeds.discard(key, None)
+        self.remove_bounds(key)
+        self.remove_masks(key)
+
+    def remove_bounds(self, key):
+        bounds = self.bounds.pop(key, None)
+        if bounds is not None:
+            min_col, min_row, max_col, max_row = self.hash_bounds(bounds)
+            for col in xrange(min_col, max_col + 1):
+                for row in xrange(min_row, max_row + 1):
+                    self.cells[col, row].remove(key)
+
+    def remove_masks(self, key):
+        self.seeds.discard(key)
         self.masks.pop(key, None)
-        self.bounds.pop(key, None)
+
+    def hash_bounds(self, bounds):
+        min_x, min_y, max_x, max_y = bounds
+        min_col, min_row = self.hash_point((min_x, min_y))
+        max_col, max_row = self.hash_point((max_x, max_y))
+        return min_col, min_row, max_col, max_row
+
+    def hash_point(self, point):
+        px, py = point
+        col = int(round(px / self.cell_width))
+        row = int(round(py / self.cell_height))
+        return col, row
 
     def query(self, bounds, masks):
         for key in self.masks:
@@ -119,25 +156,33 @@ class Grid(object):
                 yield key
 
     def query_all(self):
-        for key_1 in self.seeds:
-            for key_2 in self.masks:
-                if key_1 < key_2 or key_2 not in self.seeds:
-                    if self.match_keys(key_1, key_2):
-                        yield key_1, key_2
+        for key_a in self.seeds:
+            for key_b in self.masks:
+                if key_a < key_b or key_b not in self.seeds:
+                    if self.match_keys(key_a, key_b):
+                        yield key_a, key_b
 
-    def match_keys(self, key_1, key_2):
-        return (self.match_masks(self.masks[key_1], self.masks[key_2]) and
-                self.match_bounds(self.bounds[key_1], self.bounds[key_2]))
+    def match_keys(self, key_a, key_b):
+        return (self.match_masks(self.masks[key_a], self.masks[key_b]) and
+                self.match_bounds(self.bounds[key_a], self.bounds[key_b]))
 
-    def match_masks(self, masks_1, masks_2):
-        mask_1, include_mask_1, exclude_mask_1 = masks_1
-        mask_2, include_mask_2, exclude_mask_2 = masks_2
-        include = mask_1 & include_mask_2 or mask_2 & include_mask_1
-        exclude = mask_1 & exclude_mask_2 or mask_2 & exclude_mask_1
+    def match_masks(self, masks_a, masks_b):
+        mask_a, include_mask_a, exclude_mask_a = masks_a
+        mask_b, include_mask_b, exclude_mask_b = masks_b
+        include = mask_a & include_mask_b or mask_b & include_mask_a
+        exclude = mask_a & exclude_mask_b or mask_b & exclude_mask_a
         return include and not exclude
 
-    def match_bounds(self, bounds_1, bounds_2):
-        min_x_1, min_y_1, max_x_1, max_y_1 = bounds_1
-        min_x_2, min_y_2, max_x_2, max_y_2 = bounds_2
-        return (min_x_1 <= max_x_2 and min_x_2 <= max_x_1 and
-                min_y_1 <= max_y_2 and min_y_2 <= max_y_1)
+    def match_bounds(self, bounds_a, bounds_b):
+        min_xa, min_ya, max_xa, max_ya = bounds_b
+        min_xb, min_yb, max_xb, max_yb = bounds_b
+        return (min_xa <= max_xb and min_xb <= max_xa and
+                min_ya <= max_yb and min_yb <= max_ya)
+
+    def get_cell_bounds(self, col, row):
+        min_x = self.cell_width * (float(col) - 0.5)
+        min_y = self.cell_height * (float(row) - 0.5)
+        max_x = self.cell_width * (float(col) + 0.5)
+        max_y = self.cell_height * (float(row) + 0.5)
+        return min_x, min_y, max_x, max_y
+
