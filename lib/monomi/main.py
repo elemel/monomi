@@ -89,7 +89,7 @@ class LevelActor(Actor):
             char = self.tiles[col, row]
             if char == '#':
                 bounds = self.get_tile_bounds(col, row)
-                debug_graphics.draw_bounds(bounds, stroke=(255, 255, 255))
+                debug_graphics.draw_bounds(bounds, stroke=(191, 191, 191))
             elif char == '@':
                 pass
 
@@ -155,7 +155,7 @@ class GameEngine(object):
         self.level_actor = LevelActor(self)
         self.player_actor = CharacterActor(self)
         self.player_actor.position = self.level_actor.start_position
-        self.player_actor.debug_stroke = 0, 191, 255
+        self.player_actor.debug_stroke = 0, 127, 255
         self.camera.position = self.player_actor.position
 
     def generate_key(self):
