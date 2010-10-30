@@ -1,6 +1,86 @@
 from collections import defaultdict
 import math
 
+class Vector(object):
+    def __init__(self, x=0.0, y=0.0):
+        self.x = x
+        self.y = y
+
+    def __repr__(self):
+        return 'Vector(%r, %r)' % (self.x, self.y)
+
+    @property
+    def length(self):
+        return math.sqrt(self.x * self.x + self.y * self.y)
+
+    @property
+    def squared_length(self):
+        return self.x * self.x + self.y * self.y
+
+    def __nonzero__(self):
+        return self.x or self.y
+
+    def __iter__(self):
+        yield self.x
+        yield self.y
+
+    def __iadd__(self, other):
+        self.x += other.x
+        self.y += other.y
+        return self
+
+    def __isub__(self, other):
+        self.x -= other.x
+        self.y -= other.y
+        return self
+
+    def __imul__(self, other):
+        self.x *= other
+        self.y *= other
+        return self
+
+    def __idiv__(self, other):
+        self.x /= other
+        self.y /= other
+        return self
+
+    def __add__(self, other):
+        return Vector(self.x + other.x, self.y - other.y)
+
+    def __sub__(self, other):
+        return Vector(self.x - other.x, self.y - other.y)
+
+    def __mul__(self, other):
+        return Vector(self.x * other, self.y * other)
+
+    def __rmul__(self, other):
+        return Vector(other * self.x, other * self.y)
+
+    def __div__(self, other):
+        return Vector(self.x / other, self.y / other)
+
+    def __neg__(self):
+        return Vector(-self.x, -self.y)
+
+    def __eq__(self, other):
+        return self.x == other.x and self.y == other.y
+
+    def __ne__(self, other):
+        return self.x != other.x or self.y != other.y
+
+    def __hash__(self):
+        return hash((self.x, self.y))
+
+    def __abs__(self):
+        return math.sqrt(self.x * self.x + self.y * self.y)
+
+    def copy(self):
+        return Vector(self.x, self.y)
+
+    def normalize(self):
+        if self:
+            self /= abs(self)
+
 class Matrix(object):
     def __init__(self, a=1.0, b=0.0, c=0.0, d=1.0, e=0.0, f=0.0):
         self.abcdef = a, b, c, d, e, f
@@ -23,6 +103,9 @@ class Matrix(object):
         x, y = point
         a, b, c, d, e, f = self.abcdef
         return a * x + c * y + e, b * x + d * y + f
+
+    def copy(self):
+        return Matrix(*self.abcdef)
 
     @classmethod
     def create_translate(cls, translation):
@@ -109,7 +192,6 @@ class Grid(object):
 
     def add_bounds(self, key, bounds):
         self.bounds[key] = bounds
-        min_x, min_y, max_x, max_y = bounds
         min_col, min_row, max_col, max_row = self.hash_bounds(bounds)
         for col in xrange(min_col, max_col + 1):
             for row in xrange(min_row, max_row + 1):
@@ -138,9 +220,8 @@ class Grid(object):
         self.masks.pop(key, None)
 
     def hash_bounds(self, bounds):
-        min_x, min_y, max_x, max_y = bounds
-        min_col, min_row = self.hash_point((min_x, min_y))
-        max_col, max_row = self.hash_point((max_x, max_y))
+        min_col, min_row = self.hash_point((bounds.min_x, bounds.min_y))
+        max_col, max_row = self.hash_point((bounds.max_x, bounds.max_y))
         return min_col, min_row, max_col, max_row
 
     def hash_point(self, point):
@@ -184,5 +265,5 @@ class Grid(object):
         min_y = self.cell_height * (float(row) - 0.5)
         max_x = self.cell_width * (float(col) + 0.5)
         max_y = self.cell_height * (float(row) + 0.5)
-        return min_x, min_y, max_x, max_y
+        return Bounds(min_x, min_y, max_x, max_y)
 

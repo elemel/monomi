@@ -10,9 +10,8 @@ class DebugGraphics(object):
         self.draw_vertices(polygon.vertices, stroke, fill)
 
     def draw_bounds(self, bounds, stroke=None, fill=None):
-        min_x, min_y, max_x, max_y = bounds
-        vertices = [(min_x, min_y), (max_x, min_y),
-                    (max_x, max_y), (min_x, max_y)]
+        vertices = [(bounds.min_x, bounds.min_y), (bounds.max_x, bounds.min_y),
+                    (bounds.max_x, bounds.max_y), (bounds.min_x, bounds.max_y)]
         self.draw_vertices(vertices, stroke, fill)
 
     def draw_circle(self, circle, stroke=None, fill=None):
@@ -70,7 +69,7 @@ LEVEL = """
 class LevelActor(Actor):
     def __init__(self, game_engine):
         super(LevelActor, self).__init__(game_engine)
-        self.start_position = 0.0, 0.0
+        self.start_position = Vector()
         self.tiles = {}
         for row, line in enumerate(reversed(LEVEL.splitlines())):
             for col, char in enumerate(line):
@@ -94,19 +93,18 @@ class LevelActor(Actor):
                 pass
 
     def get_tile_center(self, col, row):
-        return float(col) + 0.5, float(row) + 0.5
+        return Vector(float(col) + 0.5, float(row) + 0.5)
 
     def get_tile_bounds(self, col, row):
         cx, cy = self.get_tile_center(col, row)
-        return cx - 0.5, cy - 0.5, cx + 0.5, cy + 0.5
+        return Bounds(cx - 0.5, cy - 0.5, cx + 0.5, cy + 0.5)
 
 class CharacterActor(Actor):
-    def __init__(self, game_engine, position=(0.0, 0.0),
-                 debug_stroke=None, debug_fill=None):
+    def __init__(self, game_engine, position=(0.0, 0.0), debug_color=None):
         super(CharacterActor, self).__init__(game_engine)
         self.circle = Circle(center=position, radius=0.75)
-        self.debug_stroke = debug_stroke
-        self.debug_fill = debug_fill
+        self.debug_color = debug_color
+        self.velocity = Vector()
 
     @property
     def position(self):
@@ -116,9 +114,12 @@ class CharacterActor(Actor):
     def position(self, position):
         self.circle.center = position
 
+    def step(self, dt):
+        self.velocity += dt * self.game_engine.gravity
+        self.position += dt * self.velocity
+
     def debug_draw(self, debug_graphics):
-        debug_graphics.draw_circle(self.circle, stroke=self.debug_stroke,
-                                   fill=self.debug_fill)
+        debug_graphics.draw_circle(self.circle, stroke=self.debug_color)
 
 class Camera(object):
     def __init__(self, window):
@@ -150,12 +151,13 @@ class GameEngine(object):
         self.time = 0.0
         self.next_key = 0
         self.grid = Grid(3.0, 3.0)
+        self.gravity = Vector(0.0, -10.0)
         self.camera = Camera(window)
         self.actors = []
         self.level_actor = LevelActor(self)
         self.player_actor = CharacterActor(self)
         self.player_actor.position = self.level_actor.start_position
-        self.player_actor.debug_stroke = 0, 127, 255
+        self.player_actor.debug_color = 0, 127, 255
         self.camera.position = self.player_actor.position
 
     def generate_key(self):
@@ -165,9 +167,10 @@ class GameEngine(object):
 
     def step(self, dt):
         self.time += dt
+        for actor in self.actors:
+            actor.step(dt)
 
     def on_draw(self):
-        self.window.clear()
         self.debug_draw()
 
     def debug_draw(self):
@@ -204,6 +207,7 @@ class GameView(View):
         self.dt = 1.0 / 60.0
         self.max_dt = 1.0
         self.time = 0.0
+        self.clock_display = pyglet.clock.ClockDisplay()
         pyglet.clock.schedule_interval(self.step, 0.1 * self.dt)
 
     def delete(self):
@@ -215,7 +219,9 @@ class GameView(View):
             self.game_engine.step(self.dt)
 
     def on_draw(self):
+        self.window.clear()
         self.game_engine.on_draw()
+        self.clock_display.draw()
 
     def on_resize(self, width, height):
         self.game_engine.on_resize(width, height)
