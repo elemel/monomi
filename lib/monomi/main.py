@@ -1,4 +1,4 @@
-from geometry import *
+from monomi.geometry import *
 
 from contextlib import contextmanager
 import pyglet
@@ -6,20 +6,18 @@ from pyglet.gl import *
 import sys
 
 class DebugGraphics(object):
-    def draw_polygon(self, vertices):
-        glBegin(GL_LINE_LOOP)
-        for x, y in vertices:
-            glVertex2f(x, y)
-        glEnd()
+    def draw_polygon(self, polygon, stroke=None, fill=None):
+        self.draw_vertices(polygon.vertices, stroke, fill)
 
-    def draw_bounds(self, bounds):
+    def draw_bounds(self, bounds, stroke=None, fill=None):
         min_x, min_y, max_x, max_y = bounds
         vertices = [(min_x, min_y), (max_x, min_y),
                     (max_x, max_y), (min_x, max_y)]
-        self.draw_polygon(vertices)
+        self.draw_vertices(vertices, stroke, fill)
 
-    def draw_circle(self, center, radius):
-        cx, cy = center
+    def draw_circle(self, circle, stroke=None, fill=None):
+        cx, cy = circle.center
+        radius = circle.radius
         vertices = []
         vertex_count = 16
         for i in xrange(vertex_count):
@@ -27,7 +25,23 @@ class DebugGraphics(object):
             vx = cx + radius * math.cos(angle)
             vy = cy + radius * math.sin(angle)
             vertices.append((vx, vy))
-        self.draw_polygon(vertices)
+        self.draw_vertices(vertices, stroke, fill)
+
+    def draw_vertices(self, vertices, stroke=None, fill=None):
+        if stroke is None and fill is None:
+            stroke = 0, 255, 0
+        if fill is not None:
+            glColor3ub(*fill)
+            glBegin(GL_POLYGON)
+            for x, y in vertices:
+                glVertex2f(x, y)
+            glEnd()
+        if stroke is not None:
+            glColor3ub(*stroke)
+            glBegin(GL_LINE_LOOP)
+            for x, y in vertices:
+                glVertex2f(x, y)
+            glEnd()
 
 class Actor(object):
     def __init__(self, game_engine):
@@ -56,25 +70,26 @@ LEVEL = """
 class LevelActor(Actor):
     def __init__(self, game_engine):
         super(LevelActor, self).__init__(game_engine)
-        self.start = 0.0, 0.0
+        self.start_position = 0.0, 0.0
         self.tiles = {}
         for row, line in enumerate(reversed(LEVEL.splitlines())):
             for col, char in enumerate(line):
                 if not char.isspace():
                     self.tiles[col, row] = char
-                    if char == '@':
-                        self.start = self.get_tile_center(col, row)
-                    key = col, row
-                    bounds = self.get_tile_bounds(col, row)
-                    masks = (0, 0, 0)
-                    self.game_engine.grid.add(key, bounds, masks)
+                    if char == '#':
+                        key = self.game_engine.generate_key()
+                        bounds = self.get_tile_bounds(col, row)
+                        masks = 0, 0, 0
+                        self.game_engine.grid.add(key, bounds, masks)
+                    elif char == '@':
+                        self.start_position = self.get_tile_center(col, row)
 
     def debug_draw(self, debug_graphics):
         for col, row in self.tiles:
             char = self.tiles[col, row]
             if char == '#':
                 bounds = self.get_tile_bounds(col, row)
-                debug_graphics.draw_bounds(bounds)
+                debug_graphics.draw_bounds(bounds, stroke=(255, 255, 255))
             elif char == '@':
                 pass
 
@@ -84,6 +99,26 @@ class LevelActor(Actor):
     def get_tile_bounds(self, col, row):
         cx, cy = self.get_tile_center(col, row)
         return cx - 0.5, cy - 0.5, cx + 0.5, cy + 0.5
+
+class CharacterActor(Actor):
+    def __init__(self, game_engine, position=(0.0, 0.0),
+                 debug_stroke=None, debug_fill=None):
+        super(CharacterActor, self).__init__(game_engine)
+        self.circle = Circle(center=position, radius=0.75)
+        self.debug_stroke = debug_stroke
+        self.debug_fill = debug_fill
+
+    @property
+    def position(self):
+        return self.circle.center
+
+    @position.setter
+    def position(self, position):
+        self.circle.center = position
+
+    def debug_draw(self, debug_graphics):
+        debug_graphics.draw_circle(self.circle, stroke=self.debug_stroke,
+                                   fill=self.debug_fill)
 
 class Camera(object):
     def __init__(self, window):
@@ -112,12 +147,21 @@ class Camera(object):
 class GameEngine(object):
     def __init__(self, window):
         self.window = window
+        self.time = 0.0
+        self.next_key = 0
+        self.grid = Grid(3.0, 3.0)
         self.camera = Camera(window)
         self.actors = []
-        self.time = 0.0
-        self.grid = Grid(3.0, 3.0)
-        level_actor = LevelActor(self)
-        self.camera.position = level_actor.start
+        self.level_actor = LevelActor(self)
+        self.player_actor = CharacterActor(self)
+        self.player_actor.position = self.level_actor.start_position
+        self.player_actor.debug_stroke = 0, 191, 255
+        self.camera.position = self.player_actor.position
+
+    def generate_key(self):
+        key = self.next_key
+        self.next_key += 1
+        return key
 
     def step(self, dt):
         self.time += dt

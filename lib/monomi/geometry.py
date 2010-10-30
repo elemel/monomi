@@ -78,7 +78,7 @@ class Bounds(object):
                 self.min_y < other.max_y and other.min_y < self.max_y)
 
 class Shape(object):
-    def get_bounding_box(self, matrix):
+    def get_bounds(self, matrix):
         raise NotImplementedError()
 
 class Circle(Shape):
@@ -86,10 +86,10 @@ class Circle(Shape):
         self.center = center
         self.radius = radius
 
-    def get_bounding_box(self, matrix):
+    def get_bounds(self, matrix):
         pass
 
-class ConvexPolygon(Shape):
+class Polygon(Shape):
     def __init__(self, vertices):
         self.vertices = list(vertices)
 
