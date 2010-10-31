@@ -6,6 +6,13 @@ import pyglet
 from pyglet.gl import *
 import sys
 
+class Enumeration(object):
+    def __init__(self, names):
+        self.names = list(names)
+        self.values = range(len(self.names))
+        for name, value in zip(self.names, self.values):
+            setattr(self, name, value)
+
 class DebugGraphics(object):
     def draw_polygon(self, polygon, stroke=None, fill=None):
         self.draw_vertices(polygon.vertices, stroke, fill)
@@ -110,6 +117,13 @@ class CharacterActor(Actor):
         self.init_controls()
 
     def init_controls(self):
+        self.left_control = False
+        self.right_control = False
+        self.up_control = False
+        self.down_control = False
+        self.jump_control = False
+
+    def reset_controls(self):
         self.left_control = False
         self.right_control = False
         self.up_control = False
