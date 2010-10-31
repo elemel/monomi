@@ -180,9 +180,8 @@ class Polygon(Shape):
         self.vertices = list(vertices)
 
 class Grid(object):
-    def __init__(self, cell_width=1.0, cell_height=1.0):
-        self.cell_width = cell_width
-        self.cell_height = cell_height
+    def __init__(self, cell_size=1.0):
+        self.cell_size = cell_size
         self.bounds = {}
         self.masks = {}
         self.seeds = set()
@@ -229,8 +228,8 @@ class Grid(object):
 
     def hash_point(self, point):
         px, py = point
-        col = int(round(px / self.cell_width))
-        row = int(round(py / self.cell_height))
+        col = int(round(px / self.cell_size))
+        row = int(round(py / self.cell_size))
         return col, row
 
     def query(self, bounds, masks):
@@ -264,9 +263,9 @@ class Grid(object):
                 min_ya <= max_yb and min_yb <= max_ya)
 
     def get_cell_bounds(self, col, row):
-        min_x = self.cell_width * (float(col) - 0.5)
-        min_y = self.cell_height * (float(row) - 0.5)
-        max_x = self.cell_width * (float(col) + 0.5)
-        max_y = self.cell_height * (float(row) + 0.5)
+        min_x = self.cell_size * (float(col) - 0.5)
+        min_y = self.cell_size * (float(row) - 0.5)
+        max_x = self.cell_size * (float(col) + 0.5)
+        max_y = self.cell_size * (float(row) + 0.5)
         return Bounds(min_x, min_y, max_x, max_y)
 

@@ -1,3 +1,4 @@
+from monomi import settings
 from monomi.geometry import *
 
 from contextlib import contextmanager
@@ -15,10 +16,11 @@ class DebugGraphics(object):
         self.draw_vertices(vertices, stroke, fill)
 
     def draw_circle(self, circle, stroke=None, fill=None):
-        vertices = list(self.generate_circle_vertices(circle, 16))
+        vertices = list(self.generate_circle_vertices(circle))
         self.draw_vertices(vertices, stroke, fill)
 
-    def generate_circle_vertices(self, circle, vertex_count):
+    def generate_circle_vertices(self, circle,
+                                 vertex_count=settings.circle_vertex_count):
         cx, cy = circle.center
         for i in xrange(vertex_count):
             angle = 2.0 * math.pi * float(i) / float(vertex_count)
@@ -28,7 +30,7 @@ class DebugGraphics(object):
 
     def draw_vertices(self, vertices, stroke=None, fill=None):
         if stroke is None and fill is None:
-            stroke = 0, 255, 0
+            stroke = settings.debug_color
         if fill is not None:
             glColor3ub(*fill)
             glBegin(GL_POLYGON)
@@ -158,7 +160,7 @@ class GameEngine(object):
         self.window = window
         self.time = 0.0
         self.next_key = 0
-        self.grid = Grid(3.0, 3.0)
+        self.grid = Grid(settings.grid_cell_size)
         self.gravity = Vector(0.0, -10.0)
         self.camera = Camera(window)
         self.actors = []
@@ -212,10 +214,13 @@ class GameView(View):
     def __init__(self, window):
         self.window = window
         self.game_engine = GameEngine(self.window)
-        self.dt = 1.0 / 60.0
+        self.dt = 1.0 / float(settings.fps)
         self.max_dt = 1.0
         self.time = 0.0
-        self.clock_display = pyglet.clock.ClockDisplay()
+        if settings.debug_fps:
+            self.clock_display = pyglet.clock.ClockDisplay()
+        else:
+            self.clock_display = None
         pyglet.clock.schedule_interval(self.step, 0.1 * self.dt)
 
     def delete(self):
@@ -229,7 +234,8 @@ class GameView(View):
     def on_draw(self):
         self.window.clear()
         self.game_engine.on_draw()
-        self.clock_display.draw()
+        if self.clock_display is not None:
+            self.clock_display.draw()
 
     def on_resize(self, width, height):
         self.game_engine.on_resize(width, height)
