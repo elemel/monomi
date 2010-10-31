@@ -2,6 +2,8 @@ from collections import defaultdict
 import math
 
 class Vector(object):
+    __slots__ = 'x', 'y'
+
     def __init__(self, x=0.0, y=0.0):
         self.x = x
         self.y = y
@@ -72,14 +74,15 @@ class Vector(object):
         return hash((self.x, self.y))
 
     def __abs__(self):
-        return math.sqrt(self.x * self.x + self.y * self.y)
+        return self.length
 
     def copy(self):
         return Vector(self.x, self.y)
 
     def normalize(self):
-        if self:
-            self /= abs(self)
+        length = self.length
+        if length:
+            self /= length
 
 class Matrix(object):
     def __init__(self, a=1.0, b=0.0, c=0.0, d=1.0, e=0.0, f=0.0):

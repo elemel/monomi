@@ -15,16 +15,16 @@ class DebugGraphics(object):
         self.draw_vertices(vertices, stroke, fill)
 
     def draw_circle(self, circle, stroke=None, fill=None):
+        vertices = list(self.generate_circle_vertices(circle, 16))
+        self.draw_vertices(vertices, stroke, fill)
+
+    def generate_circle_vertices(self, circle, vertex_count):
         cx, cy = circle.center
-        radius = circle.radius
-        vertices = []
-        vertex_count = 16
         for i in xrange(vertex_count):
             angle = 2.0 * math.pi * float(i) / float(vertex_count)
-            vx = cx + radius * math.cos(angle)
-            vy = cy + radius * math.sin(angle)
-            vertices.append((vx, vy))
-        self.draw_vertices(vertices, stroke, fill)
+            vx = cx + circle.radius * math.cos(angle)
+            vy = cy + circle.radius * math.sin(angle)
+            yield vx, vy
 
     def draw_vertices(self, vertices, stroke=None, fill=None):
         if stroke is None and fill is None:
@@ -105,6 +105,14 @@ class CharacterActor(Actor):
         self.circle = Circle(center=position, radius=0.75)
         self.debug_color = debug_color
         self.velocity = Vector()
+        self.init_controls()
+
+    def init_controls(self):
+        self.left_control = False
+        self.right_control = False
+        self.up_control = False
+        self.down_control = False
+        self.jump_control = False
 
     @property
     def position(self):
