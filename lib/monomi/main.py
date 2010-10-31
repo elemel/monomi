@@ -11,28 +11,33 @@ class Enumeration(object):
         self.names = list(names)
         self.values = range(len(self.names))
         for name, value in zip(self.names, self.values):
+            assert isinstance(name, str)
             setattr(self, name, value)
 
 class DebugGraphics(object):
     def draw_polygon(self, polygon, stroke=None, fill=None):
+        assert isinstance(polygon, Polygon)
         self.draw_vertices(polygon.vertices, stroke, fill)
 
     def draw_bounds(self, bounds, stroke=None, fill=None):
-        vertices = [(bounds.min_x, bounds.min_y), (bounds.max_x, bounds.min_y),
-                    (bounds.max_x, bounds.max_y), (bounds.min_x, bounds.max_y)]
+        assert isinstance(bounds, Bounds)
+        vertices = [tuple(bounds.lower), (bounds.upper.x, bounds.lower.y),
+                    tuple(bounds.upper), (bounds.lower.x, bounds.upper.y)]
         self.draw_vertices(vertices, stroke, fill)
 
     def draw_circle(self, circle, stroke=None, fill=None):
+        assert isinstance(circle, Circle)
         vertices = list(self.generate_circle_vertices(circle))
         self.draw_vertices(vertices, stroke, fill)
 
     def generate_circle_vertices(self, circle,
                                  vertex_count=settings.circle_vertex_count):
-        cx, cy = circle.center
+        assert isinstance(circle, Circle)
+        assert isinstance(vertex_count, int)
         for i in xrange(vertex_count):
             angle = 2.0 * math.pi * float(i) / float(vertex_count)
-            vx = cx + circle.radius * math.cos(angle)
-            vy = cy + circle.radius * math.sin(angle)
+            vx = circle.center.x + circle.radius * math.cos(angle)
+            vy = circle.center.y + circle.radius * math.sin(angle)
             yield vx, vy
 
     def draw_vertices(self, vertices, stroke=None, fill=None):
@@ -41,14 +46,14 @@ class DebugGraphics(object):
         if fill is not None:
             glColor3ub(*fill)
             glBegin(GL_POLYGON)
-            for x, y in vertices:
-                glVertex2f(x, y)
+            for vertex in vertices:
+                glVertex2f(*vertex)
             glEnd()
         if stroke is not None:
             glColor3ub(*stroke)
             glBegin(GL_LINE_LOOP)
-            for x, y in vertices:
-                glVertex2f(x, y)
+            for vertex in vertices:
+                glVertex2f(*vertex)
             glEnd()
 
 class Actor(object):
@@ -105,16 +110,30 @@ class LevelActor(Actor):
         return Vector(float(col) + 0.5, float(row) + 0.5)
 
     def get_tile_bounds(self, col, row):
-        cx, cy = self.get_tile_center(col, row)
-        return Bounds(cx - 0.5, cy - 0.5, cx + 0.5, cy + 0.5)
+        center = self.get_tile_center(col, row)
+        lower = center - Vector(0.5, 0.5)
+        upper = center + Vector(0.5, 0.5)
+        return Bounds(lower, upper)
 
 class CharacterActor(Actor):
-    def __init__(self, game_engine, position=(0.0, 0.0), debug_color=None):
+    states = Enumeration("""
+        STAND
+    """.split())
+
+    def __init__(self, game_engine, position=(0.0, 0.0), radius=0.75,
+                 debug_color=None):
         super(CharacterActor, self).__init__(game_engine)
-        self.circle = Circle(center=position, radius=0.75)
+        self.key = self.game_engine.generate_key()
+        self.position = position
+        self.radius = radius
         self.debug_color = debug_color
+        self.state = self.states.STAND
         self.velocity = Vector()
         self.init_controls()
+
+    @property
+    def circle(self):
+        return Circle(self.position, self.radius)
 
     def init_controls(self):
         self.left_control = False
@@ -130,17 +149,12 @@ class CharacterActor(Actor):
         self.down_control = False
         self.jump_control = False
 
-    @property
-    def position(self):
-        return self.circle.center
-
-    @position.setter
-    def position(self, position):
-        self.circle.center = position
-
     def step(self, dt):
         self.velocity += dt * self.game_engine.gravity
+        self.velocity = self.game_engine.clamp_velocity(self.velocity)
         self.position += dt * self.velocity
+        masks = 0, 0, 0
+        self.game_engine.grid.add(self.key, self.circle.bounds, masks)
 
     def debug_draw(self, debug_graphics):
         debug_graphics.draw_circle(self.circle, stroke=self.debug_color)
@@ -184,12 +198,24 @@ class GameEngine(object):
         self.player_actor.debug_color = 0, 127, 255
         self.camera.position = self.player_actor.position
 
+    def clamp_velocity(self, velocity):
+        assert isinstance(velocity, Vector)
+        if (velocity.squared_length <=
+            settings.max_velocity * settings.max_velocity):
+            return velocity
+        else:
+            velocity = velocity.copy()
+            velocity.normalize()
+            velocity *= settings.max_velocity
+            return velocity
+
     def generate_key(self):
         key = self.next_key
         self.next_key += 1
         return key
 
     def step(self, dt):
+        assert isinstance(dt, float)
         self.time += dt
         for actor in self.actors:
             actor.step(dt)
@@ -200,8 +226,10 @@ class GameEngine(object):
     def debug_draw(self):
         debug_graphics = DebugGraphics()
         with self.camera.manage_transform():
-            self.debug_draw_grid(debug_graphics)
-            self.debug_draw_actors(debug_graphics)
+            if settings.debug_grid:
+                self.debug_draw_grid(debug_graphics)
+            if settings.debug_actors:
+                self.debug_draw_actors(debug_graphics)
 
     def debug_draw_grid(self, debug_graphics):
         for col, row in self.grid.cells:
@@ -229,7 +257,6 @@ class GameView(View):
         self.window = window
         self.game_engine = GameEngine(self.window)
         self.dt = 1.0 / float(settings.fps)
-        self.max_dt = 1.0
         self.time = 0.0
         if settings.debug_fps:
             self.clock_display = pyglet.clock.ClockDisplay()
@@ -241,7 +268,7 @@ class GameView(View):
         pyglet.clock.unschedule(self.step)
 
     def step(self, dt):
-        self.time += min(dt, self.max_dt)
+        self.time += min(dt, settings.max_dt)
         while self.game_engine.time + self.dt < self.time:
             self.game_engine.step(self.dt)
 
