@@ -85,14 +85,17 @@ class LevelActor(Actor):
         super(LevelActor, self).__init__(game_engine)
         self.start_position = Vector()
         self.tiles = {}
+        self.shapes = {}
         for row, line in enumerate(reversed(LEVEL.splitlines())):
             for col, char in enumerate(line):
                 if not char.isspace():
                     self.tiles[col, row] = char
                     if char == '#':
                         key = self.game_engine.generate_key()
+                        self.shapes[key] = col, row
+                        self.game_engine.shapes[key] = self
                         bounds = self.get_tile_bounds(col, row)
-                        masks = 0, 0, 0
+                        masks = 1, 0, 0
                         self.game_engine.grid.add(key, bounds, masks)
                     elif char == '@':
                         self.start_position = self.get_tile_center(col, row)
@@ -109,21 +112,34 @@ class LevelActor(Actor):
     def get_tile_center(self, col, row):
         return Vector(float(col) + 0.5, float(row) + 0.5)
 
+    def get_tile_shape(self, col, row):
+        center = self.get_tile_center(col, row)
+        vertices = [center + Vector(-0.5, -0.5), center + Vector(0.5, -0.5),
+                    center + Vector(0.5, 0.5), center + Vector(-0.5, 0.5)]
+        return Polygon(vertices)
+
     def get_tile_bounds(self, col, row):
         center = self.get_tile_center(col, row)
         lower = center - Vector(0.5, 0.5)
         upper = center + Vector(0.5, 0.5)
         return Bounds(lower, upper)
 
+    def get_shape(self, key):
+        col, row = self.shapes[key]
+        return self.get_tile_shape(col, row)
+
 class CharacterActor(Actor):
     states = Enumeration("""
+        JUMP
         STAND
+        WALK
     """.split())
 
     def __init__(self, game_engine, position=(0.0, 0.0), radius=0.75,
                  debug_color=None):
         super(CharacterActor, self).__init__(game_engine)
         self.key = self.game_engine.generate_key()
+        self.game_engine.shapes[self.key] = self
         self.position = position
         self.radius = radius
         self.debug_color = debug_color
@@ -153,11 +169,18 @@ class CharacterActor(Actor):
         self.velocity += dt * self.game_engine.gravity
         self.velocity = self.game_engine.clamp_velocity(self.velocity)
         self.position += dt * self.velocity
-        masks = 0, 0, 0
-        self.game_engine.grid.add(self.key, self.circle.bounds, masks)
+        bounds = self.circle.bounds
+        masks = 1, 1, 0
+        self.game_engine.grid.add(self.key, bounds, masks)
+        for key in self.game_engine.grid.query(bounds, masks):
+            if key != self.key:
+                print key
 
     def debug_draw(self, debug_graphics):
         debug_graphics.draw_circle(self.circle, stroke=self.debug_color)
+
+    def get_shape(self, key):
+        return self.circle
 
 class Camera(object):
     def __init__(self, window):
@@ -192,6 +215,7 @@ class GameEngine(object):
         self.gravity = Vector(0.0, -10.0)
         self.camera = Camera(window)
         self.actors = []
+        self.shapes = {}
         self.level_actor = LevelActor(self)
         self.player_actor = CharacterActor(self)
         self.player_actor.position = self.level_actor.start_position
@@ -246,6 +270,11 @@ class GameEngine(object):
         self.camera.on_resize(width, height)
 
 class View(object):
+    """Each view is a different application screen.
+
+    The application displays one view at a time.
+    """
+
     def on_draw(self):
         pass
 
