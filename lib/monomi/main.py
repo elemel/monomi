@@ -21,8 +21,8 @@ class DebugGraphics(object):
 
     def draw_bounds(self, bounds, stroke=None, fill=None):
         assert isinstance(bounds, Bounds)
-        vertices = [tuple(bounds.lower), (bounds.upper.x, bounds.lower.y),
-                    tuple(bounds.upper), (bounds.lower.x, bounds.upper.y)]
+        vertices = [(bounds.min_x, bounds.min_y), (bounds.max_x, bounds.min_y),
+                    (bounds.max_x, bounds.max_y), (bounds.min_x, bounds.max_y)]
         self.draw_vertices(vertices, stroke, fill)
 
     def draw_circle(self, circle, stroke=None, fill=None):
@@ -94,9 +94,9 @@ class LevelActor(Actor):
                         key = self.game_engine.generate_key()
                         self.shapes[key] = col, row
                         self.game_engine.shapes[key] = self
-                        bounds = self.get_tile_bounds(col, row)
-                        masks = 1, 0, 0
-                        self.game_engine.grid.add(key, bounds, masks)
+                        polygon = self.get_tile_polygon(col, row)
+                        masks = Masks(1, 0, 0)
+                        self.game_engine.grid.add_shape(key, polygon, masks)
                     elif char == '@':
                         self.start_position = self.get_tile_center(col, row)
 
@@ -104,25 +104,19 @@ class LevelActor(Actor):
         for col, row in self.tiles:
             char = self.tiles[col, row]
             if char == '#':
-                bounds = self.get_tile_bounds(col, row)
-                debug_graphics.draw_bounds(bounds, stroke=(191, 191, 191))
+                polygon = self.get_tile_polygon(col, row)
+                debug_graphics.draw_polygon(polygon, stroke=(191, 191, 191))
             elif char == '@':
                 pass
 
     def get_tile_center(self, col, row):
         return Vector(float(col) + 0.5, float(row) + 0.5)
 
-    def get_tile_shape(self, col, row):
+    def get_tile_polygon(self, col, row):
         center = self.get_tile_center(col, row)
         vertices = [center + Vector(-0.5, -0.5), center + Vector(0.5, -0.5),
                     center + Vector(0.5, 0.5), center + Vector(-0.5, 0.5)]
         return Polygon(vertices)
-
-    def get_tile_bounds(self, col, row):
-        center = self.get_tile_center(col, row)
-        lower = center - Vector(0.5, 0.5)
-        upper = center + Vector(0.5, 0.5)
-        return Bounds(lower, upper)
 
     def get_shape(self, key):
         col, row = self.shapes[key]
@@ -169,10 +163,9 @@ class CharacterActor(Actor):
         self.velocity += dt * self.game_engine.gravity
         self.velocity = self.game_engine.clamp_velocity(self.velocity)
         self.position += dt * self.velocity
-        bounds = self.circle.bounds
-        masks = 1, 1, 0
-        self.game_engine.grid.add(self.key, bounds, masks)
-        for key in self.game_engine.grid.query(bounds, masks):
+        masks = Masks(1, 1, 0)
+        self.game_engine.grid.add_shape(self.key, self.circle, masks)
+        for key in self.game_engine.grid.query(self.circle.bounds, masks):
             if key != self.key:
                 print key
 
