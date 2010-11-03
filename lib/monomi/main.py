@@ -85,18 +85,15 @@ class LevelActor(Actor):
         super(LevelActor, self).__init__(game_engine)
         self.start_position = Vector()
         self.tiles = {}
-        self.shapes = {}
         for row, line in enumerate(reversed(LEVEL.splitlines())):
             for col, char in enumerate(line):
                 if not char.isspace():
                     self.tiles[col, row] = char
                     if char == '#':
                         key = self.game_engine.generate_key()
-                        self.shapes[key] = col, row
-                        self.game_engine.shapes[key] = self
                         polygon = self.get_tile_polygon(col, row)
                         masks = Masks(1, 0, 0)
-                        self.game_engine.grid.add_shape(key, polygon, masks)
+                        self.game_engine.add_shape(key, polygon, masks, self)
                     elif char == '@':
                         self.start_position = self.get_tile_center(col, row)
 
@@ -164,10 +161,10 @@ class CharacterActor(Actor):
         self.velocity = self.game_engine.clamp_velocity(self.velocity)
         self.position += dt * self.velocity
         masks = Masks(1, 1, 0)
-        self.game_engine.grid.add_shape(self.key, self.circle, masks)
-        for key in self.game_engine.grid.query(self.circle.bounds, masks):
-            if key != self.key:
-                print key
+        self.game_engine.add_shape(self.key, self.circle, masks, self)
+        for key, shape, actor in self.game_engine.query_shapes(self.circle.bounds, masks):
+            if key != self.key and self.circle.intersect(shape):
+                print self.game_engine.generate_key(), key
 
     def debug_draw(self, debug_graphics):
         debug_graphics.draw_circle(self.circle, stroke=self.debug_color)
@@ -179,7 +176,7 @@ class Camera(object):
     def __init__(self, window):
         self.window = window
         self.position = 0.0, 0.0
-        self.scale = 0.1
+        self.scale = 0.5
         self.half_width = 0.0
         self.half_height = 0.0
         self.on_resize(self.window.width, self.window.height)
@@ -199,13 +196,17 @@ class Camera(object):
         self.half_width = float(width // 2)
         self.half_height = float(height // 2)
 
+    def get_world_point(self, view_point):
+        scale = self.scale * min(self.half_width, self.half_height)
+        return (view_point - Vector(self.half_width, self.half_height)) / scale + self.position
+
 class GameEngine(object):
     def __init__(self, window):
         self.window = window
         self.time = 0.0
         self.next_key = 0
         self.grid = Grid(settings.grid_cell_size)
-        self.gravity = Vector(0.0, -10.0)
+        self.gravity = Vector(0.0, 0.0)
         self.camera = Camera(window)
         self.actors = []
         self.shapes = {}
@@ -230,6 +231,20 @@ class GameEngine(object):
         key = self.next_key
         self.next_key += 1
         return key
+
+    def add_shape(self, key, shape, masks, actor):
+        shape = shape.copy()
+        self.shapes[key] = shape, actor
+        self.grid.add(key, shape.bounds, masks)
+
+    def remove_shape(self, key):
+        self.grid.remove(key)
+        del self.shapes[key]
+
+    def query_shapes(self, bounds, masks):
+        for key in self.grid.query(bounds, masks):
+            shape, actor = self.shapes[key]
+            yield key, shape, actor
 
     def step(self, dt):
         assert isinstance(dt, float)
@@ -262,6 +277,17 @@ class GameEngine(object):
     def on_resize(self, width, height):
         self.camera.on_resize(width, height)
 
+    def on_mouse_press(self, x, y, button, modifiers):
+        view_point = Vector(float(x), float(y))
+        self.player_actor.position = self.camera.get_world_point(view_point)
+
+    def on_mouse_drag(self, x, y, dx, dy, button, modifiers):
+        view_point = Vector(float(x), float(y))
+        self.player_actor.position = self.camera.get_world_point(view_point)
+
+    def on_mouse_release(self, x, y, button, modifiers):
+        pass
+
 class View(object):
     """Each view is a different application screen.
 
@@ -272,6 +298,15 @@ class View(object):
         pass
 
     def on_resize(self, width, height):
+        pass
+
+    def on_mouse_press(self, x, y, button, modifiers):
+        pass
+
+    def on_mouse_drag(self, x, y, dx, dy, button, modifiers):
+        pass
+
+    def on_mouse_release(self, x, y, button, modifiers):
         pass
 
 class GameView(View):
@@ -303,6 +338,15 @@ class GameView(View):
     def on_resize(self, width, height):
         self.game_engine.on_resize(width, height)
 
+    def on_mouse_press(self, x, y, button, modifiers):
+        self.game_engine.on_mouse_press(x, y, button, modifiers)
+
+    def on_mouse_drag(self, x, y, dx, dy, button, modifiers):
+        self.game_engine.on_mouse_drag(x, y, dx, dy, button, modifiers)
+
+    def on_mouse_release(self, x, y, button, modifiers):
+        self.game_engine.on_mouse_release(x, y, button, modifiers)
+
 class MyWindow(pyglet.window.Window):
     def __init__(self, **kwargs):
         super(MyWindow, self).__init__(**kwargs)
@@ -314,6 +358,15 @@ class MyWindow(pyglet.window.Window):
     def on_resize(self, width, height):
         super(MyWindow, self).on_resize(width, height)
         self.view.on_resize(width, height)
+
+    def on_mouse_press(self, x, y, button, modifiers):
+        self.view.on_mouse_press(x, y, button, modifiers)
+
+    def on_mouse_drag(self, x, y, dx, dy, button, modifiers):
+        self.view.on_mouse_drag(x, y, dx, dy, button, modifiers)
+
+    def on_mouse_release(self, x, y, button, modifiers):
+        self.view.on_mouse_release(x, y, button, modifiers)
 
 def main():
     fullscreen = '--fullscreen' in sys.argv

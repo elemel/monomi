@@ -1,4 +1,4 @@
-from collections import defaultdict
+from itertools import izip
 import math
 
 class Vector(object):
@@ -13,11 +13,15 @@ class Vector(object):
 
     @property
     def length(self):
-        return math.sqrt(self.x * self.x + self.y * self.y)
+        return math.sqrt(self.squared_length)
 
     @property
     def squared_length(self):
-        return self.x * self.x + self.y * self.y
+        return self.dot(self)
+
+    @property
+    def normal(self):
+        return Vector(self.y, -self.x)
 
     def __nonzero__(self):
         return self.x or self.y
@@ -26,60 +30,60 @@ class Vector(object):
         yield self.x
         yield self.y
 
-    def __iadd__(self, other):
-        assert isinstance(other, Vector)
-        self.x += other.x
-        self.y += other.y
+    def __iadd__(self, vector):
+        assert isinstance(vector, Vector)
+        self.x += vector.x
+        self.y += vector.y
         return self
 
-    def __isub__(self, other):
-        assert isinstance(other, Vector)
-        self.x -= other.x
-        self.y -= other.y
+    def __isub__(self, vector):
+        assert isinstance(vector, Vector)
+        self.x -= vector.x
+        self.y -= vector.y
         return self
 
-    def __imul__(self, other):
-        assert isinstance(other, float)
-        self.x *= other
-        self.y *= other
+    def __imul__(self, f):
+        assert isinstance(f, float)
+        self.x *= f
+        self.y *= f
         return self
 
-    def __idiv__(self, other):
-        assert isinstance(other, float)
-        self.x /= other
-        self.y /= other
+    def __idiv__(self, f):
+        assert isinstance(f, float)
+        self.x /= f
+        self.y /= f
         return self
 
-    def __add__(self, other):
-        assert isinstance(other, Vector)
-        return Vector(self.x + other.x, self.y + other.y)
+    def __add__(self, vector):
+        assert isinstance(vector, Vector)
+        return Vector(self.x + vector.x, self.y + vector.y)
 
-    def __sub__(self, other):
-        assert isinstance(other, Vector)
-        return Vector(self.x - other.x, self.y - other.y)
+    def __sub__(self, vector):
+        assert isinstance(vector, Vector)
+        return Vector(self.x - vector.x, self.y - vector.y)
 
-    def __mul__(self, other):
-        assert isinstance(other, float)
-        return Vector(self.x * other, self.y * other)
+    def __mul__(self, f):
+        assert isinstance(f, float)
+        return Vector(self.x * f, self.y * f)
 
-    def __rmul__(self, other):
-        assert isinstance(other, float)
-        return Vector(other * self.x, other * self.y)
+    def __rmul__(self, f):
+        assert isinstance(f, float)
+        return Vector(f * self.x, f * self.y)
 
-    def __div__(self, other):
-        assert isinstance(other, float)
-        return Vector(self.x / other, self.y / other)
+    def __div__(self, f):
+        assert isinstance(f, float)
+        return Vector(self.x / f, self.y / f)
 
     def __neg__(self):
         return Vector(-self.x, -self.y)
 
-    def __eq__(self, other):
-        assert isinstance(other, Vector)
-        return self.x == other.x and self.y == other.y
+    def __eq__(self, vector):
+        assert isinstance(vector, Vector)
+        return self.x == vector.x and self.y == vector.y
 
-    def __ne__(self, other):
-        assert isinstance(other, Vector)
-        return self.x != other.x or self.y != other.y
+    def __ne__(self, vector):
+        assert isinstance(vector, Vector)
+        return self.x != vector.x or self.y != vector.y
 
     def __hash__(self):
         return hash((self.x, self.y))
@@ -96,6 +100,14 @@ class Vector(object):
             self /= length
         return length
 
+    def dot(self, vector):
+        assert isinstance(vector, Vector)
+        return self.x * vector.x + self.y * vector.y
+
+    def cross(self, vector):
+        assert isinstance(vector, Vector)
+        return self.x * vector.y - vector.x * self.y
+
 class Matrix(object):
     def __init__(self, a=1.0, b=0.0, c=0.0, d=1.0, e=0.0, f=0.0):
         assert isinstance(a, float)
@@ -109,10 +121,10 @@ class Matrix(object):
     def __repr__(self):
         return 'Matrix(a=%r, b=%r, c=%r, d=%r, e=%r, f=%r)' % self.abcdef
 
-    def __mul__(self, other):
-        assert isinstance(other, Matrix)
+    def __mul__(self, matrix):
+        assert isinstance(matrix, Matrix)
         a1, b1, c1, d1, e1, f1 = self.abcdef
-        a2, b2, c2, d2, e2, f2 = other.abcdef
+        a2, b2, c2, d2, e2, f2 = matrix.abcdef
         a3 = a1 * a2 + c1 * b2
         b3 = b1 * a2 + d1 * b2
         c3 = a1 * c2 + c1 * d2
@@ -161,25 +173,21 @@ class Bounds(object):
         self.max_x = max_x
         self.max_y = max_y
 
-    @property
-    def bounds(self):
-        return self
-
     def __repr__(self):
         return ('Bounds(min_x=%r, min_y=%r, max_x=%r, max_y=%r)' %
                 (self.min_x, self.min_y, self.max_x, self.max_y))
 
-    def add(self, other):
-        assert isinstance(other, Bounds)
-        self.min_x = min(self.min_x, other.min_x)
-        self.min_y = min(self.min_y, other.min_y)
-        self.max_x = max(self.max_x, other.max_x)
-        self.max_y = max(self.max_y, other.max_y)
+    def add(self, bounds):
+        assert isinstance(bounds, Bounds)
+        self.min_x = min(self.min_x, bounds.min_x)
+        self.min_y = min(self.min_y, bounds.min_y)
+        self.max_x = max(self.max_x, bounds.max_x)
+        self.max_y = max(self.max_y, bounds.max_y)
 
-    def intersects(self, other):
-        assert isinstance(other, Bounds)
-        return (self.min_x < other.max_x and other.min_x < self.max_x and
-                self.min_y < other.max_y and other.min_y < self.max_y)
+    def intersect(self, bounds):
+        assert isinstance(bounds, Bounds)
+        return (self.min_x < bounds.max_x and bounds.min_x < self.max_x and
+                self.min_y < bounds.max_y and bounds.min_y < self.max_y)
 
     def add_point(self, point):
         assert isinstance(point, Vector)
@@ -201,6 +209,15 @@ class Shape(object):
     def bounds(self):
         raise NotImplementedError()
 
+    def intersect(self, shape):
+        raise NotImplementedError()
+
+    def intersect_circle(self, circle):
+        raise NotImplementedError()
+
+    def intersect_polygon(self, polygon):
+        raise NotImplementedError()
+
     def copy(self):
         raise NotImplementedError()
 
@@ -215,9 +232,46 @@ class Circle(Shape):
 
     @property
     def bounds(self):
-        radius = Vector(self.radius, self.radius)
         return Bounds(self.center.x - self.radius, self.center.y - self.radius,
                       self.center.x + self.radius, self.center.y + self.radius)
+
+    def intersect(self, shape):
+        assert isinstance(shape, Shape)
+        return shape.intersect_circle(self)
+
+    def intersect_circle(self, circle):
+        assert isinstance(circle, Circle)
+        radius_sum = self.radius + circle.radius
+        squared_center_distance = (circle.center - self.center).squared_length
+        return squared_center_distance < radius_sum * radius_sum
+
+    def intersect_polygon(self, polygon):
+        assert isinstance(polygon, Polygon)
+        return polygon.intersect_circle(self)
+
+    def intersect_point(self, point):
+        return ((point - self.center).squared_length <
+                (self.radius * self.radius))
+
+    def intersect_edge(self, edge):
+        vertex_1, vertex_2 = edge
+        tangent = vertex_2 - vertex_1
+        normal = tangent.normal
+        normal.normalize()
+        return (tangent.dot(self.center - vertex_1) > 0.0 and
+                tangent.dot(self.center - vertex_2) < 0.0 and
+                normal.dot(self.center - vertex_1) < self.radius * self.radius)
+
+    def contains_point(self, point):
+        return ((point - self.center).squared_length <=
+                (self.radius * self.radius))
+
+    def contains_circle(self, circle):
+        radius_diff = self.radius - circle.radius
+        if radius_diff < 0.0:
+            return False
+        squared_center_distance = (circle.center - self.center).squared_length
+        return squared_center_distance <= (radius_diff * radius_diff)
 
     def copy(self):
         return Circle(self.center, self.radius)
@@ -236,6 +290,49 @@ class Polygon(Shape):
             bounds.add_point(vertex)
         return bounds
 
+    @property
+    def edges(self):
+        return izip(self.vertices, self.vertices[1:] + self.vertices[:1])
+
+    @property
+    def tangents(self):
+        return (v2 - v1 for v1, v2 in self.edges)
+
+    @property
+    def normals(self):
+        return (t.normal for t in self.tangents)
+
+    def intersect(self, shape):
+        assert isinstance(shape, Shape)
+        return shape.intersect_polygon(self)
+
+    def intersect_circle(self, circle):
+        assert isinstance(circle, Circle)
+        return (self.intersect_point(circle.center) or
+                any(circle.intersect_point(v) for v in self.vertices) or
+                any(circle.intersect_edge(e) for e in self.edges))
+
+    # Separating axis theorem.
+    def intersect_polygon(self, polygon):
+        assert isinstance(polygon, Polygon)
+        return (not self.has_separating_edge(polygon) and
+                not polygon.has_separating_edge(self))
+
+    def has_separating_edge(self, polygon):
+        assert isinstance(polygon, Polygon)
+        return any(all((v2 - v1).cross(v) >= 0.0 for v in polygon.vertices)
+                   for v1, v2 in self.edges)
+
+    def intersect_point(self, point):
+        assert isinstance(point, Vector)
+        return not any((v2 - v1).cross(point - v1) >= 0.0
+                       for v1, v2 in self.edges)
+
+    def contains_point(self, point):
+        assert isinstance(point, Vector)
+        return not any((v2 - v1).cross(point - v1) > 0.0
+                       for v1, v2 in self.edges)
+
     def copy(self):
         return Polygon(self.vertices)
 
@@ -252,11 +349,11 @@ class Masks(object):
         return ('Masks(mask=0x%x, include_mask=0x%x, exclude_mask=0x%x)' %
                 (self.mask, self.include_mask, self.exclude_mask))
 
-    def match(self, other):
-        included = (self.mask & other.include_mask or
-                    other.mask & self.include_mask)
-        excluded = (self.mask & other.exclude_mask or
-                    other.mask & self.exclude_mask)
+    def match(self, masks):
+        included = (self.mask & masks.include_mask or
+                    masks.mask & self.include_mask)
+        excluded = (self.mask & masks.exclude_mask or
+                    masks.mask & self.exclude_mask)
         return included and not excluded
 
     def copy(self):
@@ -267,26 +364,47 @@ class Grid(object):
         self.cell_size = cell_size
         self.shapes = {}
         self.bounds = {}
+        self.indices = {}
         self.masks = {}
         self.seeds = set()
-        self.cells = defaultdict(set)
+        self.cells = {}
 
-    def add_shape(self, key, shape, masks):
-        assert isinstance(shape, Shape)
+    def add(self, key, bounds, masks):
+        assert isinstance(bounds, Bounds)
         assert isinstance(masks, Masks)
-        self.remove(key)
-        self.shapes[key] = shape.copy()
-        self.add_bounds(key, shape.bounds)
+        self.add_bounds(key, bounds)
         self.add_masks(key, masks)
 
     def add_bounds(self, key, bounds):
         assert isinstance(bounds, Bounds)
         bounds = bounds.copy()
         self.bounds[key] = bounds
-        min_col, min_row, max_col, max_row = self.hash_bounds(bounds)
-        for col in xrange(min_col, max_col + 1):
-            for row in xrange(min_row, max_row + 1):
-                self.cells[col, row].add(key)
+        new_indices = self.hash_bounds(bounds)
+        old_indices = self.indices.get(key, (0, 0, 0, 0))
+        if new_indices != old_indices:
+            new_min_col, new_min_row, new_max_col, new_max_row = new_indices
+            old_min_col, old_min_row, old_max_col, old_max_row = old_indices
+
+            # Add key to cells that have not been occupied before.
+            for col in xrange(new_min_col, new_max_col):
+                for row in xrange(new_min_row, new_max_row):
+                    if not (old_min_col <= col < old_max_col and
+                            old_max_row <= row < old_max_row):
+                        self.add_key_to_cell(key, col, row)
+
+            # Remove key from cells that are no longer occupied.
+            for col in xrange(old_min_col, old_max_col):
+                for row in xrange(old_min_row, old_max_row):
+                    if not (new_min_col <= col < new_max_col and
+                            new_max_row <= row < new_max_row):
+                        self.remove_key_from_cell(key, col, row)
+
+            self.indices[key] = new_indices
+
+    def add_key_to_cell(self, key, col, row):
+        if (col, row) not in self.cells:
+            self.cells[col, row] = []
+        self.cells[col, row].append(key)
 
     def add_masks(self, key, masks):
         assert isinstance(masks, Masks)
@@ -294,38 +412,43 @@ class Grid(object):
         self.masks[key] = masks
         if masks.include_mask:
             self.seeds.add(key)
+        else:
+            self.seeds.discard(key)
 
     def remove(self, key):
-        self.shapes.pop(key, 0)
         self.remove_bounds(key)
         self.remove_masks(key)
 
     def remove_bounds(self, key):
-        bounds = self.bounds.pop(key, None)
-        if bounds is not None:
-            min_col, min_row, max_col, max_row = self.hash_bounds(bounds)
-            for col in xrange(min_col, max_col + 1):
-                for row in xrange(min_row, max_row + 1):
-                    cell = self.cells[col, row]
-                    cell.remove(key)
-                    if not cell:
-                        del self.cells[col, row]
+        del self.bounds[key]
+        min_col, min_row, max_col, max_row = self.indices.pop(key)
+        for col in xrange(min_col, max_col):
+            for row in xrange(min_row, max_row):
+                self.remove_key_from_cell(key, col, row)
+
+    def remove_key_from_cell(self, key, col, row):
+        self.cells[col, row].remove(key)
+        if not self.cells[col, row]:
+            del self.cells[col, row]
 
     def remove_masks(self, key):
+        del self.masks[key]
         self.seeds.discard(key)
-        self.masks.pop(key, None)
 
     def hash_bounds(self, bounds):
+        assert isinstance(bounds, Bounds)
         min_col = int(round(bounds.min_x / self.cell_size))
         min_row = int(round(bounds.min_y / self.cell_size))
-        max_col = int(round(bounds.max_x / self.cell_size))
-        max_row = int(round(bounds.max_y / self.cell_size))
+        max_col = int(round(bounds.max_x / self.cell_size)) + 1
+        max_row = int(round(bounds.max_y / self.cell_size)) + 1
         return min_col, min_row, max_col, max_row
 
     def query(self, bounds, masks):
+        assert isinstance(bounds, Bounds)
+        assert isinstance(masks, Masks)
         for key in self.masks:
-            if (bounds.intersects(self.bounds[key]) and
-                masks.match(self.masks[key])):
+            if (masks.match(self.masks[key]) and
+                bounds.intersect(self.bounds[key])):
                 yield key
 
     def query_all(self):
@@ -336,15 +459,8 @@ class Grid(object):
                         yield key_a, key_b
 
     def match_keys(self, key_a, key_b):
-        return (self.match_masks(self.masks[key_a], self.masks[key_b]) and
-                self.bounds[key_a].intersects(self.bounds[key_b]))
-
-    def match_masks(self, masks_a, masks_b):
-        mask_a, include_mask_a, exclude_mask_a = masks_a
-        mask_b, include_mask_b, exclude_mask_b = masks_b
-        include = mask_a & include_mask_b or mask_b & include_mask_a
-        exclude = mask_a & exclude_mask_b or mask_b & exclude_mask_a
-        return include and not exclude
+        return (self.masks[key_a].match(self.masks[key_b]) and
+                self.bounds[key_a].intersect(self.bounds[key_b]))
 
     def get_cell_bounds(self, col, row):
         min_x = self.cell_size * (float(col) - 0.5)
