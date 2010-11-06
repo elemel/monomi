@@ -1,4 +1,4 @@
-from itertools import izip
+from itertools import chain, izip
 import math
 
 class Vector(object):
@@ -184,7 +184,7 @@ class Bounds(object):
         self.max_x = max(self.max_x, bounds.max_x)
         self.max_y = max(self.max_y, bounds.max_y)
 
-    def intersect(self, bounds):
+    def intersects(self, bounds):
         assert isinstance(bounds, Bounds)
         return (self.min_x < bounds.max_x and bounds.min_x < self.max_x and
                 self.min_y < bounds.max_y and bounds.min_y < self.max_y)
@@ -209,13 +209,22 @@ class Shape(object):
     def bounds(self):
         raise NotImplementedError()
 
-    def intersect(self, shape):
+    def intersects(self, shape):
         raise NotImplementedError()
 
-    def intersect_circle(self, circle):
+    def intersects_circle(self, circle):
         raise NotImplementedError()
 
-    def intersect_polygon(self, polygon):
+    def intersects_polygon(self, polygon):
+        raise NotImplementedError()
+
+    def separate(self, shape):
+        raise NotImplementedError()
+
+    def separate_circle(self, circle):
+        raise NotImplementedError()
+
+    def separate_polygon(self, polygon):
         raise NotImplementedError()
 
     def copy(self):
@@ -231,29 +240,33 @@ class Circle(Shape):
         return 'Circle(center=%r, radius=%r)' % (self.center, self.radius)
 
     @property
+    def squared_radius(self):
+        return self.radius * self.radius
+
+    @property
     def bounds(self):
         return Bounds(self.center.x - self.radius, self.center.y - self.radius,
                       self.center.x + self.radius, self.center.y + self.radius)
 
-    def intersect(self, shape):
+    def intersects(self, shape):
         assert isinstance(shape, Shape)
-        return shape.intersect_circle(self)
+        return shape.intersects_circle(self)
 
-    def intersect_circle(self, circle):
+    def intersects_circle(self, circle):
         assert isinstance(circle, Circle)
         radius_sum = self.radius + circle.radius
         squared_center_distance = (circle.center - self.center).squared_length
         return squared_center_distance < radius_sum * radius_sum
 
-    def intersect_polygon(self, polygon):
+    def intersects_polygon(self, polygon):
         assert isinstance(polygon, Polygon)
-        return polygon.intersect_circle(self)
+        return polygon.intersects_circle(self)
 
-    def intersect_point(self, point):
+    def intersects_point(self, point):
         return ((point - self.center).squared_length <
                 (self.radius * self.radius))
 
-    def intersect_edge(self, edge):
+    def intersects_edge(self, edge):
         vertex_1, vertex_2 = edge
         tangent = vertex_2 - vertex_1
         normal = tangent.normal
@@ -261,6 +274,21 @@ class Circle(Shape):
         return (tangent.dot(self.center - vertex_1) > 0.0 and
                 tangent.dot(self.center - vertex_2) < 0.0 and
                 normal.dot(self.center - vertex_1) < self.radius * self.radius)
+
+    def separate(self, shape):
+        assert isinstance(shape, Shape)
+        return shape.separate_circle(self)
+
+    def separate_circle(self, circle):
+        assert isinstance(circle, Circle)
+        normal = circle.center - self.center
+        center_distance = normal.normalize()
+        distance = center_distance - (self.radius + circle.radius)
+        return distance, normal
+
+    def separate_polygon(self, polygon):
+        assert isinstance(polygon, Polygon)
+        return polygon.separate_circle(self)
 
     def contains_point(self, point):
         return ((point - self.center).squared_length <=
@@ -302,18 +330,18 @@ class Polygon(Shape):
     def normals(self):
         return (t.normal for t in self.tangents)
 
-    def intersect(self, shape):
+    def intersects(self, shape):
         assert isinstance(shape, Shape)
-        return shape.intersect_polygon(self)
+        return shape.intersects_polygon(self)
 
-    def intersect_circle(self, circle):
+    def intersects_circle(self, circle):
         assert isinstance(circle, Circle)
-        return (self.intersect_point(circle.center) or
-                any(circle.intersect_point(v) for v in self.vertices) or
-                any(circle.intersect_edge(e) for e in self.edges))
+        return (self.intersects_point(circle.center) or
+                any(circle.intersects_point(v) for v in self.vertices) or
+                any(circle.intersects_edge(e) for e in self.edges))
 
     # Separating axis theorem.
-    def intersect_polygon(self, polygon):
+    def intersects_polygon(self, polygon):
         assert isinstance(polygon, Polygon)
         return (not self.has_separating_edge(polygon) and
                 not polygon.has_separating_edge(self))
@@ -323,7 +351,56 @@ class Polygon(Shape):
         return any(all((v2 - v1).cross(v) >= 0.0 for v in polygon.vertices)
                    for v1, v2 in self.edges)
 
-    def intersect_point(self, point):
+    def separate(self, shape):
+        assert isinstance(shape, Shape)
+        return shape.separate_polygon(self)
+
+    def separate_circle(self, circle):
+        assert isinstance(circle, Circle)
+        distance, normal = self.separate_point(circle.center)
+        return distance - circle.radius, normal
+
+    def separate_point(self, point):
+        assert isinstance(point, Vector)
+        return max(self.separate_point_generator(point))
+
+    def separate_point_generator(self, point):
+        assert isinstance(point, Vector)
+        for i in xrange(len(self.vertices)):
+            vertex_1 = self.vertices[i - 2]
+            vertex_2 = self.vertices[i - 1]
+            vertex_3 = self.vertices[i]
+            tangent_1 = vertex_2 - vertex_1
+            tangent_2 = vertex_3 - vertex_2
+            offset_1 = point - vertex_1
+            offset_2 = point - vertex_2
+            if tangent_1.dot(offset_1) > 0.0:
+                if tangent_1.dot(offset_2) > 0.0:
+                    if tangent_2.dot(offset_2) > 0.0:
+                        pass
+                    else:
+                        yield offset_2.normalize(), offset_2
+                else:
+                    normal = tangent_1.normal
+                    normal.normalize()
+                    distance = normal.dot(offset_1)
+                    yield distance, normal
+
+    def separate_polygon(self, polygon):
+        assert isinstance(polygon, Polygon)
+        distance_1, normal_1 = max(self.separate_edge(e) for e in polygon.edges)
+        distance_2, normal_2 = max(polygon.separate_edge(e) for e in self.edges)
+        return max((distance_1, normal_1),
+                   (distance_2, -normal_2))
+
+    def separate_edge(self, edge):
+        vertex_1, vertex_2 = edge
+        normal = (vertex_2 - vertex_1).normal
+        normal.normalize()
+        distance = min(normal.dot(v - vertex_1) for v in self.vertices)
+        return distance, normal
+
+    def intersects_point(self, point):
         assert isinstance(point, Vector)
         return not any((v2 - v1).cross(point - v1) >= 0.0
                        for v1, v2 in self.edges)
@@ -448,7 +525,7 @@ class Grid(object):
         assert isinstance(masks, Masks)
         for key in self.masks:
             if (masks.match(self.masks[key]) and
-                bounds.intersect(self.bounds[key])):
+                bounds.intersects(self.bounds[key])):
                 yield key
 
     def query_all(self):
@@ -460,7 +537,7 @@ class Grid(object):
 
     def match_keys(self, key_a, key_b):
         return (self.masks[key_a].match(self.masks[key_b]) and
-                self.bounds[key_a].intersect(self.bounds[key_b]))
+                self.bounds[key_a].intersects(self.bounds[key_b]))
 
     def get_cell_bounds(self, col, row):
         min_x = self.cell_size * (float(col) - 0.5)

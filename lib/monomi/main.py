@@ -163,7 +163,7 @@ class CharacterActor(Actor):
         masks = Masks(1, 1, 0)
         self.game_engine.add_shape(self.key, self.circle, masks, self)
         for key, shape, actor in self.game_engine.query_shapes(self.circle.bounds, masks):
-            if key != self.key and self.circle.intersect(shape):
+            if key != self.key and self.circle.intersects(shape):
                 print self.game_engine.generate_key(), key
 
     def debug_draw(self, debug_graphics):
