@@ -1485,12 +1485,21 @@ class Geometry:
         raise AttributeError, 'Cannot intersect %s and %s' % \
             (self.__class__, other.__class__)
 
+    def _grow_unimplemented(self, other):
+        raise AttributeError, 'Cannot grow %s with %s' % \
+            (self.__class__, other.__class__)
+
     _intersect_point2 = _intersect_unimplemented
     _intersect_line2 = _intersect_unimplemented
     _intersect_circle = _intersect_unimplemented
+    _intersect_polygon = _intersect_unimplemented
+    _intersect_aabb2 = _intersect_unimplemented
     _connect_point2 = _connect_unimplemented
     _connect_line2 = _connect_unimplemented
     _connect_circle = _connect_unimplemented
+    _connect_polygon = _connect_unimplemented
+    _connect_aabb2 = _connect_unimplemented
+    _grow_aabb2 = _grow_unimplemented
 
     _intersect_point3 = _intersect_unimplemented
     _intersect_line3 = _intersect_unimplemented
@@ -1515,7 +1524,13 @@ class Geometry:
 
 def _intersect_point2_circle(P, C):
     return abs(P - C.c) <= C.r
-    
+
+def _intersect_point2_polygon(A, B):
+    return all((v2 - v1).cross().dot(A  - v1) <= 0.0 for v1, v2 in B._edges())
+
+def _intersect_point2_aabb2(P, B):
+    return B.p.x <= P.x <= B.q.x and B.p.y <= P.y <= B.q.y
+
 def _intersect_line2_line2(A, B):
     d = B.v.y * A.v.x - B.v.x * A.v.y
     if d == 0:
@@ -1620,7 +1635,6 @@ def _connect_circle_circle(A, B):
     return LineSegment2(Point2(A.c.x + v.x * A.r, A.c.y + v.y * A.r),
                         Point2(B.c.x - v.x * B.r, B.c.y - v.y * B.r))
 
-
 class Point2(Vector2, Geometry):
     def __repr__(self):
         return 'Point2(%.2f, %.2f)' % (self.x, self.y)
@@ -1630,6 +1644,9 @@ class Point2(Vector2, Geometry):
 
     def _intersect_circle(self, other):
         return _intersect_point2_circle(self, other)
+
+    def _intersect_polygon(self, other):
+        return _intersect_point2_polygon(self, other)
 
     def connect(self, other):
         return other._connect_point2(self)
@@ -1646,6 +1663,12 @@ class Point2(Vector2, Geometry):
         c = _connect_point2_circle(self, other)
         if c:
             return c._swap()
+
+    def _grow_aabb2(self, other):
+        other.p.x = min(other.p.x, self.x)
+        other.p.y = min(other.p.y, self.y)
+        other.q.x = max(other.q.x, self.x)
+        other.q.y = max(other.q.y, self.y)
 
 class Line2(Geometry):
     __slots__ = ['p', 'v']
@@ -1749,6 +1772,10 @@ class LineSegment2(Line2):
 
     length = property(lambda self: abs(self.v))
 
+    def _grow_aabb(self, other):
+        self.p1._grow_aabb(other)
+        self.p2._grow_aabb(other)
+
 class Circle(Geometry):
     __slots__ = ['c', 'r']
 
@@ -1791,6 +1818,91 @@ class Circle(Geometry):
 
     def _connect_circle(self, other):
         return _connect_circle_circle(other, self)
+
+    def _grow_aabb2(self, other):
+        other.p.x = min(other.p.x, self.c.x - self.r)
+        other.p.y = min(other.p.y, self.c.y - self.r)
+        other.q.x = max(other.q.x, self.c.x + self.r)
+        other.q.y = max(other.q.y, self.c.y + self.r)
+
+class Polygon(Geometry):
+    __slots__ = ['v']
+
+    def __init__(self, v):
+        self.v = [p.copy() for p in v]
+        assert all(isinstance(p, Point2) for p in self.v)
+
+    def __copy__(self):
+        return self.__class__(self.v)
+
+    copy = __copy__
+
+    def __repr__(self):
+        return ('Polygon([%s])' %
+                ', '.join('<%.2f, %.2f>' % (p.x, p.y) for p in self.v))
+
+    def _edges(self):
+        return zip(self.v, self.v[1:] + self.v[:1])
+
+    def _apply_transform(self, t):
+        self.v[:] = (t * p for p in self.v)
+
+    def intersect(self, other):
+        return other._intersect_polygon(self)
+
+    def connect(self, other):
+        return other._connect_polygon(self)
+
+    def _grow_aabb2(self, other):
+        other.p.x = min(other.p.x, min(p.x for p in self.v))
+        other.p.y = min(other.p.y, min(p.y for p in self.v))
+        other.q.x = max(other.q.x, max(p.x for p in self.v))
+        other.q.y = max(other.q.y, max(p.y for p in self.v))
+
+class AABB2(Geometry):
+    __slots__ = ['p', 'q']
+
+    def __init__(self, other=None):
+        self.p = Point2(float('inf'), float('inf'))
+        self.q = Point2(float('-inf'), float('-inf'))
+        if other is not None:
+            other._grow_aabb2(self)
+
+    def __repr__(self):
+        return ('AABB2(<%.2f, %.2f> to <%.2f, %.2f>)' %
+                (self.p.x, self.p.y, self.q.x, self.q.y))
+
+    def __nonzero__(self):
+        return self.p.x <= self.q.x and self.p.y <= self.q.y
+
+    def __copy__(self):
+        return self.__class__(self)
+
+    copy = __copy__
+
+    def grow(self, other):
+        other._grow_aabb2(self)
+
+    def intersect(self, other):
+        return other._intersect_aabb2(self)
+
+    def _intersect_point2(self, other):
+        return _intersect_point2_aabb2(other, self)
+
+    def _intersect_aabb2(self, other):
+        return _intersect_aabb2_aabb2(other, self)
+
+    def connect(self, other):
+        return other._connect_aabb2(self)
+
+    def _connect_aabb2(self, other):
+        return _connect_aabb2_aabb2(other, self)
+
+    def _grow_aabb2(self, other):
+        other.p.x = min(other.p.x, self.p.x)
+        other.p.y = min(other.p.y, self.p.y)
+        other.q.x = max(other.q.x, self.q.x)
+        other.q.y = max(other.q.y, self.q.y)
 
 # 3D Geometry
 # -------------------------------------------------------------------------

@@ -2,6 +2,7 @@ from monomi import settings
 from monomi.geometry import *
 
 from contextlib import contextmanager
+import euclid
 import pyglet
 from pyglet.gl import *
 import sys
