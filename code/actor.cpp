@@ -7,10 +7,13 @@ namespace monomi {
 
     Actor::~Actor()
     { }
-    
-    void Actor::draw()
+
+    void Actor::step(float dt)
     { }
 
-    void Actor::debugDraw(DebugGraphics *debugGraphics)
+    void Actor::draw() const
+    { }
+
+    void Actor::debugDraw(DebugGraphics *debugGraphics) const
     { }
 }

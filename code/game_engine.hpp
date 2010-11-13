@@ -11,7 +11,8 @@ namespace monomi {
         GameEngine();
 
         void step(float dt);
-    
+        void draw() const;
+
     private:
         float time_;
         std::vector<Actor *> actors_;

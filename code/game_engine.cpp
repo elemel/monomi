@@ -9,4 +9,7 @@ namespace monomi {
     {
         time_ += dt;
     }
+
+    void GameEngine::draw() const
+    { }
 }

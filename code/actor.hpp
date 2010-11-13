@@ -10,9 +10,10 @@ namespace monomi {
         explicit Actor(GameEngine *gameEngine);
         
         virtual ~Actor();
-    
-        virtual void draw();
-        virtual void debugDraw(DebugGraphics *debugGraphics);
+
+        virtual void step(float dt);
+        virtual void draw() const;
+        virtual void debugDraw(DebugGraphics *debugGraphics) const;
     
     protected:
         GameEngine *gameEngine_;
