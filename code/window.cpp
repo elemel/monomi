@@ -26,6 +26,16 @@ namespace monomi {
         SDL_Quit();
     }
 
+    Screen *Window::topScreen()
+    {
+        return screens_.empty() ? 0 : screens_.back();
+    }
+
+    const Screen *Window::topScreen() const
+    {
+        return screens_.empty() ? 0 : screens_.back();
+    }
+
     void Window::pushScreen(std::auto_ptr<Screen> screen)
     {
         screens_.push_back(screen.release());
@@ -50,7 +60,15 @@ namespace monomi {
         while (SDL_PollEvent(&event)) {
             switch (event.type) {
             case SDL_KEYDOWN:
-                popAllScreens();
+                if (topScreen()) {
+                    topScreen()->onKeyPress(keys::escape, Modifiers());
+                }
+                break;
+
+            case SDL_KEYUP:
+                if (topScreen()) {
+                    topScreen()->onKeyRelease(keys::escape, Modifiers());
+                }
                 break;
 
             case SDL_QUIT:

@@ -16,18 +16,6 @@ namespace monomi {
         return alive_;
     }
 
-    void Screen::open()
-    { }
-
-    void Screen::suspend()
-    { }
-
-    void Screen::resume()
-    { }
-
-    void Screen::close()
-    { }
-
     void Screen::update()
     { }
 
@@ -39,4 +27,24 @@ namespace monomi {
         glVertex2f(1.0f, 1.0f);
         glEnd();
     }
+
+    void Screen::onOpen()
+    { }
+
+    void Screen::onSuspend()
+    { }
+
+    void Screen::onResume()
+    { }
+
+    void Screen::onClose()
+    { }
+
+    void Screen::onKeyPress(Key key, Modifiers modifiers)
+    {
+        alive_ = false;
+    }
+
+    void Screen::onKeyRelease(Key key, Modifiers modifiers)
+    { }
 }

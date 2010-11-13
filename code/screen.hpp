@@ -1,6 +1,8 @@
 #ifndef MONOMI_SCREEN_HPP
 #define MONOMI_SCREEN_HPP
 
+#include "keys.hpp"
+
 namespace monomi {
     class Window;
 
@@ -11,13 +13,16 @@ namespace monomi {
 
         bool alive() const;
 
-        virtual void open();
-        virtual void suspend();
-        virtual void resume();
-        virtual void close();
-    
         virtual void update();
         virtual void draw() const;
+
+        virtual void onOpen();
+        virtual void onSuspend();
+        virtual void onResume();
+        virtual void onClose();
+
+        virtual void onKeyPress(Key key, Modifiers modifiers);
+        virtual void onKeyRelease(Key key, Modifiers modifiers);
 
     protected:
         Window *window_;

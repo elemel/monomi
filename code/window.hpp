@@ -13,7 +13,10 @@ namespace monomi {
     public:
         Window();
         ~Window();
-    
+
+        Screen *topScreen();
+        const Screen *topScreen() const;
+
         void pushScreen(std::auto_ptr<Screen> screen);
         void run();
     
