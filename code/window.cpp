@@ -32,6 +32,9 @@ namespace monomi {
         running_ = true;
         while (running_) {
             handleEvents();
+            onIdle();
+            onDraw();
+            SDL_GL_SwapBuffers();
         }
     }
 
@@ -42,7 +45,13 @@ namespace monomi {
     { }
 
     void Window::onDraw()
-    { }
+    {
+        glClear(GL_COLOR_BUFFER_BIT);
+        glBegin(GL_LINES);
+        glVertex2f(-1.0f, -1.0f);
+        glVertex2f(1.0f, 1.0f);
+        glEnd();
+    }
 
     void Window::handleEvents()
     {
