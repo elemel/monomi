@@ -1,25 +1,29 @@
 #ifndef MONOMI_WINDOW_HPP
 #define MONOMI_WINDOW_HPP
 
+#include <memory>
+#include <vector>
+
 struct SDL_Surface;
 
 namespace monomi {
+    class Screen;
+
     class Window {
     public:
-        Window(int width, int height);
-        virtual ~Window();
+        Window();
+        ~Window();
     
-        virtual void run();
+        void pushScreen(std::auto_ptr<Screen> screen);
+        void run();
     
-        virtual void onResize(int width, int height);
-        virtual void onIdle();
-        virtual void onDraw();
-
     private:
-        bool running_;
         SDL_Surface *videoSurface_;
+        std::vector<Screen *> screens_;
 
         void handleEvents();
+        void popAllScreens();
+        void popDeadScreens();
     };
 }
 

@@ -1,15 +1,14 @@
+#include "screen.hpp"
 #include "window.hpp"
 
 #include <cassert>
 #include <iostream>
 #include <sstream>
 #include <stdexcept>
-#include <GL/gl.h>
 #include <SDL.h>
 
 namespace monomi {
-    Window::Window(int width, int height) :
-        running_(false),
+    Window::Window() :
         videoSurface_(0)
     {
         SDL_Init(SDL_INIT_VIDEO);
@@ -23,34 +22,26 @@ namespace monomi {
 
     Window::~Window()
     {
+        popAllScreens();
         SDL_Quit();
+    }
+
+    void Window::pushScreen(std::auto_ptr<Screen> screen)
+    {
+        screens_.push_back(screen.release());
     }
 
     void Window::run()
     {
-        assert(!running_);
-        running_ = true;
-        while (running_) {
+        while (!screens_.empty()) {
             handleEvents();
-            onIdle();
-            onDraw();
-            SDL_GL_SwapBuffers();
+            if (!screens_.empty()) {
+                screens_.back()->update();
+                screens_.back()->draw();
+                SDL_GL_SwapBuffers();
+                popDeadScreens();
+            }
         }
-    }
-
-    void Window::onResize(int width, int height)
-    { }
-
-    void Window::onIdle()
-    { }
-
-    void Window::onDraw()
-    {
-        glClear(GL_COLOR_BUFFER_BIT);
-        glBegin(GL_LINES);
-        glVertex2f(-1.0f, -1.0f);
-        glVertex2f(1.0f, 1.0f);
-        glEnd();
     }
 
     void Window::handleEvents()
@@ -59,13 +50,29 @@ namespace monomi {
         while (SDL_PollEvent(&event)) {
             switch (event.type) {
             case SDL_KEYDOWN:
-                running_ = false;
+                popAllScreens();
                 break;
 
             case SDL_QUIT:
-                running_ = false;
+                popAllScreens();
                 break;
             }
+        }
+    }
+
+    void Window::popAllScreens()
+    {
+        while (!screens_.empty()) {
+            delete screens_.back();
+            screens_.pop_back();
+        }
+    }
+
+    void Window::popDeadScreens()
+    {
+        while (!screens_.empty() && !screens_.back()->alive()) {
+            delete screens_.back();
+            screens_.pop_back();
         }
     }
 }
