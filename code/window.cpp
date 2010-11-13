@@ -22,18 +22,17 @@ namespace monomi {
 
     Window::~Window()
     {
-        popAllScreens();
         SDL_Quit();
     }
 
     Screen *Window::topScreen()
     {
-        return screens_.empty() ? 0 : screens_.back();
+        return screens_.empty() ? 0 : &screens_.back();
     }
 
     const Screen *Window::topScreen() const
     {
-        return screens_.empty() ? 0 : screens_.back();
+        return screens_.empty() ? 0 : &screens_.back();
     }
 
     void Window::pushScreen(std::auto_ptr<Screen> screen)
@@ -46,10 +45,12 @@ namespace monomi {
         while (!screens_.empty()) {
             handleEvents();
             if (!screens_.empty()) {
-                screens_.back()->update();
-                screens_.back()->draw();
+                screens_.back().update();
+                screens_.back().draw();
                 SDL_GL_SwapBuffers();
-                popDeadScreens();
+                while (!screens_.empty() && !screens_.back().alive()) {
+                    screens_.pop_back();
+                }
             }
         }
     }
@@ -72,25 +73,9 @@ namespace monomi {
                 break;
 
             case SDL_QUIT:
-                popAllScreens();
+                screens_.clear();
                 break;
             }
-        }
-    }
-
-    void Window::popAllScreens()
-    {
-        while (!screens_.empty()) {
-            delete screens_.back();
-            screens_.pop_back();
-        }
-    }
-
-    void Window::popDeadScreens()
-    {
-        while (!screens_.empty() && !screens_.back()->alive()) {
-            delete screens_.back();
-            screens_.pop_back();
         }
     }
 }

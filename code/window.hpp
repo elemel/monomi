@@ -2,7 +2,7 @@
 #define MONOMI_WINDOW_HPP
 
 #include <memory>
-#include <vector>
+#include <boost/ptr_container/ptr_vector.hpp>
 
 struct SDL_Surface;
 
@@ -22,11 +22,9 @@ namespace monomi {
     
     private:
         SDL_Surface *videoSurface_;
-        std::vector<Screen *> screens_;
+        boost::ptr_vector<Screen> screens_;
 
         void handleEvents();
-        void popAllScreens();
-        void popDeadScreens();
     };
 }
 
