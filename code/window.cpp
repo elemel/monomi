@@ -1,5 +1,6 @@
-#include "screen.hpp"
 #include "window.hpp"
+
+#include "screen.hpp"
 
 namespace monomi {
     Window::Window()

@@ -11,12 +11,15 @@ namespace monomi {
         
         virtual ~Actor();
 
+        virtual bool alive() const;
+
         virtual void step(float dt);
         virtual void draw() const;
         virtual void debugDraw(DebugGraphics *debugGraphics) const;
     
     protected:
         GameEngine *gameEngine_;
+        bool alive_;
     };
 }
 

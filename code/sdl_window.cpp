@@ -1,5 +1,6 @@
-#include "screen.hpp"
 #include "sdl_window.hpp"
+
+#include "screen.hpp"
 
 #include <iostream>
 #include <sstream>
