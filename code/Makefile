@@ -1,7 +1,35 @@
-CXXFLAGS := -I/opt/local/include -I/usr/local/include/SDL -framework OpenGL -lSDL
+CPPFLAGS := -I/opt/local/include -I/usr/local/include/SDL
+CXXFLAGS := -g
+LDFLAGS := -framework OpenGL -lSDL
 
-monomi: *.cpp *.hpp
-	g++ -g -o monomi *.cpp $(CXXFLAGS)
+objects := \
+	actor.o \
+	debug_graphics.o \
+	game_engine.o \
+	geometry.o \
+	gl_debug_graphics.o \
+	keys.o \
+	main.o \
+	screen.o \
+	sdl_window.o \
+	window.o
+
+monomi: $(objects)
+	g++ -o monomi $(objects) $(LDFLAGS)
 
 clean:
-	rm -f monomi
+	rm -f monomi *.o
+
+# DO NOT DELETE
+
+actor.o: actor.hpp
+debug_graphics.o: debug_graphics.hpp
+game_engine.o: game_engine.hpp actor.hpp gl_debug_graphics.hpp
+game_engine.o: debug_graphics.hpp geometry.hpp
+geometry.o: geometry.hpp
+gl_debug_graphics.o: gl_debug_graphics.hpp debug_graphics.hpp geometry.hpp
+keys.o: keys.hpp
+main.o: game_engine.hpp screen.hpp keys.hpp sdl_window.hpp window.hpp
+screen.o: screen.hpp keys.hpp
+sdl_window.o: sdl_window.hpp window.hpp screen.hpp keys.hpp
+window.o: window.hpp screen.hpp keys.hpp
