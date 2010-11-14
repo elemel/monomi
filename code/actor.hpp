@@ -12,7 +12,6 @@ namespace monomi {
     {
     public:
         explicit Actor(GameEngine *gameEngine);
-        
         virtual ~Actor();
 
         virtual bool alive();
