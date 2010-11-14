@@ -8,7 +8,9 @@
 struct SDL_Surface;
 
 namespace monomi {
-    class SDLWindow : public Window {
+    class SDLWindow :
+        public Window
+    {
     public:
         SDLWindow();
         virtual ~SDLWindow();

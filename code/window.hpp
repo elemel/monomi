@@ -9,7 +9,9 @@
 namespace monomi {
     class Screen;
 
-    class Window : private boost::noncopyable {
+    class Window :
+        private boost::noncopyable
+    {
     public:
         Window();
         virtual ~Window();

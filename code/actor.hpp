@@ -7,7 +7,9 @@ namespace monomi {
     class DebugGraphics;
     class GameEngine;
 
-    class Actor : private boost::noncopyable {
+    class Actor :
+        private boost::noncopyable
+    {
     public:
         explicit Actor(GameEngine *gameEngine);
         

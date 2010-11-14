@@ -7,7 +7,9 @@
 #include <vector>
 
 namespace monomi {
-    class GLDebugGraphics : public DebugGraphics {
+    class GLDebugGraphics :
+        public DebugGraphics
+    {
     public:
         explicit GLDebugGraphics(int circleVertexCount = 16);
 

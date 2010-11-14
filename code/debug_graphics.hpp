@@ -8,7 +8,9 @@ namespace monomi {
     class Circle;
     class LineSegment2;
 
-    class DebugGraphics : private boost::noncopyable {
+    class DebugGraphics :
+        private boost::noncopyable
+    {
     public:
         virtual ~DebugGraphics();
 
