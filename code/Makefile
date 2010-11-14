@@ -6,6 +6,7 @@ objects := \
 	actor.o \
 	debug_graphics.o \
 	game_engine.o \
+	game_screen.o \
 	geometry.o \
 	gl_debug_graphics.o \
 	keys.o \
@@ -18,7 +19,7 @@ monomi: $(objects)
 	g++ -o monomi $(objects) $(LDFLAGS)
 
 clean:
-	rm -f monomi *.o
+	rm -fr monomi monomi.dSYM $(objects)
 
 # DO NOT DELETE
 
@@ -26,6 +27,7 @@ actor.o: actor.hpp
 debug_graphics.o: debug_graphics.hpp
 game_engine.o: game_engine.hpp actor.hpp gl_debug_graphics.hpp
 game_engine.o: debug_graphics.hpp geometry.hpp
+game_screen.o: game_screen.hpp screen.hpp keys.hpp
 geometry.o: geometry.hpp
 gl_debug_graphics.o: gl_debug_graphics.hpp debug_graphics.hpp geometry.hpp
 keys.o: keys.hpp

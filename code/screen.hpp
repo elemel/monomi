@@ -3,34 +3,23 @@
 
 #include "keys.hpp"
 
-#include <boost/noncopyable.hpp>
-
 namespace monomi {
-    class Window;
-
-    class Screen :
-        private boost::noncopyable
-    {
+    class Screen {
     public:
-        explicit Screen(Window *window);
         virtual ~Screen();
 
-        virtual bool alive();
+        virtual bool alive() = 0;
 
-        virtual void update();
-        virtual void draw();
+        virtual void update() = 0;
+        virtual void draw() = 0;
 
-        virtual void onOpen();
-        virtual void onSuspend();
-        virtual void onResume();
-        virtual void onClose();
+        virtual void onOpen() = 0;
+        virtual void onSuspend() = 0;
+        virtual void onResume() = 0;
+        virtual void onClose() = 0;
 
-        virtual void onKeyPress(Key key, Modifiers modifiers);
-        virtual void onKeyRelease(Key key, Modifiers modifiers);
-
-    protected:
-        Window *window_;
-        bool alive_;
+        virtual void onKeyPress(Key key, Modifiers modifiers) = 0;
+        virtual void onKeyRelease(Key key, Modifiers modifiers) = 0;
     };
 }
 
