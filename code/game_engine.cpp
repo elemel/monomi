@@ -3,6 +3,8 @@
 #include "actor.hpp"
 #include "gl_debug_graphics.hpp"
 
+#include <GL/gl.h>
+
 namespace monomi {
     namespace {
         bool dead(Actor &actor)
@@ -32,8 +34,22 @@ namespace monomi {
     }
 
     void GameEngine::draw()
+    { }
+
+    void GameEngine::debugDraw()
     {
+        float scale = 2.0f;
+        float aspectRatio = float(screenWidth_) / float(screenHeight_);
+        glMatrixMode(GL_PROJECTION);
+        glLoadIdentity();
+        glOrtho(-scale * aspectRatio, scale * aspectRatio,
+                -scale, scale,
+                -1.0, 1.0);
+        glMatrixMode(GL_MODELVIEW);
+
         GLDebugGraphics debugGraphics;
+        glPushMatrix();
+        debugGraphics.drawCircle(Circle(Point2(), 1.0f));
         typedef boost::ptr_vector<Actor>::iterator Iterator;
         for (Iterator i = actors_.begin(); i != actors_.end(); ++i) {
             i->debugDraw(&debugGraphics);

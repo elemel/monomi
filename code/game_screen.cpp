@@ -1,12 +1,17 @@
 #include "game_screen.hpp"
 
+#include "game_engine.hpp"
+#include "window.hpp"
+
 #include <GL/gl.h>
 
 namespace monomi {
     GameScreen::GameScreen(Window *window) :
         window_(window),
         alive_(true)
-    { }
+    {
+        gameEngine_.reset(new GameEngine(window_->width(), window_->height()));
+    }
 
     bool GameScreen::alive()
     {
@@ -19,10 +24,7 @@ namespace monomi {
     void GameScreen::draw()
     {
         glClear(GL_COLOR_BUFFER_BIT);
-        glBegin(GL_LINES);
-        glVertex2f(-1.0f, -1.0f);
-        glVertex2f(1.0f, 1.0f);
-        glEnd();
+        gameEngine_->debugDraw();
     }
 
     void GameScreen::onOpen()

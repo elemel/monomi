@@ -23,11 +23,15 @@ namespace monomi {
 
     void GLDebugGraphics::drawBox(const Box2 &box)
     {
-        glBegin(GL_QUADS);
+        glBegin(GL_LINES);
         glVertex2f(box.p1.x, box.p1.y);
         glVertex2f(box.p2.x, box.p1.y);
+        glVertex2f(box.p2.x, box.p1.y);
+        glVertex2f(box.p2.x, box.p2.y);
         glVertex2f(box.p2.x, box.p2.y);
         glVertex2f(box.p1.x, box.p2.y);
+        glVertex2f(box.p1.x, box.p2.y);
+        glVertex2f(box.p1.x, box.p1.y);
         glEnd();
     }
 

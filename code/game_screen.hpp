@@ -3,9 +3,11 @@
 
 #include "screen.hpp"
 
+#include <memory>
 #include <boost/noncopyable.hpp>
 
 namespace monomi {
+    class GameEngine;
     class Window;
 
     class GameScreen :
@@ -31,6 +33,7 @@ namespace monomi {
     private:
         Window *window_;
         bool alive_;
+        std::auto_ptr<GameEngine> gameEngine_;
     };
 }
 

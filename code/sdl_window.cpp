@@ -2,7 +2,6 @@
 
 #include "screen.hpp"
 
-#include <iostream>
 #include <sstream>
 #include <stdexcept>
 #include <SDL.h>
@@ -12,6 +11,7 @@ namespace monomi {
         videoSurface_(0)
     {
         SDL_Init(SDL_INIT_VIDEO);
+
         videoSurface_ = SDL_SetVideoMode(0, 0, 0, SDL_OPENGL | SDL_FULLSCREEN);
         if (videoSurface_ == 0) {
             std::stringstream message;
@@ -23,6 +23,26 @@ namespace monomi {
     SDLWindow::~SDLWindow()
     {
         SDL_Quit();
+    }
+
+    int SDLWindow::width()
+    {
+        return videoSurface_->w;
+    }
+
+    int SDLWindow::height()
+    {
+        return videoSurface_->h;
+    }
+
+    Screen *SDLWindow::topScreen()
+    {
+        return screens_.empty() ? 0 : &screens_.back();
+    }
+
+    void SDLWindow::pushScreen(std::auto_ptr<Screen> screen)
+    {
+        screens_.push_back(screen.release());
     }
 
     void SDLWindow::run()

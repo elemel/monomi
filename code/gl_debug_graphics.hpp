@@ -5,10 +5,12 @@
 #include "geometry.hpp"
 
 #include <vector>
+#include <boost/noncopyable.hpp>
 
 namespace monomi {
     class GLDebugGraphics :
-        public DebugGraphics
+        public DebugGraphics,
+        private boost::noncopyable
     {
     public:
         explicit GLDebugGraphics(int circleVertexCount = 16);

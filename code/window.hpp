@@ -2,27 +2,20 @@
 #define MONOMI_WINDOW_HPP
 
 #include <memory>
-#include <boost/ptr_container/ptr_vector.hpp>
-
-#include <boost/noncopyable.hpp>
 
 namespace monomi {
     class Screen;
 
-    class Window :
-        private boost::noncopyable
-    {
+    class Window {
     public:
-        Window();
         virtual ~Window();
 
-        virtual Screen *topScreen();
+        virtual int width() = 0;
+        virtual int height() = 0;
+        virtual Screen *topScreen() = 0;
 
-        virtual void pushScreen(std::auto_ptr<Screen> screen);
-        virtual void run();
-
-    protected:
-        boost::ptr_vector<Screen> screens_;
+        virtual void pushScreen(std::auto_ptr<Screen> screen) = 0;
+        virtual void run() = 0;
     };
 }
 

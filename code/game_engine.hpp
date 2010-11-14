@@ -17,6 +17,7 @@ namespace monomi {
         void addActor(std::auto_ptr<Actor> actor);
         void step(float dt);
         void draw();
+        void debugDraw();
 
     private:
         int screenWidth_, screenHeight_;
