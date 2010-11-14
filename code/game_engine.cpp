@@ -11,7 +11,9 @@ namespace monomi {
         }
     }
 
-    GameEngine::GameEngine() :
+    GameEngine::GameEngine(int screenWidth, int screenHeight) :
+        screenWidth_(screenWidth),
+        screenHeight_(screenHeight),
         time_(0.0f)
     { }
 

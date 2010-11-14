@@ -11,7 +11,7 @@ namespace monomi {
         private boost::noncopyable
     {
     public:
-        GameEngine();
+        GameEngine(int screenWidth, int screenHeight);
         ~GameEngine();
 
         void addActor(std::auto_ptr<Actor> actor);
@@ -19,6 +19,7 @@ namespace monomi {
         void draw();
 
     private:
+        int screenWidth_, screenHeight_;
         float time_;
         boost::ptr_vector<Actor> actors_;
     };
