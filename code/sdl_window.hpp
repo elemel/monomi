@@ -3,6 +3,8 @@
 
 #include "window.hpp"
 
+#include <boost/noncopyable.hpp>
+
 struct SDL_Surface;
 
 namespace monomi {

@@ -4,16 +4,17 @@
 #include <memory>
 #include <boost/ptr_container/ptr_vector.hpp>
 
+#include <boost/noncopyable.hpp>
+
 namespace monomi {
     class Screen;
 
-    class Window {
+    class Window : private boost::noncopyable {
     public:
         Window();
         virtual ~Window();
 
         virtual Screen *topScreen();
-        virtual const Screen *topScreen() const;
 
         virtual void pushScreen(std::auto_ptr<Screen> screen);
         virtual void run();

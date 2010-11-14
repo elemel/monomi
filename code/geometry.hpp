@@ -11,6 +11,8 @@ namespace monomi {
 
         Vector2 operator-() const;
 
+        Vector2 &operator+=(const Vector2 &v);
+        Vector2 &operator-=(const Vector2 &v);
         Vector2 &operator*=(float f);
         Vector2 &operator/=(float f);
 
@@ -20,10 +22,19 @@ namespace monomi {
         float normalize();
     };
 
+    Vector2 operator+(const Vector2 &v1, const Vector2 &v2);
+    Vector2 operator-(const Vector2 &v1, const Vector2 &v2);
+    Vector2 operator*(const Vector2 &v, float f);
+    Vector2 operator*(float f, const Vector2 &v);
+    Vector2 operator/(const Vector2 &v, float f);
+
     float dot(const Vector2 &v1, const Vector2 &v2);
     float cross(const Vector2 &v1, const Vector2 &v2);
     Vector2 cross(const Vector2 &v);
     Vector2 normalize(const Vector2 &v);
+
+    float distance(const Vector2 &p1, const Vector2 &p2);
+    float squaredDistance(const Vector2 &p1, const Vector2 &p2);
 
     class LineSegment2 {
     public:

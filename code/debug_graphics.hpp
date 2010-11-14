@@ -1,12 +1,14 @@
 #ifndef MONOMI_DEBUG_GRAPHICS_HPP
 #define MONOMI_DEBUG_GRAPHICS_HPP
 
+#include <boost/noncopyable.hpp>
+
 namespace monomi {
     class Box2;
     class Circle;
     class LineSegment2;
 
-    class DebugGraphics {
+    class DebugGraphics : private boost::noncopyable {
     public:
         virtual ~DebugGraphics();
 

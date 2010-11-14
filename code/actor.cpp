@@ -9,7 +9,7 @@ namespace monomi {
     Actor::~Actor()
     { }
 
-    bool Actor::alive() const
+    bool Actor::alive()
     {
         return alive_;
     }
@@ -17,9 +17,9 @@ namespace monomi {
     void Actor::step(float dt)
     { }
 
-    void Actor::draw() const
+    void Actor::draw()
     { }
 
-    void Actor::debugDraw(DebugGraphics *debugGraphics) const
+    void Actor::debugDraw(DebugGraphics *debugGraphics)
     { }
 }

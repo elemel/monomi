@@ -11,7 +11,7 @@ namespace monomi {
     Screen::~Screen()
     { }
 
-    bool Screen::alive() const
+    bool Screen::alive()
     {
         return alive_;
     }
@@ -19,7 +19,7 @@ namespace monomi {
     void Screen::update()
     { }
 
-    void Screen::draw() const
+    void Screen::draw()
     {
         glClear(GL_COLOR_BUFFER_BIT);
         glBegin(GL_LINES);

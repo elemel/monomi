@@ -1,10 +1,11 @@
 #include "game_engine.hpp"
 
 #include "actor.hpp"
+#include "gl_debug_graphics.hpp"
 
 namespace monomi {
     namespace {
-        bool dead(const Actor &actor)
+        bool dead(Actor &actor)
         {
             return !actor.alive();
         }
@@ -28,6 +29,12 @@ namespace monomi {
         actors_.erase_if(&dead);
     }
 
-    void GameEngine::draw() const
-    { }
+    void GameEngine::draw()
+    {
+        GLDebugGraphics debugGraphics;
+        typedef boost::ptr_vector<Actor>::iterator Iterator;
+        for (Iterator i = actors_.begin(); i != actors_.end(); ++i) {
+            i->debugDraw(&debugGraphics);
+        }
+    }
 }
