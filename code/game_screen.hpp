@@ -3,11 +3,14 @@
 
 #include "screen.hpp"
 
+#include <boost/noncopyable.hpp>
+
 namespace monomi {
     class Window;
 
     class GameScreen :
-        public Screen
+        public Screen,
+        private boost::noncopyable
     {
     public:
         explicit GameScreen(Window *window);
