@@ -33,15 +33,31 @@ namespace monomi {
     Vector2 cross(const Vector2 &v);
     Vector2 normalize(const Vector2 &v);
 
-    float distance(const Vector2 &p1, const Vector2 &p2);
-    float squaredDistance(const Vector2 &p1, const Vector2 &p2);
+    class Point2 {
+    public:
+        float x, y;
+
+        Point2();
+        Point2(float x, float y);
+
+        Point2 &operator+=(const Vector2 &v);
+        Point2 &operator-=(const Vector2 &v);
+    };
+
+    Point2 operator+(const Point2 &p, const Vector2 &v);
+    Point2 operator+(const Vector2 &v, const Point2 &p);
+    Point2 operator-(const Point2 &p, const Vector2 &v);
+    Vector2 operator-(const Point2 &p1, const Point2 &p2);
+
+    float distance(const Point2 &p1, const Point2 &p2);
+    float squaredDistance(const Point2 &p1, const Point2 &p2);
 
     class LineSegment2 {
     public:
-        Vector2 p1, p2;
+        Point2 p1, p2;
 
         LineSegment2();
-        LineSegment2(const Vector2 &p1, const Vector2 &p2);
+        LineSegment2(const Point2 &p1, const Point2 &p2);
 
         float length() const;
         float squaredLength() const;
@@ -49,19 +65,19 @@ namespace monomi {
 
     class Box2 {
     public:
-        Vector2 p1, p2;
+        Point2 p1, p2;
 
         Box2();
-        Box2(const Vector2 &p1, const Vector2 &p2);
+        Box2(const Point2 &p1, const Point2 &p2);
     };
 
     class Circle {
     public:
-        Vector2 center;
+        Point2 center;
         float radius;
 
         Circle();
-        Circle(const Vector2 &center, float radius);
+        Circle(const Point2 &center, float radius);
     };
 }
 

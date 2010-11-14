@@ -109,12 +109,56 @@ namespace monomi {
         return v2;
     }
 
-    float distance(const Vector2 &p1, const Vector2 &p2)
+    Point2::Point2() :
+        x(0.0f),
+        y(0.0f)
+    { }
+
+    Point2::Point2(float x, float y) :
+        x(x),
+        y(y)
+    { }
+
+    Point2 &Point2::operator+=(const Vector2 &v)
+    {
+        x += v.x;
+        y += v.y;
+        return *this;
+    }
+
+    Point2 &Point2::operator-=(const Vector2 &v)
+    {
+        x -= v.x;
+        y -= v.y;
+        return *this;
+    }
+
+    Point2 operator+(const Point2 &p, const Vector2 &v)
+    {
+        return Point2(p) += v;
+    }
+
+    Point2 operator+(const Vector2 &v, const Point2 &p)
+    {
+        return Point2(p) += v;
+    }
+
+    Point2 operator-(const Point2 &p, const Vector2 &v)
+    {
+        return Point2(p) -= v;
+    }
+
+    Vector2 operator-(const Point2 &p1, const Point2 &p2)
+    {
+        return Vector2(p1.x - p2.x, p1.y - p2.y);
+    }
+
+    float distance(const Point2 &p1, const Point2 &p2)
     {
         return (p2 - p1).length();
     }
 
-    float squaredDistance(const Vector2 &p1, const Vector2 &p2)
+    float squaredDistance(const Point2 &p1, const Point2 &p2)
     {
         return (p2 - p1).squaredLength();
     }
@@ -122,7 +166,7 @@ namespace monomi {
     LineSegment2::LineSegment2()
     { }
 
-    LineSegment2::LineSegment2(const Vector2 &p1, const Vector2 &p2) :
+    LineSegment2::LineSegment2(const Point2 &p1, const Point2 &p2) :
         p1(p1),
         p2(p2)
     { }
@@ -140,7 +184,7 @@ namespace monomi {
     Box2::Box2()
     { }
 
-    Box2::Box2(const Vector2 &p1, const Vector2 &p2) :
+    Box2::Box2(const Point2 &p1, const Point2 &p2) :
         p1(p1),
         p2(p2)
     { }
@@ -149,7 +193,7 @@ namespace monomi {
         radius(0.0f)
     { }
 
-    Circle::Circle(const Vector2 &center, float radius) :
+    Circle::Circle(const Point2 &center, float radius) :
         center(center),
         radius(radius)
     { }
