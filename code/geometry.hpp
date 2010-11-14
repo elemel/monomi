@@ -2,6 +2,8 @@
 #define MONOMI_GEOMETRY_HPP
 
 namespace monomi {
+    const float pi = 3.14159265358979323846264338327950288419716939937510f;
+
     class Vector2 {
     public:
         float x, y;

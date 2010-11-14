@@ -7,7 +7,7 @@ namespace monomi {
     GLDebugGraphics::GLDebugGraphics(int circleVertexCount)
     {
         for (int i = 0; i < circleVertexCount; ++i) {
-            float angle = 2.0f * M_PI * float(i) / float(circleVertexCount);
+            float angle = 2.0f * pi * float(i) / float(circleVertexCount);
             Vector2 vertex(std::cos(angle), std::sin(angle));
             circleVertices_.push_back(vertex);
         }
