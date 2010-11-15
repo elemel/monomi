@@ -1,7 +1,7 @@
 #include "game_engine.hpp"
 
 #include "actor.hpp"
-#include "gl_debug_graphics.hpp"
+#include "opengl_debug_graphics.hpp"
 
 #include <GL/gl.h>
 
@@ -47,7 +47,7 @@ namespace monomi {
                 -1.0, 1.0);
         glMatrixMode(GL_MODELVIEW);
 
-        GLDebugGraphics debugGraphics;
+        OpenGLDebugGraphics debugGraphics;
         glPushMatrix();
         debugGraphics.drawCircle(Circle(Point2(), 1.0f));
         typedef boost::ptr_vector<Actor>::iterator Iterator;

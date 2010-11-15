@@ -1,5 +1,5 @@
-#ifndef MONOMI_GL_DEBUG_GRAPHICS_HPP
-#define MONOMI_GL_DEBUG_GRAPHICS_HPP
+#ifndef MONOMI_OPENGL_DEBUG_GRAPHICS_HPP
+#define MONOMI_OPENGL_DEBUG_GRAPHICS_HPP
 
 #include "debug_graphics.hpp"
 #include "geometry.hpp"
@@ -8,12 +8,12 @@
 #include <boost/noncopyable.hpp>
 
 namespace monomi {
-    class GLDebugGraphics :
+    class OpenGLDebugGraphics :
         public DebugGraphics,
         private boost::noncopyable
     {
     public:
-        explicit GLDebugGraphics(int circleVertexCount = 16);
+        explicit OpenGLDebugGraphics(int circleVertexCount = 16);
 
         virtual void drawLineSegment(const LineSegment2 &lineSegment);
         virtual void drawBox(const Box2 &box);
@@ -24,4 +24,4 @@ namespace monomi {
     };
 }
 
-#endif // MONOMI_GL_DEBUG_GRAPHICS_HPP
+#endif // MONOMI_OPENGL_DEBUG_GRAPHICS_HPP

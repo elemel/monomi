@@ -1,10 +1,10 @@
-#include "gl_debug_graphics.hpp"
+#include "opengl_debug_graphics.hpp"
 
 #include <cmath>
 #include <GL/gl.h>
 
 namespace monomi {
-    GLDebugGraphics::GLDebugGraphics(int circleVertexCount)
+    OpenGLDebugGraphics::OpenGLDebugGraphics(int circleVertexCount)
     {
         for (int i = 0; i < circleVertexCount; ++i) {
             float angle = 2.0f * pi * float(i) / float(circleVertexCount);
@@ -13,7 +13,7 @@ namespace monomi {
         }
     }
 
-    void GLDebugGraphics::drawLineSegment(const LineSegment2 &lineSegment)
+    void OpenGLDebugGraphics::drawLineSegment(const LineSegment2 &lineSegment)
     {
         glBegin(GL_LINES);
         glVertex2f(lineSegment.p1.x, lineSegment.p1.y);
@@ -21,7 +21,7 @@ namespace monomi {
         glEnd();
     }
 
-    void GLDebugGraphics::drawBox(const Box2 &box)
+    void OpenGLDebugGraphics::drawBox(const Box2 &box)
     {
         glBegin(GL_LINES);
         glVertex2f(box.p1.x, box.p1.y);
@@ -35,7 +35,7 @@ namespace monomi {
         glEnd();
     }
 
-    void GLDebugGraphics::drawCircle(const Circle &circle)
+    void OpenGLDebugGraphics::drawCircle(const Circle &circle)
     {
         glBegin(GL_LINES);
         for (std::size_t i = 0; i < circleVertices_.size(); ++i) {
