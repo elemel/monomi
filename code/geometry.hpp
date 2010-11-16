@@ -81,8 +81,8 @@ namespace monomi {
 
         Point2 center() const;
         bool empty() const;
-        float width() const;
-        float height() const;
+        float dx() const;
+        float dy() const;
         float perimeter() const;
         float area() const;
 

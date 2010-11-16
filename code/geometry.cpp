@@ -213,27 +213,27 @@ namespace monomi {
 
     bool Box2::empty() const
     {
-        return width() <= 0.0f || height() <= 0.0f;
+        return dx() <= 0.0f || dy() <= 0.0f;
     }
 
-    float Box2::width() const
+    float Box2::dx() const
     {
         return p2.x - p1.x;
     }
 
-    float Box2::height() const
+    float Box2::dy() const
     {
         return p2.y - p1.y;
     }
 
     float Box2::perimeter() const
     {
-        return 2.0f * (width() + height());
+        return 2.0f * (dx() + dy());
     }
 
     float Box2::area() const
     {
-        return width() * height();
+        return dx() * dy();
     }
 
     void Box2::clear()
@@ -346,7 +346,7 @@ namespace monomi {
     LineSegment2 separate(const Box2 &b1, const Box2 &b2)
     {
         Box2 i = intersection(b1, b2);
-        if (i.width() <= i.height()) {
+        if (i.dx() <= i.dy()) {
             float y = i.center().y;
             if (b2.p2.x - b1.p1.x <= b1.p2.x - b2.p1.x) {
                 return LineSegment2(Point2(b1.p1.x, y), Point2(b2.p2.x, y));
