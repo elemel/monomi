@@ -101,6 +101,9 @@ namespace monomi {
         Circle();
         Circle(const Point2 &center, float radius);
 
+        float perimeter() const;
+        float area() const;
+
         bool contains(const Point2 &p) const;
     };
 

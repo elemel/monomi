@@ -278,6 +278,16 @@ namespace monomi {
         radius(radius)
     { }
 
+    float Circle::perimeter() const
+    {
+        return 2.0f * pi * radius;
+    }
+
+    float Circle::area() const
+    {
+        return pi * radius * radius;
+    }
+
     bool Circle::contains(const Point2 &p) const
     {
         return squaredDistance(center, p) <= radius * radius;
