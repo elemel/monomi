@@ -13,6 +13,7 @@ objects := \
 	opengl_debug_graphics.o \
 	screen.o \
 	sdl_window.o \
+	shape.o \
 	window.o
 
 monomi: $(objects)
@@ -35,4 +36,5 @@ opengl_debug_graphics.o: opengl_debug_graphics.hpp debug_graphics.hpp
 opengl_debug_graphics.o: geometry.hpp
 screen.o: screen.hpp keys.hpp
 sdl_window.o: sdl_window.hpp window.hpp screen.hpp keys.hpp
+shape.o: shape.hpp geometry.hpp
 window.o: window.hpp
