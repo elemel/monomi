@@ -1,28 +1,18 @@
 #ifndef MONOMI_ACTOR_HPP
 #define MONOMI_ACTOR_HPP
 
-#include <boost/noncopyable.hpp>
-
 namespace monomi {
     class DebugGraphics;
-    class GameEngine;
 
-    class Actor :
-        private boost::noncopyable
-    {
+    class Actor {
     public:
-        explicit Actor(GameEngine *gameEngine);
         virtual ~Actor();
 
-        virtual bool alive();
+        virtual bool alive() = 0;
 
-        virtual void step(float dt);
-        virtual void draw();
-        virtual void debugDraw(DebugGraphics *debugGraphics);
-    
-    protected:
-        GameEngine *gameEngine_;
-        bool alive_;
+        virtual void step(float dt) = 0;
+        virtual void draw() = 0;
+        virtual void debugDraw(DebugGraphics *debugGraphics) = 0;
     };
 }
 

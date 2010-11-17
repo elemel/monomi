@@ -4,6 +4,7 @@ LDFLAGS := -framework OpenGL -lSDL
 
 objects := \
 	actor.o \
+	character_actor.o \
 	debug_graphics.o \
 	game_engine.o \
 	game_screen.o \
@@ -25,10 +26,13 @@ clean:
 # DO NOT DELETE
 
 actor.o: actor.hpp
+character_actor.o: character_actor.hpp actor.hpp geometry.hpp
+character_actor.o: debug_graphics.hpp
 debug_graphics.o: debug_graphics.hpp
 game_engine.o: game_engine.hpp actor.hpp opengl_debug_graphics.hpp
 game_engine.o: debug_graphics.hpp geometry.hpp
-game_screen.o: game_screen.hpp screen.hpp keys.hpp game_engine.hpp window.hpp
+game_screen.o: game_screen.hpp screen.hpp keys.hpp game_engine.hpp
+game_screen.o: character_actor.hpp actor.hpp geometry.hpp window.hpp
 geometry.o: geometry.hpp
 keys.o: keys.hpp
 main.o: game_screen.hpp screen.hpp keys.hpp sdl_window.hpp window.hpp

@@ -38,7 +38,7 @@ namespace monomi {
 
     void GameEngine::debugDraw()
     {
-        float scale = 2.0f;
+        float scale = 10.0f;
         float aspectRatio = float(screenWidth_) / float(screenHeight_);
         glMatrixMode(GL_PROJECTION);
         glLoadIdentity();
@@ -49,10 +49,10 @@ namespace monomi {
 
         OpenGLDebugGraphics debugGraphics;
         glPushMatrix();
-        debugGraphics.drawCircle(Circle(Point2(), 1.0f));
         typedef boost::ptr_vector<Actor>::iterator Iterator;
         for (Iterator i = actors_.begin(); i != actors_.end(); ++i) {
             i->debugDraw(&debugGraphics);
         }
+        glPopMatrix();
     }
 }
