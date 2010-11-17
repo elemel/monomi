@@ -12,7 +12,7 @@ namespace monomi {
         alive_(true)
     {
         gameEngine_.reset(new GameEngine(window_->width(), window_->height()));
-        std::auto_ptr<CharacterActor> characterActor(new CharacterActor);
+        std::auto_ptr<CharacterActor> characterActor(new CharacterActor(gameEngine_.get()));
         std::auto_ptr<Actor> actor(characterActor);
         gameEngine_->addActor(actor);
     }

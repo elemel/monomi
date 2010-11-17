@@ -3,7 +3,16 @@
 #include "debug_graphics.hpp"
 
 namespace monomi {
-    CharacterActor::CharacterActor(float radius) :
+    CharacterControls::CharacterControls() :
+        left(false),
+        right(false),
+        up(false),
+        down(false),
+        action(false)
+    { }
+
+    CharacterActor::CharacterActor(GameEngine *gameEngine, float radius) :
+        gameEngine_(gameEngine),
         radius_(radius)
     { }
 

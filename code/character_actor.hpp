@@ -7,12 +7,24 @@
 #include <boost/noncopyable.hpp>
 
 namespace monomi {
+    class GameEngine;
+
+    struct CharacterControls {
+        CharacterControls();
+
+        bool left : 1;
+        bool right : 1;
+        bool up : 1;
+        bool down : 1;
+        bool action : 1;
+    };
+
     class CharacterActor :
         public Actor,
         private boost::noncopyable
     {
     public:
-        CharacterActor(float radius = 0.75f);
+        CharacterActor(GameEngine *gameEngine, float radius = 0.75f);
 
         bool alive();
 
@@ -21,8 +33,10 @@ namespace monomi {
         void debugDraw(DebugGraphics *debugGraphics);
 
     private:
-        Point2 position_;
+        GameEngine *gameEngine_;
         float radius_;
+        Point2 position_;
+        CharacterControls controls_;
     };
 }
 
