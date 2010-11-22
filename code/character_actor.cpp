@@ -24,9 +24,6 @@ namespace monomi {
     void CharacterActor::step(float dt)
     { }
 
-    void CharacterActor::draw()
-    { }
-
     void CharacterActor::debugDraw(DebugGraphics *debugGraphics)
     {
         debugGraphics->drawCircle(Circle(position_, radius_));

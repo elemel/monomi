@@ -4,10 +4,14 @@
 #include "screen.hpp"
 
 #include <memory>
+#include <string>
 #include <boost/noncopyable.hpp>
 
 namespace monomi {
+    class Actor;
+    class CharacterActor;
     class GameEngine;
+    class LevelActor;
     class Window;
 
     class GameScreen :
@@ -34,6 +38,9 @@ namespace monomi {
         Window *window_;
         bool alive_;
         std::auto_ptr<GameEngine> gameEngine_;
+
+        std::auto_ptr<Actor> createLevelActor(const std::string &fileName);
+        std::auto_ptr<Actor> createCharacterActor();
     };
 }
 

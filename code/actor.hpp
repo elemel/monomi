@@ -11,7 +11,6 @@ namespace monomi {
         virtual bool alive() = 0;
 
         virtual void step(float dt) = 0;
-        virtual void draw() = 0;
         virtual void debugDraw(DebugGraphics *debugGraphics) = 0;
     };
 }

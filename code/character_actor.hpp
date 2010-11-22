@@ -29,7 +29,6 @@ namespace monomi {
         bool alive();
 
         void step(float dt);
-        void draw();
         void debugDraw(DebugGraphics *debugGraphics);
 
     private:

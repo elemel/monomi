@@ -33,9 +33,6 @@ namespace monomi {
         actors_.erase_if(&dead);
     }
 
-    void GameEngine::draw()
-    { }
-
     void GameEngine::debugDraw()
     {
         float scale = 10.0f;

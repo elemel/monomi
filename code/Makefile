@@ -10,6 +10,7 @@ objects := \
 	game_screen.o \
 	geometry.o \
 	keys.o \
+	level_actor.o \
 	main.o \
 	opengl_debug_graphics.o \
 	screen.o \
@@ -35,6 +36,7 @@ game_screen.o: game_screen.hpp screen.hpp keys.hpp game_engine.hpp
 game_screen.o: character_actor.hpp actor.hpp geometry.hpp window.hpp
 geometry.o: geometry.hpp
 keys.o: keys.hpp
+level_actor.o: level_actor.hpp actor.hpp
 main.o: game_screen.hpp screen.hpp keys.hpp sdl_window.hpp window.hpp
 opengl_debug_graphics.o: opengl_debug_graphics.hpp debug_graphics.hpp
 opengl_debug_graphics.o: geometry.hpp

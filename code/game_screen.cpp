@@ -2,8 +2,11 @@
 
 #include "game_engine.hpp"
 #include "character_actor.hpp"
+#include "level_actor.hpp"
 #include "window.hpp"
 
+#include <fstream>
+#include <iostream>
 #include <GL/gl.h>
 
 namespace monomi {
@@ -12,9 +15,8 @@ namespace monomi {
         alive_(true)
     {
         gameEngine_.reset(new GameEngine(window_->width(), window_->height()));
-        std::auto_ptr<CharacterActor> characterActor(new CharacterActor(gameEngine_.get()));
-        std::auto_ptr<Actor> actor(characterActor);
-        gameEngine_->addActor(actor);
+        gameEngine_->addActor(createLevelActor("level.txt"));
+        gameEngine_->addActor(createCharacterActor());
     }
 
     bool GameScreen::alive()
@@ -50,4 +52,22 @@ namespace monomi {
 
     void GameScreen::onKeyRelease(Key key, Modifiers modifiers)
     { }
+
+    std::auto_ptr<Actor> GameScreen::createLevelActor(const std::string &fileName)
+    {
+        std::ifstream in(fileName.c_str());
+        std::vector<std::string> lines;
+        std::string line;
+        while (std::getline(in, line)) {
+            lines.push_back(line);
+        }
+        std::auto_ptr<LevelActor> levelActor(new LevelActor(gameEngine_.get(), lines));
+        return std::auto_ptr<Actor>(levelActor);
+    }
+
+    std::auto_ptr<Actor> GameScreen::createCharacterActor()
+    {
+        std::auto_ptr<CharacterActor> characterActor(new CharacterActor(gameEngine_.get()));
+        return std::auto_ptr<Actor>(characterActor);
+    }
 }
