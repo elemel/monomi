@@ -9,6 +9,8 @@
 namespace monomi {
     GameScreen::GameScreen() :
         quit_(false),
+        time_(0.0f),
+        dt_(1.0f / 60.0f),
         cameraScale_(5.0f),
         debugGraphics_(new DebugGraphics),
         playerCharacter_(new Character)
@@ -19,8 +21,10 @@ namespace monomi {
     
     std::auto_ptr<Screen> GameScreen::run()
     {
+        time_ = 0.001f * float(SDL_GetTicks());
         do {
             pumpEvents();
+            step();
             draw();
         } while (!quit_);
         return std::auto_ptr<Screen>();
@@ -44,6 +48,15 @@ namespace monomi {
                 quit_ = true;
                 break;
             }
+        }
+    }
+
+    void GameScreen::step()
+    {
+        float time = 0.001f * float(SDL_GetTicks());
+        while (time_ + dt_ <= time) {
+            time_ += dt_;
+            playerCharacter_->step(dt_);
         }
     }
 

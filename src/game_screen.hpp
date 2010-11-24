@@ -22,12 +22,15 @@ namespace monomi {
 
     private:
         bool quit_;
+        float time_;
+        float dt_;
         Point2 cameraPosition_;
         float cameraScale_;
         std::auto_ptr<DebugGraphics> debugGraphics_;
         std::auto_ptr<Character> playerCharacter_;
 
         void pumpEvents();
+        void step();
         void draw();
     };
 }
