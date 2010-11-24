@@ -21,10 +21,14 @@ namespace monomi {
         std::auto_ptr<Screen> run();
 
     private:
+        bool quit_;
         Point2 cameraPosition_;
         float cameraScale_;
         std::auto_ptr<DebugGraphics> debugGraphics_;
         std::auto_ptr<Character> playerCharacter_;
+
+        void pumpEvents();
+        void draw();
     };
 }
 
