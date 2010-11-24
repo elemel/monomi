@@ -1,22 +1,15 @@
-CPPFLAGS := -I/opt/local/include -I/usr/local/include/SDL
+CPPFLAGS := -I/opt/local/include
 CXXFLAGS := -g
 LDFLAGS := -framework OpenGL -lSDL
 
 objects := \
-	actor.o \
-	character_actor.o \
-	debug_graphics.o \
-	game_engine.o \
+    character.o \
+    debug_graphics.o \
 	game_screen.o \
 	geometry.o \
-	keys.o \
-	level_actor.o \
 	main.o \
-	opengl_debug_graphics.o \
 	screen.o \
-	sdl_window.o \
-	shape.o \
-	window.o
+	title_screen.o
 
 monomi: $(objects)
 	g++ -o monomi $(objects) $(LDFLAGS)
@@ -26,21 +19,11 @@ clean:
 
 # DO NOT DELETE
 
-actor.o: actor.hpp
-character_actor.o: character_actor.hpp actor.hpp geometry.hpp
-character_actor.o: debug_graphics.hpp
-debug_graphics.o: debug_graphics.hpp
-game_engine.o: game_engine.hpp actor.hpp opengl_debug_graphics.hpp
-game_engine.o: debug_graphics.hpp geometry.hpp
-game_screen.o: game_screen.hpp screen.hpp keys.hpp game_engine.hpp
-game_screen.o: character_actor.hpp actor.hpp geometry.hpp window.hpp
+character.o: character.hpp geometry.hpp debug_graphics.hpp
+debug_graphics.o: debug_graphics.hpp geometry.hpp
+game_screen.o: game_screen.hpp screen.hpp geometry.hpp character.hpp
+game_screen.o: debug_graphics.hpp
 geometry.o: geometry.hpp
-keys.o: keys.hpp
-level_actor.o: level_actor.hpp actor.hpp
-main.o: game_screen.hpp screen.hpp keys.hpp sdl_window.hpp window.hpp
-opengl_debug_graphics.o: opengl_debug_graphics.hpp debug_graphics.hpp
-opengl_debug_graphics.o: geometry.hpp
-screen.o: screen.hpp keys.hpp
-sdl_window.o: sdl_window.hpp window.hpp screen.hpp keys.hpp
-shape.o: shape.hpp geometry.hpp
-window.o: window.hpp
+main.o: title_screen.hpp screen.hpp
+screen.o: screen.hpp
+title_screen.o: title_screen.hpp screen.hpp game_screen.hpp geometry.hpp

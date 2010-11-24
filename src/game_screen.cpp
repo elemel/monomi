@@ -1,73 +1,64 @@
 #include "game_screen.hpp"
 
-#include "game_engine.hpp"
-#include "character_actor.hpp"
-#include "level_actor.hpp"
-#include "window.hpp"
+#include "character.hpp"
+#include "debug_graphics.hpp"
 
-#include <fstream>
-#include <iostream>
 #include <GL/gl.h>
+#include <SDL/SDL.h>
 
 namespace monomi {
-    GameScreen::GameScreen(Window *window) :
-        window_(window),
-        alive_(true)
-    {
-        gameEngine_.reset(new GameEngine(window_->width(), window_->height()));
-        gameEngine_->addActor(createLevelActor("level.txt"));
-        gameEngine_->addActor(createCharacterActor());
-    }
-
-    bool GameScreen::alive()
-    {
-        return alive_;
-    }
-
-    void GameScreen::update()
+    GameScreen::GameScreen() :
+        cameraScale_(5.0f),
+        debugGraphics_(new DebugGraphics),
+        playerCharacter_(new Character)
     { }
 
-    void GameScreen::draw()
+    GameScreen::~GameScreen()
+    { }
+    
+    std::auto_ptr<Screen> GameScreen::run()
     {
-        glClear(GL_COLOR_BUFFER_BIT);
-        gameEngine_->debugDraw();
-    }
+        bool quit = false;
+        do {
+            // Pump events.
+            SDL_Event event;
+            while (SDL_PollEvent(&event)) {
+                switch (event.type) {
+                case SDL_KEYDOWN:
+                    if (event.key.keysym.sym == SDLK_ESCAPE) {
+                        quit = true;
+                    }
+                    break;
+    
+                case SDL_KEYUP:
+                    break;
+    
+                case SDL_QUIT:
+                    quit = true;
+                    break;
+                }
+            }
 
-    void GameScreen::onOpen()
-    { }
+            // Set up camera.
+            SDL_Surface *videoSurface = SDL_GetVideoSurface();
+            float aspectRatio = (float(videoSurface->w) /
+                                 float(videoSurface->h));
+            glMatrixMode(GL_PROJECTION);
+            glLoadIdentity();
+            glOrtho(cameraPosition_.x - cameraScale_ * aspectRatio,
+                    cameraPosition_.x + cameraScale_ * aspectRatio,
+                    cameraPosition_.y - cameraScale_,
+                    cameraPosition_.y + cameraScale_,
+                    -1.0f, 1.0f);
+            glMatrixMode(GL_MODELVIEW);
 
-    void GameScreen::onSuspend()
-    { }
-
-    void GameScreen::onResume()
-    { }
-
-    void GameScreen::onClose()
-    { }
-
-    void GameScreen::onKeyPress(Key key, Modifiers modifiers)
-    {
-        alive_ = false;
-    }
-
-    void GameScreen::onKeyRelease(Key key, Modifiers modifiers)
-    { }
-
-    std::auto_ptr<Actor> GameScreen::createLevelActor(const std::string &fileName)
-    {
-        std::ifstream in(fileName.c_str());
-        std::vector<std::string> lines;
-        std::string line;
-        while (std::getline(in, line)) {
-            lines.push_back(line);
-        }
-        std::auto_ptr<LevelActor> levelActor(new LevelActor(gameEngine_.get(), lines));
-        return std::auto_ptr<Actor>(levelActor);
-    }
-
-    std::auto_ptr<Actor> GameScreen::createCharacterActor()
-    {
-        std::auto_ptr<CharacterActor> characterActor(new CharacterActor(gameEngine_.get()));
-        return std::auto_ptr<Actor>(characterActor);
+            // Draw.
+            glClearColor(0.0f, 0.0f, 0.0f, 0.0f);
+            glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT |
+                    GL_STENCIL_BUFFER_BIT);
+            playerCharacter_->debugDraw(debugGraphics_.get());
+            SDL_GL_SwapBuffers();
+        } while (!quit);
+        return std::auto_ptr<Screen>();
     }
 }

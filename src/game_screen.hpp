@@ -3,44 +3,28 @@
 
 #include "screen.hpp"
 
+#include "geometry.hpp"
+
 #include <memory>
-#include <string>
-#include <boost/noncopyable.hpp>
 
 namespace monomi {
-    class Actor;
-    class CharacterActor;
-    class GameEngine;
-    class LevelActor;
-    class Window;
+    class Character;
+    class DebugGraphics;
 
     class GameScreen :
-        public Screen,
-        private boost::noncopyable
+        public Screen
     {
     public:
-        explicit GameScreen(Window *window);
+        GameScreen();
+        ~GameScreen();
 
-        bool alive();
-
-        void update();
-        void draw();
-
-        void onOpen();
-        void onSuspend();
-        void onResume();
-        void onClose();
-
-        void onKeyPress(Key key, Modifiers modifiers);
-        void onKeyRelease(Key key, Modifiers modifiers);
+        std::auto_ptr<Screen> run();
 
     private:
-        Window *window_;
-        bool alive_;
-        std::auto_ptr<GameEngine> gameEngine_;
-
-        std::auto_ptr<Actor> createLevelActor(const std::string &fileName);
-        std::auto_ptr<Actor> createCharacterActor();
+        Point2 cameraPosition_;
+        float cameraScale_;
+        std::auto_ptr<DebugGraphics> debugGraphics_;
+        std::auto_ptr<Character> playerCharacter_;
     };
 }
 

@@ -1,19 +1,25 @@
 #ifndef MONOMI_DEBUG_GRAPHICS_HPP
 #define MONOMI_DEBUG_GRAPHICS_HPP
 
+#include "geometry.hpp"
+
+#include <vector>
+#include <boost/noncopyable.hpp>
+
 namespace monomi {
-    class Box2;
-    class Circle;
-    class LineSegment2;
-
-    class DebugGraphics {
+    class DebugGraphics :
+        private boost::noncopyable
+    {
     public:
-        virtual ~DebugGraphics();
+        explicit DebugGraphics(int circleVertexCount = 16);
 
-        virtual void drawLineSegment(const LineSegment2 &lineSegment) = 0;
-        virtual void drawBox(const Box2 &box) = 0;
-        virtual void drawCircle(const Circle &circle) = 0;
+        void drawLineSegment(const LineSegment2 &lineSegment);
+        void drawBox(const Box2 &box);
+        void drawCircle(const Circle &circle);
+
+    protected:
+        std::vector<Vector2> circleVertices_;
     };
 }
 
-#endif // MONOMI_DEBUG_GRAPHICS_HPP
+#endif // MONOMI_OPENGL_DEBUG_GRAPHICS_HPP
