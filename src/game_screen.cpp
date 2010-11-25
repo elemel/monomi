@@ -18,7 +18,7 @@ namespace monomi {
 
     GameScreen::~GameScreen()
     { }
-    
+
     std::auto_ptr<Screen> GameScreen::run()
     {
         time_ = 0.001f * float(SDL_GetTicks());
@@ -36,12 +36,11 @@ namespace monomi {
         while (SDL_PollEvent(&event)) {
             switch (event.type) {
             case SDL_KEYDOWN:
-                if (event.key.keysym.sym == SDLK_ESCAPE) {
-                    quit_ = true;
-                }
+                onKeyDown(event);
                 break;
 
             case SDL_KEYUP:
+                onKeyUp(event);
                 break;
 
             case SDL_QUIT:
@@ -50,6 +49,18 @@ namespace monomi {
             }
         }
     }
+
+    void GameScreen::onKeyDown(SDL_Event const &event)
+    {
+        switch (event.key.keysym.sym) {
+        case SDLK_ESCAPE:
+            quit_ = true;
+            break;
+        }
+    }
+
+    void GameScreen::onKeyUp(SDL_Event const &event)
+    { }
 
     void GameScreen::step()
     {

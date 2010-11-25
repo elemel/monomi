@@ -6,6 +6,7 @@
 #include "geometry.hpp"
 
 #include <memory>
+#include <SDL/SDL.h>
 
 namespace monomi {
     class Character;
@@ -30,6 +31,8 @@ namespace monomi {
         std::auto_ptr<Character> playerCharacter_;
 
         void pumpEvents();
+        void onKeyDown(SDL_Event const &event);
+        void onKeyUp(SDL_Event const &event);
         void step();
         void draw();
     };
