@@ -6,9 +6,11 @@
 #include "geometry.hpp"
 
 #include <memory>
+#include <boost/ptr_container/ptr_vector.hpp>
 #include <SDL/SDL.h>
 
 namespace monomi {
+    class Block;
     class Character;
     class DebugGraphics;
 
@@ -29,6 +31,7 @@ namespace monomi {
         float cameraScale_;
         std::auto_ptr<DebugGraphics> debugGraphics_;
         std::auto_ptr<Character> playerCharacter_;
+        boost::ptr_vector<Block> blocks_;
 
         void pumpEvents();
         void onKeyDown(SDL_Event const &event);

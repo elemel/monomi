@@ -1,5 +1,6 @@
 #include "game_screen.hpp"
 
+#include "block.hpp"
 #include "character.hpp"
 #include "debug_graphics.hpp"
 
@@ -7,6 +8,16 @@
 #include <SDL/SDL.h>
 
 namespace monomi {
+    namespace {
+        std::auto_ptr<Block> createBlock(int x, int y)
+        {
+            std::auto_ptr<Block> block(new Block);
+            block->box.p1 = Point2(float(x), float(y));
+            block->box.p2 = Point2(float(x + 1), float(y + 1));
+            return block;
+        }
+    }
+
     GameScreen::GameScreen() :
         quit_(false),
         time_(0.0f),
@@ -14,7 +25,12 @@ namespace monomi {
         cameraScale_(5.0f),
         debugGraphics_(new DebugGraphics),
         playerCharacter_(new Character)
-    { }
+    {
+        playerCharacter_->position = Point2(1.5f, 2.5f);
+        blocks_.push_back(createBlock(0, 0));
+        blocks_.push_back(createBlock(1, 0));
+        blocks_.push_back(createBlock(2, 0));
+    }
 
     GameScreen::~GameScreen()
     { }
@@ -121,6 +137,7 @@ namespace monomi {
                              float(videoSurface->h));
         glMatrixMode(GL_PROJECTION);
         glLoadIdentity();
+        cameraPosition_ = playerCharacter_->position;
         glOrtho(cameraPosition_.x - cameraScale_ * aspectRatio,
                 cameraPosition_.x + cameraScale_ * aspectRatio,
                 cameraPosition_.y - cameraScale_,
@@ -132,6 +149,11 @@ namespace monomi {
         glClearColor(0.0f, 0.0f, 0.0f, 0.0f);
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT |
                 GL_STENCIL_BUFFER_BIT);
+        for (boost::ptr_vector<Block>::iterator i = blocks_.begin();
+             i != blocks_.end(); ++i)
+        {
+            i->debugDraw(debugGraphics_.get());
+        }
         playerCharacter_->debugDraw(debugGraphics_.get());
         SDL_GL_SwapBuffers();
     }
