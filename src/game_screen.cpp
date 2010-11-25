@@ -18,15 +18,19 @@ namespace monomi {
         }
     }
 
+    Camera::Camera() :
+        scale(1.0f)
+    { }
+
     GameScreen::GameScreen() :
         quit_(false),
         time_(0.0f),
         dt_(1.0f / 60.0f),
-        cameraScale_(5.0f),
         debugGraphics_(new DebugGraphics),
         playerCharacter_(new Character)
     {
-        playerCharacter_->position = Point2(1.5f, 2.5f);
+        camera_.scale = 5.0f;
+        playerCharacter_->circle.center = Point2(1.5f, 2.5f);
         blocks_.push_back(createBlock(0, 0));
         blocks_.push_back(createBlock(1, 0));
         blocks_.push_back(createBlock(2, 0));
@@ -41,6 +45,7 @@ namespace monomi {
         do {
             pumpEvents();
             step();
+            resolveCollisions();
             draw();
         } while (!quit_);
         return std::auto_ptr<Screen>();
@@ -129,6 +134,18 @@ namespace monomi {
         }
     }
 
+    void GameScreen::resolveCollisions()
+    {
+        for (boost::ptr_vector<Block>::iterator i = blocks_.begin();
+             i != blocks_.end(); ++i)
+        {
+            if (intersects(playerCharacter_->circle, i->box)) {
+                playerCharacter_->circle.center.y = i->box.p2.y + playerCharacter_->circle.radius;
+                playerCharacter_->velocity.y = 0.0f;
+            }
+        }
+    }
+
     void GameScreen::draw()
     {
         // Set up camera.
@@ -137,11 +154,11 @@ namespace monomi {
                              float(videoSurface->h));
         glMatrixMode(GL_PROJECTION);
         glLoadIdentity();
-        cameraPosition_ = playerCharacter_->position;
-        glOrtho(cameraPosition_.x - cameraScale_ * aspectRatio,
-                cameraPosition_.x + cameraScale_ * aspectRatio,
-                cameraPosition_.y - cameraScale_,
-                cameraPosition_.y + cameraScale_,
+        camera_.position = playerCharacter_->circle.center;
+        glOrtho(camera_.position.x - camera_.scale * aspectRatio,
+                camera_.position.x + camera_.scale * aspectRatio,
+                camera_.position.y - camera_.scale,
+                camera_.position.y + camera_.scale,
                 -1.0f, 1.0f);
         glMatrixMode(GL_MODELVIEW);
 

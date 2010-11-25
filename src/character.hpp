@@ -19,7 +19,7 @@ namespace monomi {
 
     class Character {
     public:
-        Point2 position;
+        Circle circle;
         Vector2 velocity;
         Vector2 gravity;
         CharacterControls controls;

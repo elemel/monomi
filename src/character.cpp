@@ -14,6 +14,7 @@ namespace monomi {
     { }
 
     Character::Character() :
+        circle(Point2(), 0.75f),
         gravity(0.0f, -10.0f)
     { }
 
@@ -35,11 +36,11 @@ namespace monomi {
             std::cout << "jump" << std::endl;
         }
         velocity += dt * gravity;
-        position += dt * velocity;
+        circle.center += dt * velocity;
     }
 
     void Character::debugDraw(DebugGraphics *debugGraphics)
     {
-        debugGraphics->drawCircle(Circle(position, 0.75f));
+        debugGraphics->drawCircle(circle);
     }
 }
