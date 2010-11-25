@@ -56,11 +56,53 @@ namespace monomi {
         case SDLK_ESCAPE:
             quit_ = true;
             break;
+
+        case SDLK_LEFT:
+            playerCharacter_->controls.left = true;
+            break;
+
+        case SDLK_RIGHT:
+            playerCharacter_->controls.right = true;
+            break;
+
+        case SDLK_DOWN:
+            playerCharacter_->controls.down = true;
+            break;
+
+        case SDLK_UP:
+            playerCharacter_->controls.up = true;
+            break;
+
+        case SDLK_SPACE:
+            playerCharacter_->controls.jump = true;
+            break;
         }
     }
 
     void GameScreen::onKeyUp(SDL_Event const &event)
-    { }
+    {
+        switch (event.key.keysym.sym) {
+        case SDLK_LEFT:
+            playerCharacter_->controls.left = false;
+            break;
+
+        case SDLK_RIGHT:
+            playerCharacter_->controls.right = false;
+            break;
+
+        case SDLK_DOWN:
+            playerCharacter_->controls.down = false;
+            break;
+
+        case SDLK_UP:
+            playerCharacter_->controls.up = false;
+            break;
+
+        case SDLK_SPACE:
+            playerCharacter_->controls.jump = false;
+            break;
+        }
+    }
 
     void GameScreen::step()
     {

@@ -2,6 +2,8 @@
 
 #include "debug_graphics.hpp"
 
+#include <iostream>
+
 namespace monomi {
     CharacterControls::CharacterControls() :
         left(false),
@@ -17,6 +19,21 @@ namespace monomi {
 
     void Character::step(float dt)
     {
+        if (controls.left) {
+            std::cout << "left" << std::endl;
+        }
+        if (controls.right) {
+            std::cout << "right" << std::endl;
+        }
+        if (controls.up) {
+            std::cout << "up" << std::endl;
+        }
+        if (controls.down) {
+            std::cout << "down" << std::endl;
+        }
+        if (controls.jump) {
+            std::cout << "jump" << std::endl;
+        }
         velocity += dt * gravity;
         position += dt * velocity;
     }
