@@ -8,10 +8,15 @@ namespace monomi {
 
     namespace characterStates {
         enum CharacterState {
-            climbing,
             crouching,
+            diving,
             jumping,
+            ledgeHanging,
+            running,
+            sliding,
+            stalking,
             standing,
+            swimming,
             walking,
             wallSliding
         };
