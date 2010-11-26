@@ -147,7 +147,7 @@ namespace monomi {
             if (intersects(playerCharacter_->circle, i->box)) {
                 playerCharacter_->circle.center.y = i->box.p2.y + playerCharacter_->circle.radius;
                 playerCharacter_->velocity.y = 0.0f;
-                playerCharacter_->state = characterStates::standing;
+                playerCharacter_->state = characterStates::walking;
             }
         }
     }

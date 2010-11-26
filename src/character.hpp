@@ -15,7 +15,6 @@ namespace monomi {
             running,
             sliding,
             stalking,
-            standing,
             swimming,
             walking,
             wallSliding
@@ -42,6 +41,8 @@ namespace monomi {
         Vector2 gravity;
         CharacterState state;
         CharacterControls controls;
+        float walkAcceleration;
+        float maxWalkVelocity;
 
         Character();
 

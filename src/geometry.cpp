@@ -5,6 +5,16 @@
 #include <limits>
 
 namespace monomi {
+    bool finite(float x)
+    {
+        return std::abs(x) <= std::numeric_limits<float>::max();
+    }
+
+    float sign(float x)
+    {
+        return x < 0.0f ? -1.0f : 0.0f < x ? 1.0f : 0.0f;
+    }
+
     Vector2::Vector2() :
         x(0.0f),
         y(0.0f)

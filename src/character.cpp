@@ -2,6 +2,7 @@
 
 #include "debug_graphics.hpp"
 
+#include <cmath>
 #include <iostream>
 
 namespace monomi {
@@ -16,28 +17,27 @@ namespace monomi {
     Character::Character() :
         circle(Point2(), 0.75f),
         gravity(0.0f, -15.0f),
-        state(characterStates::standing)
+        state(characterStates::walking),
+        walkAcceleration(10.0f),
+        maxWalkVelocity(5.0f)
     { }
 
     void Character::step(float dt)
     {
         if (controls.jump) {
-            if (state == characterStates::standing) {
+            if (state == characterStates::walking) {
                 state = characterStates::jumping;
                 velocity.y += 10.0f;
             }
         }
-        if (controls.left) {
-            std::cout << "left" << std::endl;
-        }
-        if (controls.right) {
-            std::cout << "right" << std::endl;
-        }
-        if (controls.up) {
-            std::cout << "up" << std::endl;
-        }
-        if (controls.down) {
-            std::cout << "down" << std::endl;
+        int face = int(controls.right) - int(controls.left);
+        if (state == characterStates::walking) {
+            if (face) {
+                velocity.x += float(face) * walkAcceleration * dt;
+                velocity.x = sign(velocity.x) * std::min(std::abs(velocity.x), maxWalkVelocity);
+            } else {
+                velocity.x = sign(velocity.x) * std::max(std::abs(velocity.x) - walkAcceleration * dt, 0.0f);
+            }
         }
         velocity += dt * gravity;
         if (state == characterStates::jumping && !controls.jump) {
@@ -48,7 +48,7 @@ namespace monomi {
 
     void Character::debugDraw(DebugGraphics *debugGraphics)
     {
-        DebugColor color = (state == characterStates::standing) ? debugColors::green() : debugColors::red();
+        DebugColor color = (state == characterStates::walking) ? debugColors::green() : debugColors::red();
         debugGraphics->drawCircle(circle, color);
     }
 }
