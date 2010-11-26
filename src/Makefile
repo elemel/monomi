@@ -1,13 +1,13 @@
-# Variant (debug or release).
-ifndef variant
-    variant := release
+# Build.
+ifndef build
+    build := release
 endif
-ifeq ($(variant), debug)
+ifeq ($(build), debug)
     CXXFLAGS += -g -DDEBUG
-else ifeq ($(variant), release)
+else ifeq ($(build), release)
     CXXFLAGS += -O3 -DNDEBUG
 else
-    $(error invalid variant "$(variant)", please specify "debug" (default) or "release" instead)
+    $(error Invalid build "$(build)", please specify "debug" or "release")
 endif
 
 # Platform.
@@ -19,7 +19,7 @@ ifeq ($(platform), mac)
     CPPFLAGS += -I/opt/local/include
     LDFLAGS += -framework OpenGL -lSDL
 else
-    $(error invalid platform "$(platform)", only "mac" is supported for now)
+    $(error Invalid platform "$(platform)", only "mac" is supported for now)
 endif
 
 objects := \
