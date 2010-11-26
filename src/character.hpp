@@ -6,6 +6,19 @@
 namespace monomi {
     class DebugGraphics;
 
+    namespace characterStates {
+        enum CharacterState {
+            climbing,
+            crouching,
+            jumping,
+            standing,
+            walking,
+            wallSliding
+        };
+    }
+
+    using characterStates::CharacterState;
+
     class CharacterControls {
     public:
         CharacterControls();
@@ -22,6 +35,7 @@ namespace monomi {
         Circle circle;
         Vector2 velocity;
         Vector2 gravity;
+        CharacterState state;
         CharacterControls controls;
 
         Character();

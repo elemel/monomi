@@ -4,6 +4,65 @@
 #include <GL/gl.h>
 
 namespace monomi {
+    namespace debugColors {
+        DebugColor black()
+        {
+            return DebugColor(0.0f, 0.0f, 0.0f);
+        }
+
+        DebugColor blue()
+        {
+            return DebugColor(0.0f, 0.0f, 1.0f);
+        }
+
+        DebugColor cyan()
+        {
+            return DebugColor(0.0f, 1.0f, 1.0f);
+        }
+
+        DebugColor gray()
+        {
+            return DebugColor(0.5f, 0.5f, 0.5f);
+        }
+
+        DebugColor green()
+        {
+            return DebugColor(0.0f, 1.0f, 0.0f);
+        }
+
+        DebugColor red()
+        {
+            return DebugColor(1.0f, 0.0f, 0.0f);
+        }
+
+        DebugColor magenta()
+        {
+            return DebugColor(1.0f, 0.0f, 1.0f);
+        }
+
+        DebugColor white()
+        {
+            return DebugColor(1.0f, 1.0f, 1.0f);
+        }
+
+        DebugColor yellow()
+        {
+            return DebugColor(1.0f, 1.0f, 0.0f);
+        }
+    }
+
+    DebugColor::DebugColor() :
+        red(0.0f),
+        green(0.0f),
+        blue(0.0f)
+    { }
+
+    DebugColor::DebugColor(float red, float green, float blue) :
+        red(red),
+        green(green),
+        blue(blue)
+    { }
+
     DebugGraphics::DebugGraphics(int circleVertexCount)
     {
         for (int i = 0; i < circleVertexCount; ++i) {
@@ -13,16 +72,19 @@ namespace monomi {
         }
     }
 
-    void DebugGraphics::drawLineSegment(const LineSegment2 &lineSegment)
+    void DebugGraphics::drawLineSegment(const LineSegment2 &lineSegment,
+                                        const DebugColor &color)
     {
+        glColor3f(color.red, color.green, color.blue);
         glBegin(GL_LINES);
         glVertex2f(lineSegment.p1.x, lineSegment.p1.y);
         glVertex2f(lineSegment.p2.x, lineSegment.p2.y);
         glEnd();
     }
 
-    void DebugGraphics::drawBox(const Box2 &box)
+    void DebugGraphics::drawBox(const Box2 &box, const DebugColor &color)
     {
+        glColor3f(color.red, color.green, color.blue);
         glBegin(GL_LINES);
         glVertex2f(box.p1.x, box.p1.y);
         glVertex2f(box.p2.x, box.p1.y);
@@ -35,8 +97,10 @@ namespace monomi {
         glEnd();
     }
 
-    void DebugGraphics::drawCircle(const Circle &circle)
+    void DebugGraphics::drawCircle(const Circle &circle,
+                                   const DebugColor &color)
     {
+        glColor3f(color.red, color.green, color.blue);
         glBegin(GL_LINES);
         for (std::size_t i = 0; i < circleVertices_.size(); ++i) {
             std::size_t j = (i + 1) % circleVertices_.size();

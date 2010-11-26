@@ -15,11 +15,18 @@ namespace monomi {
 
     Character::Character() :
         circle(Point2(), 0.75f),
-        gravity(0.0f, -10.0f)
+        gravity(0.0f, -15.0f),
+        state(characterStates::standing)
     { }
 
     void Character::step(float dt)
     {
+        if (controls.jump) {
+            if (state == characterStates::standing) {
+                state = characterStates::jumping;
+                velocity.y += 10.0f;
+            }
+        }
         if (controls.left) {
             std::cout << "left" << std::endl;
         }
@@ -32,15 +39,16 @@ namespace monomi {
         if (controls.down) {
             std::cout << "down" << std::endl;
         }
-        if (controls.jump) {
-            std::cout << "jump" << std::endl;
-        }
         velocity += dt * gravity;
+        if (state == characterStates::jumping && !controls.jump) {
+                velocity.y = std::min(velocity.y, 3.0f);
+        }
         circle.center += dt * velocity;
     }
 
     void Character::debugDraw(DebugGraphics *debugGraphics)
     {
-        debugGraphics->drawCircle(circle);
+        DebugColor color = (state == characterStates::standing) ? debugColors::green() : debugColors::red();
+        debugGraphics->drawCircle(circle, color);
     }
 }
