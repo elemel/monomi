@@ -1,6 +1,26 @@
-CPPFLAGS := -I/opt/local/include
-CXXFLAGS := -g
-LDFLAGS := -framework OpenGL -lSDL
+# Variant (debug or release).
+ifndef variant
+    variant := release
+endif
+ifeq ($(variant), debug)
+    CXXFLAGS += -g -DDEBUG
+else ifeq ($(variant), release)
+    CXXFLAGS += -O3 -DNDEBUG
+else
+    $(error invalid variant "$(variant)", please specify "debug" (default) or "release" instead)
+endif
+
+# Platform.
+ifndef platform
+    # TODO: Autodetect.
+    platform := mac
+endif
+ifeq ($(platform), mac)
+    CPPFLAGS += -I/opt/local/include
+    LDFLAGS += -framework OpenGL -lSDL
+else
+    $(error invalid platform "$(platform)", only "mac" is supported for now)
+endif
 
 objects := \
     block.o \
@@ -20,11 +40,10 @@ clean:
 
 # DO NOT DELETE
 
-block.o: block.hpp geometry.hpp debug_graphics.hpp
 character.o: character.hpp geometry.hpp debug_graphics.hpp
 debug_graphics.o: debug_graphics.hpp geometry.hpp
-game_screen.o: game_screen.hpp screen.hpp geometry.hpp block.hpp
-game_screen.o: character.hpp debug_graphics.hpp
+game_screen.o: game_screen.hpp screen.hpp geometry.hpp character.hpp
+game_screen.o: debug_graphics.hpp
 geometry.o: geometry.hpp
 main.o: title_screen.hpp screen.hpp
 screen.o: screen.hpp
