@@ -109,9 +109,14 @@ namespace monomi {
         return Vector2(v) /= f;
     }
 
+    std::ostream &operator<<(std::ostream &out, const Vector2 &v)
+    {
+        return out << "[" << v.x << ", " << v.y << "]";
+    }
+
     float dot(const Vector2 &v1, const Vector2 &v2)
     {
-        return v1.x * v2.x + v1.y * v1.y;
+        return v1.x * v2.x + v1.y * v2.y;
     }
 
     float cross(const Vector2 &v1, const Vector2 &v2)
@@ -178,6 +183,11 @@ namespace monomi {
     Vector2 operator-(const Point2 &p1, const Point2 &p2)
     {
         return Vector2(p1.x - p2.x, p1.y - p2.y);
+    }
+
+    std::ostream &operator<<(std::ostream &out, const Point2 &p)
+    {
+        return out << "(" << p.x << ", " << p.y << ")";
     }
 
     float distance(const Point2 &p1, const Point2 &p2)
@@ -248,10 +258,10 @@ namespace monomi {
 
     void Box2::clear()
     {
-        p1.x = std::numeric_limits<float>::infinity();
-        p1.y = std::numeric_limits<float>::infinity();
-        p2.x = -std::numeric_limits<float>::infinity();
-        p2.y = -std::numeric_limits<float>::infinity();
+        p1.x = std::numeric_limits<float>::max();
+        p1.y = std::numeric_limits<float>::max();
+        p2.x = std::numeric_limits<float>::min();
+        p2.y = std::numeric_limits<float>::min();
     }
 
     void Box2::grow(const Point2 &p)
@@ -268,6 +278,11 @@ namespace monomi {
         p1.y = std::min(p1.y, b.p1.y);
         p2.x = std::max(p2.x, b.p2.x);
         p2.y = std::max(p2.y, b.p2.y);
+    }
+
+    bool Box2::contains(const Point2 &p) const
+    {
+        return p1.x <= p.x && p.x <= p2.x && p1.y <= p.y && p.y <= p2.y;
     }
 
     Box2 intersection(const Box2 &b1, const Box2 &b2)
@@ -363,6 +378,24 @@ namespace monomi {
         return intersects(b, c);
     }
 
+    LineSegment2 separate(const Point2 &p, const Circle &c)
+    {
+        Vector2 direction = c.center - p;
+        if (direction.x == 0.0f && direction.y == 0.0f) {
+            direction.x = 1.0f;
+        } else {
+            direction.normalize();
+        }
+        return LineSegment2(p, c.center - c.radius * direction);
+    }
+
+    LineSegment2 separate(const Circle &c, const Point2 &p)
+    {
+        LineSegment2 s = separate(p, c);
+        std::swap(s.p1, s.p2);
+        return s;
+    }
+
     LineSegment2 separate(const Box2 &b1, const Box2 &b2)
     {
         Box2 i = intersection(b1, b2);
@@ -393,5 +426,45 @@ namespace monomi {
         }
         return LineSegment2(c1.center + c1.radius * normal,
                             c2.center - c2.radius * normal);
+    }
+
+    LineSegment2 separate(const Box2 &b, const Circle &c)
+    {
+        if (c.center.x <= b.p1.x) {
+            if (c.center.y <= b.p1.y) {
+                return separate(b.p1, c);
+            } else if (b.p2.y <= c.center.y) {
+                return separate(Point2(b.p1.x, b.p2.y), c);
+            } else {
+                return LineSegment2(Point2(b.p1.x, c.center.y),
+                                    Point2(c.center.x + c.radius, c.center.y));
+            }
+        } else if (b.p2.x <= c.center.x) {
+            if (c.center.y <= b.p1.y) {
+                return separate(Point2(b.p2.x, b.p1.y), c);
+            } else if (b.p2.y <= c.center.y) {
+                return separate(b.p2, c);
+            } else {
+                return LineSegment2(Point2(b.p2.x, c.center.y),
+                                    Point2(c.center.x - c.radius, c.center.y));
+            }
+        } else {
+            if (c.center.y <= b.p1.y) {
+                return LineSegment2(Point2(c.center.x, b.p1.y),
+                                    Point2(c.center.x, c.center.y + c.radius));
+            } else if (b.p1.y <= c.center.y) {
+                return LineSegment2(Point2(c.center.x, b.p2.y),
+                                    Point2(c.center.x, c.center.y - c.radius));
+            } else {
+                return LineSegment2();
+            }
+        }
+    }
+
+    LineSegment2 separate(const Circle &c, const Box2 &b)
+    {
+        LineSegment2 s = separate(b, c);
+        std::swap(s.p1, s.p2);
+        return s;
     }
 }

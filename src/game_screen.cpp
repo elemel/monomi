@@ -4,6 +4,7 @@
 #include "character.hpp"
 #include "debug_graphics.hpp"
 
+#include <iostream>
 #include <GL/gl.h>
 #include <SDL/SDL.h>
 
@@ -38,6 +39,7 @@ namespace monomi {
         blocks_.push_back(createBlock(3, 1));
         blocks_.push_back(createBlock(3, 2));
         blocks_.push_back(createBlock(3, 3));
+        blocks_.push_back(createBlock(0, 3));
     }
 
     GameScreen::~GameScreen()
@@ -145,9 +147,14 @@ namespace monomi {
              i != blocks_.end(); ++i)
         {
             if (intersects(playerCharacter_->circle, i->box)) {
-                playerCharacter_->circle.center.y = i->box.p2.y + playerCharacter_->circle.radius;
-                playerCharacter_->velocity.y = 0.0f;
-                playerCharacter_->state = characterStates::walking;
+                LineSegment2 separator = separate(playerCharacter_->circle, i->box);
+                Vector2 normal = separator.p2 - separator.p1;
+                playerCharacter_->circle.center += normal;
+                normal.normalize();
+                playerCharacter_->velocity -= normal * std::min(dot(playerCharacter_->velocity, normal), 0.0f);
+                if (normal.y >= 0.9f) {
+                    playerCharacter_->state = characterStates::walking;
+                }
             }
         }
     }

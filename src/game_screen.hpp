@@ -39,6 +39,7 @@ namespace monomi {
         std::auto_ptr<DebugGraphics> debugGraphics_;
         std::auto_ptr<Character> playerCharacter_;
         boost::ptr_vector<Block> blocks_;
+        LineSegment2 separator_;
 
         void pumpEvents();
         void onKeyDown(SDL_Event const &event);

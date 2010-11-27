@@ -1,6 +1,8 @@
 #ifndef MONOMI_GEOMETRY_HPP
 #define MONOMI_GEOMETRY_HPP
 
+#include <iostream>
+
 namespace monomi {
     const float pi = 3.14159265358979323846264338327950288419716939937510f;
 
@@ -37,6 +39,8 @@ namespace monomi {
     Vector2 operator*(float f, const Vector2 &v);
     Vector2 operator/(const Vector2 &v, float f);
 
+    std::ostream &operator<<(std::ostream &out, const Vector2 &v);
+
     float dot(const Vector2 &v1, const Vector2 &v2);
     float cross(const Vector2 &v1, const Vector2 &v2);
     Vector2 cross(const Vector2 &v);
@@ -60,6 +64,8 @@ namespace monomi {
     Point2 operator+(const Vector2 &v, const Point2 &p);
     Point2 operator-(const Point2 &p, const Vector2 &v);
     Vector2 operator-(const Point2 &p1, const Point2 &p2);
+
+    std::ostream &operator<<(std::ostream &out, const Point2 &p);
 
     float distance(const Point2 &p1, const Point2 &p2);
     float squaredDistance(const Point2 &p1, const Point2 &p2);
@@ -92,6 +98,8 @@ namespace monomi {
         void clear();
         void grow(const Point2 &p);
         void grow(const Box2 &b);
+
+        bool contains(const Point2 &p) const;
     };
 
     Box2 intersection(const Box2 &b1, const Box2 &b2);
@@ -115,8 +123,14 @@ namespace monomi {
     bool intersects(const Box2 &b, const Circle &c);
     bool intersects(const Circle &c, const Box2 &b);
 
+    LineSegment2 separate(const Point2 &p, const Box2 &c);
+    LineSegment2 separate(const Box2 &b, const Point2 &p);
+    LineSegment2 separate(const Point2 &p, const Circle &c);
+    LineSegment2 separate(const Circle &c, const Point2 &p);
     LineSegment2 separate(const Box2 &b1, const Box2 &b2);
     LineSegment2 separate(const Circle &c1, const Circle &c2);
+    LineSegment2 separate(const Box2 &b, const Circle &c);
+    LineSegment2 separate(const Circle &c, const Box2 &b);
 }
 
 #endif // MONOMI_GEOMETRY_HPP

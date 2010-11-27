@@ -43,6 +43,8 @@ namespace monomi {
         CharacterControls controls;
         float walkAcceleration;
         float maxWalkVelocity;
+        float driftAcceleration;
+        float maxDriftVelocity;
 
         Character();
 
