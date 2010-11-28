@@ -157,16 +157,43 @@ namespace monomi {
 
     void GameScreen::resolveCollisions()
     {
+        // Mark the character as falling until proven otherwise.
+        //
+        // TODO: Something more robust that also works for wall sliding.
         playerCharacter_->state = characterStates::jumping;
-        for (boost::ptr_vector<Block>::iterator i = blocks_.begin();
-             i != blocks_.end(); ++i)
-        {
-            if (intersects(playerCharacter_->circle, i->box)) {
-                LineSegment2 separator = separate(playerCharacter_->circle, i->box);
-                Vector2 normal = separator.p2 - separator.p1;
+
+        // Make multiple iterations, resolving only the deepest collision
+        // found during each iteration.
+        for (int i = 0; i < 3; ++i) {
+            // Find the deepest collision.
+            float maxSquaredLength = -1.0f;
+            LineSegment2 maxSeparator;
+            for (boost::ptr_vector<Block>::iterator i = blocks_.begin();
+                 i != blocks_.end(); ++i)
+            {
+                if (intersects(playerCharacter_->circle, i->box)) {
+                    LineSegment2 separator =
+                        separate(playerCharacter_->circle, i->box);
+                    if (separator.squaredLength() >= maxSquaredLength) {
+                        maxSquaredLength = separator.squaredLength();
+                        maxSeparator = separator;
+                    }
+                }
+            }
+
+            // Resolve the deepest collision.
+            if (maxSquaredLength >= 0.0f) {
+                // Separate the colliding shapes, and cancel any negative
+                // velocity along the collision normal.
+                Vector2 normal = maxSeparator.p2 - maxSeparator.p1;
                 playerCharacter_->circle.center += normal;
                 normal.normalize();
-                playerCharacter_->velocity -= normal * std::min(dot(playerCharacter_->velocity, normal), 0.0f);
+                playerCharacter_->velocity -=
+                    normal * std::min(dot(playerCharacter_->velocity, normal),
+                                      0.0f);
+
+                // Mark the character as standing if it collided with the
+                // ground.
                 if (normal.y >= 0.9f) {
                     playerCharacter_->state = characterStates::walking;
                 }
