@@ -20,9 +20,9 @@ namespace monomi {
         circle(Point2(), 0.75f),
         gravity(0.0f, -20.0f),
         state(characterStates::walking),
-        walkAcceleration(10.0f),
-        maxWalkVelocity(5.0f),
-        driftAcceleration(10.0f),
+        walkAcceleration(9.0f),
+        maxWalkVelocity(6.0f),
+        driftAcceleration(6.0f),
         maxDriftVelocity(3.0f)
     { }
 
@@ -48,15 +48,12 @@ namespace monomi {
         } else if (state == characterStates::jumping) {
             if (moveFace) {
                 float driftVelocity = velocity.x + float(moveFace) * driftAcceleration * dt;
-                if (std::abs(driftVelocity) >= std::abs(velocity.x)) {
-                    driftVelocity = sign(driftVelocity) * std::min(std::abs(driftVelocity), maxDriftVelocity);
-                }
-                velocity.x = driftVelocity;
+                velocity.x = sign(driftVelocity) * std::min(std::abs(driftVelocity), std::max(std::abs(velocity.x), maxDriftVelocity));
             }
         }
         velocity += dt * gravity;
         if (state == characterStates::jumping && !controls.jump) {
-                velocity.y = std::min(velocity.y, 3.0f);
+            velocity.y = std::min(velocity.y, 3.0f);
         }
         circle.center += dt * velocity;
     }

@@ -40,6 +40,21 @@ namespace monomi {
         blocks_.push_back(createBlock(3, 2));
         blocks_.push_back(createBlock(3, 3));
         blocks_.push_back(createBlock(0, 3));
+        blocks_.push_back(createBlock(4, 0));
+        blocks_.push_back(createBlock(5, 0));
+        blocks_.push_back(createBlock(6, 0));
+        blocks_.push_back(createBlock(7, 0));
+        blocks_.push_back(createBlock(8, 0));
+        blocks_.push_back(createBlock(9, 0));
+        blocks_.push_back(createBlock(10, 0));
+        blocks_.push_back(createBlock(11, 0));
+        blocks_.push_back(createBlock(12, 0));
+        blocks_.push_back(createBlock(13, 0));
+        blocks_.push_back(createBlock(14, 0));
+        blocks_.push_back(createBlock(15, 0));
+        blocks_.push_back(createBlock(16, 0));
+        blocks_.push_back(createBlock(17, 0));
+        blocks_.push_back(createBlock(18, 0));
     }
 
     GameScreen::~GameScreen()
