@@ -32,6 +32,7 @@ namespace monomi {
         bool up;
         bool down;
         bool jump;
+        bool action;
     };
 
     class Character {

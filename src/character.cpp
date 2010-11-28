@@ -11,7 +11,8 @@ namespace monomi {
         right(false),
         up(false),
         down(false),
-        jump(false)
+        jump(false),
+        action(false)
     { }
 
     Character::Character() :
