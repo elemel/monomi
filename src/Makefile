@@ -40,10 +40,11 @@ clean:
 
 # DO NOT DELETE
 
+block.o: block.hpp geometry.hpp debug_graphics.hpp
 character.o: character.hpp geometry.hpp debug_graphics.hpp
 debug_graphics.o: debug_graphics.hpp geometry.hpp
-game_screen.o: game_screen.hpp screen.hpp geometry.hpp character.hpp
-game_screen.o: debug_graphics.hpp
+game_screen.o: game_screen.hpp screen.hpp geometry.hpp block.hpp
+game_screen.o: character.hpp debug_graphics.hpp
 geometry.o: geometry.hpp
 main.o: title_screen.hpp screen.hpp
 screen.o: screen.hpp

@@ -37,17 +37,20 @@ namespace monomi {
 
     class Character {
     public:
+        // Track which direction the character faces, -1 for left and +1 for
+        // right.
         int face;
+
         Circle circle;
         Vector2 velocity;
         Vector2 gravity;
         CharacterState state;
         CharacterControls controls;
+        CharacterControls oldControls;
         float walkAcceleration;
         float maxWalkVelocity;
         float driftAcceleration;
         float maxDriftVelocity;
-        bool oldJumpControl;
 
         Character();
 
