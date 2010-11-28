@@ -47,6 +47,7 @@ namespace monomi {
         float maxWalkVelocity;
         float driftAcceleration;
         float maxDriftVelocity;
+        bool oldJumpControl;
 
         Character();
 
