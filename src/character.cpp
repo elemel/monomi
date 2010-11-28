@@ -15,6 +15,7 @@ namespace monomi {
     { }
 
     Character::Character() :
+        face(1),
         circle(Point2(), 0.75f),
         gravity(0.0f, -20.0f),
         state(characterStates::walking),
@@ -32,17 +33,20 @@ namespace monomi {
                 velocity.y += 12.0f;
             }
         }
-        int face = int(controls.right) - int(controls.left);
+        int moveFace = int(controls.right) - int(controls.left);
+        if (moveFace) {
+            face = moveFace;
+        }
         if (state == characterStates::walking) {
-            if (face) {
-                velocity.x += float(face) * walkAcceleration * dt;
+            if (moveFace) {
+                velocity.x += float(moveFace) * walkAcceleration * dt;
                 velocity.x = sign(velocity.x) * std::min(std::abs(velocity.x), maxWalkVelocity);
             } else {
                 velocity.x = sign(velocity.x) * std::max(std::abs(velocity.x) - walkAcceleration * dt, 0.0f);
             }
         } else if (state == characterStates::jumping) {
-            if (face) {
-                float driftVelocity = velocity.x + float(face) * driftAcceleration * dt;
+            if (moveFace) {
+                float driftVelocity = velocity.x + float(moveFace) * driftAcceleration * dt;
                 if (std::abs(driftVelocity) >= std::abs(velocity.x)) {
                     driftVelocity = sign(driftVelocity) * std::min(std::abs(driftVelocity), maxDriftVelocity);
                 }
@@ -60,5 +64,7 @@ namespace monomi {
     {
         DebugColor color = (state == characterStates::walking) ? debugColors::green() : debugColors::red();
         debugGraphics->drawCircle(circle, color);
+        Point2 faceCenter = circle.center + circle.radius * Vector2(0.3f * float(face), 0.3f);
+        debugGraphics->drawCircle(Circle(faceCenter, 0.3f * circle.radius), color);
     }
 }

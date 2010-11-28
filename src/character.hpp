@@ -36,6 +36,7 @@ namespace monomi {
 
     class Character {
     public:
+        int face;
         Circle circle;
         Vector2 velocity;
         Vector2 gravity;
