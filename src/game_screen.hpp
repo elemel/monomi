@@ -37,7 +37,7 @@ namespace monomi {
         float dt_;
         Camera camera_;
         std::auto_ptr<DebugGraphics> debugGraphics_;
-        std::auto_ptr<Character> playerCharacter_;
+        boost::ptr_vector<Character> characters_;
         boost::ptr_vector<Block> blocks_;
         LineSegment2 separator_;
 

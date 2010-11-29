@@ -26,11 +26,17 @@ namespace monomi {
         quit_(false),
         time_(0.0f),
         dt_(1.0f / 60.0f),
-        debugGraphics_(new DebugGraphics),
-        playerCharacter_(new Character)
+        debugGraphics_(new DebugGraphics)
     {
-        camera_.scale = 5.0f;
-        playerCharacter_->circle.center = Point2(1.5f, 2.5f);
+        camera_.scale = 7.0f;
+        characters_.push_back(new Character);
+        characters_.back().circle.center = Point2(2.0f, 2.0f);
+        characters_.push_back(new Character);
+        characters_.back().circle.center = Point2(5.0f, 2.0f);
+        characters_.push_back(new Character);
+        characters_.back().circle.center = Point2(7.0f, 2.0f);
+        characters_.push_back(new Character);
+        characters_.back().circle.center = Point2(9.0f, 2.0f);
         blocks_.push_back(createBlock(0, 0));
         blocks_.push_back(createBlock(1, 0));
         blocks_.push_back(createBlock(2, 0));
@@ -99,23 +105,23 @@ namespace monomi {
             break;
 
         case SDLK_LEFT:
-            playerCharacter_->controls.left = true;
+            characters_.front().controls.left = true;
             break;
 
         case SDLK_RIGHT:
-            playerCharacter_->controls.right = true;
+            characters_.front().controls.right = true;
             break;
 
         case SDLK_DOWN:
-            playerCharacter_->controls.down = true;
+            characters_.front().controls.down = true;
             break;
 
         case SDLK_UP:
-            playerCharacter_->controls.up = true;
+            characters_.front().controls.up = true;
             break;
 
         case SDLK_SPACE:
-            playerCharacter_->controls.jump = true;
+            characters_.front().controls.jump = true;
             break;
         }
     }
@@ -124,23 +130,23 @@ namespace monomi {
     {
         switch (event.key.keysym.sym) {
         case SDLK_LEFT:
-            playerCharacter_->controls.left = false;
+            characters_.front().controls.left = false;
             break;
 
         case SDLK_RIGHT:
-            playerCharacter_->controls.right = false;
+            characters_.front().controls.right = false;
             break;
 
         case SDLK_DOWN:
-            playerCharacter_->controls.down = false;
+            characters_.front().controls.down = false;
             break;
 
         case SDLK_UP:
-            playerCharacter_->controls.up = false;
+            characters_.front().controls.up = false;
             break;
 
         case SDLK_SPACE:
-            playerCharacter_->controls.jump = false;
+            characters_.front().controls.jump = false;
             break;
         }
     }
@@ -150,51 +156,58 @@ namespace monomi {
         float time = 0.001f * float(SDL_GetTicks());
         while (time_ + dt_ <= time) {
             time_ += dt_;
-            playerCharacter_->step(dt_);
+            for (boost::ptr_vector<Character>::iterator i = characters_.begin();
+                 i != characters_.end(); ++i)
+            {
+                i->step(dt_);
+            }
         }
     }
 
     void GameScreen::resolveCollisions()
     {
-        // Mark the character as falling until proven otherwise.
-        //
-        // TODO: Something more robust that also works for wall sliding.
-        playerCharacter_->state = characterStates::jumping;
+        for (boost::ptr_vector<Character>::iterator i = characters_.begin();
+             i != characters_.end(); ++i)
+        {
+            // Mark the character as falling until proven otherwise.
+            //
+            // TODO: Something more robust that also works for wall sliding.
+            i->state = characterStates::jumping;
 
-        // Make multiple iterations, resolving only the deepest collision
-        // found during each iteration.
-        for (int i = 0; i < 3; ++i) {
-            // Find the deepest collision.
-            float maxSquaredLength = -1.0f;
-            LineSegment2 maxSeparator;
-            for (boost::ptr_vector<Block>::iterator i = blocks_.begin();
-                 i != blocks_.end(); ++i)
-            {
-                if (intersects(playerCharacter_->circle, i->box)) {
-                    LineSegment2 separator =
-                        separate(playerCharacter_->circle, i->box);
-                    if (separator.squaredLength() >= maxSquaredLength) {
-                        maxSquaredLength = separator.squaredLength();
-                        maxSeparator = separator;
+            // Make multiple iterations, resolving only the deepest collision
+            // found during each iteration.
+            for (int j = 0; j < 3; ++j) {
+                // Find the deepest collision.
+                float maxSquaredLength = -1.0f;
+                LineSegment2 maxSeparator;
+                for (boost::ptr_vector<Block>::iterator k = blocks_.begin();
+                     k != blocks_.end(); ++k)
+                {
+                    if (intersects(i->circle, k->box)) {
+                        LineSegment2 separator =
+                            separate(i->circle, k->box);
+                        if (separator.squaredLength() >= maxSquaredLength) {
+                            maxSquaredLength = separator.squaredLength();
+                            maxSeparator = separator;
+                        }
                     }
                 }
-            }
 
-            // Resolve the deepest collision.
-            if (maxSquaredLength >= 0.0f) {
-                // Separate the colliding shapes, and cancel any negative
-                // velocity along the collision normal.
-                Vector2 normal = maxSeparator.p2 - maxSeparator.p1;
-                playerCharacter_->circle.center += normal;
-                normal.normalize();
-                playerCharacter_->velocity -=
-                    normal * std::min(dot(playerCharacter_->velocity, normal),
-                                      0.0f);
+                // Resolve the deepest collision.
+                if (maxSquaredLength >= 0.0f) {
+                    // Separate the colliding shapes, and cancel any negative
+                    // velocity along the collision normal.
+                    Vector2 normal = maxSeparator.p2 - maxSeparator.p1;
+                    i->circle.center += normal;
+                    normal.normalize();
+                    i->velocity -= normal * std::min(dot(i->velocity, normal),
+                                                     0.0f);
 
-                // Mark the character as standing if it collided with the
-                // ground.
-                if (normal.y >= 0.9f) {
-                    playerCharacter_->state = characterStates::walking;
+                    // Mark the character as standing if it collided with the
+                    // ground.
+                    if (normal.y >= 0.9f) {
+                        i->state = characterStates::walking;
+                    }
                 }
             }
         }
@@ -208,7 +221,7 @@ namespace monomi {
                              float(videoSurface->h));
         glMatrixMode(GL_PROJECTION);
         glLoadIdentity();
-        camera_.position = playerCharacter_->circle.center;
+        camera_.position = characters_.front().circle.center;
         glOrtho(camera_.position.x - camera_.scale * aspectRatio,
                 camera_.position.x + camera_.scale * aspectRatio,
                 camera_.position.y - camera_.scale,
@@ -225,7 +238,11 @@ namespace monomi {
         {
             i->debugDraw(debugGraphics_.get());
         }
-        playerCharacter_->debugDraw(debugGraphics_.get());
+        for (boost::ptr_vector<Character>::iterator j = characters_.begin();
+             j != characters_.end(); ++j)
+        {
+            j->debugDraw(debugGraphics_.get());
+        }
         SDL_GL_SwapBuffers();
     }
 }

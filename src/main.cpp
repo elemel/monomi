@@ -6,6 +6,13 @@
 #include <GL/gl.h>
 #include <SDL.h>
 
+struct ScopedQuit {
+    ~ScopedQuit()
+    {
+        SDL_Quit();
+    }
+};
+
 int main(int argc, char *argv[])
 {
     try {
@@ -15,7 +22,7 @@ int main(int argc, char *argv[])
             message << "Failed to initialize video system: " << SDL_GetError();
             throw std::runtime_error(message.str());
         }
-        atexit(&SDL_Quit);
+        ScopedQuit scopedQuit;
 
         // Set video mode.
         if (SDL_GL_SetAttribute(SDL_GL_DOUBLEBUFFER, 1) == -1) {
