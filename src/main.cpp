@@ -4,7 +4,7 @@
 #include <stdexcept>
 #include <sstream>
 #include <GL/gl.h>
-#include <SDL/SDL.h>
+#include <SDL.h>
 
 int main(int argc, char *argv[])
 {

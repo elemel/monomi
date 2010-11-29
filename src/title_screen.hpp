@@ -3,7 +3,7 @@
 
 #include "screen.hpp"
 
-#include <SDL/SDL.h>
+#include <SDL.h>
 
 namespace monomi {
     class TitleScreen :

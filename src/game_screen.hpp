@@ -7,7 +7,7 @@
 
 #include <memory>
 #include <boost/ptr_container/ptr_vector.hpp>
-#include <SDL/SDL.h>
+#include <SDL.h>
 
 namespace monomi {
     class Block;

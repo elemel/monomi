@@ -3,7 +3,6 @@
 #include "game_screen.hpp"
 
 #include <GL/gl.h>
-#include <SDL/SDL.h>
 
 namespace monomi {
     TitleScreen::TitleScreen() :

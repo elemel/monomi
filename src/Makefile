@@ -16,8 +16,8 @@ ifndef platform
     platform := mac
 endif
 ifeq ($(platform), mac)
-    CPPFLAGS += -I/opt/local/include
-    LDFLAGS += -framework OpenGL -lSDL
+    CPPFLAGS += -I/usr/local/include/SDL -I/opt/local/include
+    LDFLAGS += -framework OpenGL -L/usr/local/lib -lSDL
 else
     $(error Invalid platform "$(platform)", only "mac" is supported for now)
 endif
