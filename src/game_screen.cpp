@@ -237,11 +237,11 @@ namespace monomi {
                 int side = int(sign(i->circle.center.x - playerCharacter->circle.center.x));
                 if (side == i->face) {
                     i->alive = false;
-                    playerCharacter->velocity *= 0.5f;
                 } else {
                     playerCharacter->alive = false;
-                    i->velocity *= 0.5f;
                 }
+                playerCharacter->velocity *= 0.5f;
+                i->velocity *= 0.5f;
             }
         }
     }
