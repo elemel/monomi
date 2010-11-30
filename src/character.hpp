@@ -53,6 +53,7 @@ namespace monomi {
         float maxWalkVelocity;
         float driftAcceleration;
         float maxDriftVelocity;
+        float maxVelocity;
 
         Character();
 

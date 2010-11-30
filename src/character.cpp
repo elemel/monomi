@@ -24,7 +24,8 @@ namespace monomi {
         walkAcceleration(9.0f),
         maxWalkVelocity(6.0f),
         driftAcceleration(6.0f),
-        maxDriftVelocity(3.0f)
+        maxDriftVelocity(3.0f),
+        maxVelocity(20.0f)
     { }
 
     void Character::step(float dt)
@@ -55,6 +56,10 @@ namespace monomi {
         velocity += dt * gravity;
         if (state == characterStates::jumping && !controls.jump) {
             velocity.y = std::min(velocity.y, 3.0f);
+        }
+        if (velocity.squaredLength() >= maxVelocity * maxVelocity) {
+            velocity.normalize();
+            velocity *= maxVelocity;
         }
         circle.center += dt * velocity;
         oldControls = controls;
