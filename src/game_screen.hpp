@@ -46,6 +46,8 @@ namespace monomi {
         void onKeyUp(SDL_Event const &event);
         void step();
         void resolveCollisions();
+        void resolveBlockCollisions();
+        void resolveCharacterCollisions();
         void draw();
     };
 }

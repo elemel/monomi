@@ -16,6 +16,7 @@ namespace monomi {
     { }
 
     Character::Character() :
+        alive(true),
         face(1),
         circle(Point2(), 0.75f),
         gravity(0.0f, -20.0f),
@@ -62,6 +63,9 @@ namespace monomi {
     void Character::debugDraw(DebugGraphics *debugGraphics)
     {
         DebugColor color = (state == characterStates::walking) ? debugColors::green() : debugColors::red();
+        if (!alive) {
+            color = debugColors::yellow();
+        }
         debugGraphics->drawCircle(circle, color);
         Point2 faceCenter = circle.center + circle.radius * Vector2(0.3f * float(face), 0.3f);
         debugGraphics->drawCircle(Circle(faceCenter, 0.3f * circle.radius), color);

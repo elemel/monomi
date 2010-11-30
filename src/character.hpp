@@ -37,6 +37,8 @@ namespace monomi {
 
     class Character {
     public:
+        bool alive;
+
         // Track which direction the character faces, -1 for left and +1 for
         // right.
         int face;

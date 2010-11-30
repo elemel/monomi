@@ -29,14 +29,18 @@ namespace monomi {
         debugGraphics_(new DebugGraphics)
     {
         camera_.scale = 7.0f;
+
+        // Create characters.
         characters_.push_back(new Character);
         characters_.back().circle.center = Point2(2.0f, 2.0f);
         characters_.push_back(new Character);
-        characters_.back().circle.center = Point2(5.0f, 2.0f);
+        characters_.back().circle.center = Point2(7.0f, 5.0f);
         characters_.push_back(new Character);
-        characters_.back().circle.center = Point2(7.0f, 2.0f);
+        characters_.back().circle.center = Point2(9.0f, 5.0f);
         characters_.push_back(new Character);
-        characters_.back().circle.center = Point2(9.0f, 2.0f);
+        characters_.back().circle.center = Point2(11.0f, 5.0f);
+
+        // Create blocks.
         blocks_.push_back(createBlock(0, 0));
         blocks_.push_back(createBlock(1, 0));
         blocks_.push_back(createBlock(2, 0));
@@ -166,6 +170,12 @@ namespace monomi {
 
     void GameScreen::resolveCollisions()
     {
+        resolveBlockCollisions();
+        resolveCharacterCollisions();
+    }
+
+    void GameScreen::resolveBlockCollisions()
+    {
         for (boost::ptr_vector<Character>::iterator i = characters_.begin();
              i != characters_.end(); ++i)
         {
@@ -173,6 +183,10 @@ namespace monomi {
             //
             // TODO: Something more robust that also works for wall sliding.
             i->state = characterStates::jumping;
+
+            if (!i->alive) {
+                continue;
+            }
 
             // Make multiple iterations, resolving only the deepest collision
             // found during each iteration.
@@ -212,6 +226,20 @@ namespace monomi {
             }
         }
     }
+
+    void GameScreen::resolveCharacterCollisions()
+    {
+        Character *playerCharacter = &characters_.front();
+        typedef boost::ptr_vector<Character>::iterator Iterator;
+        for (Iterator i = characters_.begin() + 1; i != characters_.end(); ++i)
+        {
+            if (i->alive && intersects(playerCharacter->circle, i->circle)) {
+                i->alive = false;
+                playerCharacter->velocity *= 0.5f;
+            }
+        }
+    }
+
 
     void GameScreen::draw()
     {
