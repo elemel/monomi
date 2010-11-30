@@ -233,9 +233,15 @@ namespace monomi {
         typedef boost::ptr_vector<Character>::iterator Iterator;
         for (Iterator i = characters_.begin() + 1; i != characters_.end(); ++i)
         {
-            if (i->alive && intersects(playerCharacter->circle, i->circle)) {
-                i->alive = false;
-                playerCharacter->velocity *= 0.5f;
+            if (playerCharacter->alive && i->alive && intersects(playerCharacter->circle, i->circle)) {
+                int side = int(sign(i->circle.center.x - playerCharacter->circle.center.x));
+                if (side == i->face) {
+                    i->alive = false;
+                    playerCharacter->velocity *= 0.5f;
+                } else {
+                    playerCharacter->alive = false;
+                    i->velocity *= 0.5f;
+                }
             }
         }
     }
