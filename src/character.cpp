@@ -67,7 +67,9 @@ namespace monomi {
             color = debugColors::yellow();
         }
         debugGraphics->drawCircle(circle, color);
-        Point2 faceCenter = circle.center + circle.radius * Vector2(0.3f * float(face), 0.3f);
-        debugGraphics->drawCircle(Circle(faceCenter, 0.3f * circle.radius), color);
+        Point2 eyeCenter1 = circle.center + circle.radius * Vector2(0.1f * float(face), 0.3f);
+        Point2 eyeCenter2 = circle.center + circle.radius * Vector2(0.4f * float(face), 0.3f);
+        debugGraphics->drawCircle(Circle(eyeCenter1, 0.1f * circle.radius), color);
+        debugGraphics->drawCircle(Circle(eyeCenter2, 0.1f * circle.radius), color);
     }
 }
