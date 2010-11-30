@@ -13,6 +13,7 @@ namespace monomi {
     class Block;
     class Character;
     class DebugGraphics;
+    class Random;
 
     class Camera {
     public:
@@ -35,6 +36,7 @@ namespace monomi {
         bool quit_;
         float time_;
         float dt_;
+        std::auto_ptr<Random> random_;
         Camera camera_;
         std::auto_ptr<DebugGraphics> debugGraphics_;
         boost::ptr_vector<Character> characters_;
@@ -45,6 +47,7 @@ namespace monomi {
         void onKeyDown(SDL_Event const &event);
         void onKeyUp(SDL_Event const &event);
         void step();
+        void think();
         void resolveCollisions();
         void resolveBlockCollisions();
         void resolveCharacterCollisions();

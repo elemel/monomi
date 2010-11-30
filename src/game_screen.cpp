@@ -3,7 +3,9 @@
 #include "block.hpp"
 #include "character.hpp"
 #include "debug_graphics.hpp"
+#include "random.hpp"
 
+#include <ctime>
 #include <iostream>
 #include <GL/gl.h>
 
@@ -26,6 +28,7 @@ namespace monomi {
         quit_(false),
         time_(0.0f),
         dt_(1.0f / 60.0f),
+        random_(new Random(std::time(0))),
         debugGraphics_(new DebugGraphics)
     {
         camera_.scale = 7.0f;
@@ -75,7 +78,6 @@ namespace monomi {
         do {
             pumpEvents();
             step();
-            resolveCollisions();
             draw();
         } while (!quit_);
         return std::auto_ptr<Screen>();
@@ -160,10 +162,28 @@ namespace monomi {
         float time = 0.001f * float(SDL_GetTicks());
         while (time_ + dt_ <= time) {
             time_ += dt_;
+            think();
             for (boost::ptr_vector<Character>::iterator i = characters_.begin();
                  i != characters_.end(); ++i)
             {
                 i->step(dt_);
+            }
+            resolveCollisions();
+        }
+    }
+
+    void GameScreen::think()
+    {
+        for (boost::ptr_vector<Character>::iterator i = characters_.begin() + 1;
+             i != characters_.end(); ++i)
+        {
+            if (random_->generate() <= dt_) {
+                int face = int(random_->generate() * 3.0f) - 1;
+                i->controls.left = (face == -1);
+                i->controls.right = (face == 1);
+            }
+            if (random_->generate() <= dt_) {
+                i->controls.jump = (random_->generate() <= 0.5f);
             }
         }
     }
