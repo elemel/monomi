@@ -47,10 +47,11 @@ namespace monomi {
         void onKeyDown(SDL_Event const &event);
         void onKeyUp(SDL_Event const &event);
         void step();
-        void think();
+        void performAI();
         void resolveCollisions();
         void resolveBlockCollisions();
         void resolveCharacterCollisions();
+
         void draw();
     };
 }

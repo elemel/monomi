@@ -162,7 +162,7 @@ namespace monomi {
         float time = 0.001f * float(SDL_GetTicks());
         while (time_ + dt_ <= time) {
             time_ += dt_;
-            think();
+            performAI();
             for (boost::ptr_vector<Character>::iterator i = characters_.begin();
                  i != characters_.end(); ++i)
             {
@@ -172,7 +172,7 @@ namespace monomi {
         }
     }
 
-    void GameScreen::think()
+    void GameScreen::performAI()
     {
         for (boost::ptr_vector<Character>::iterator i = characters_.begin() + 1;
              i != characters_.end(); ++i)
