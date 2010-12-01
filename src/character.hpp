@@ -54,6 +54,10 @@ namespace monomi {
         float driftAcceleration;
         float maxDriftVelocity;
         float maxVelocity;
+        bool touchingLeftWall;
+        bool touchingRightWall;
+        bool touchingCeiling;
+        bool touchingFloor;
 
         Character();
 

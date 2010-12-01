@@ -25,7 +25,11 @@ namespace monomi {
         maxWalkVelocity(6.0f),
         driftAcceleration(6.0f),
         maxDriftVelocity(3.0f),
-        maxVelocity(20.0f)
+        maxVelocity(20.0f),
+        touchingLeftWall(false),
+        touchingRightWall(false),
+        touchingCeiling(false),
+        touchingFloor(false)
     { }
 
     void Character::step(float dt)
@@ -67,9 +71,21 @@ namespace monomi {
 
     void Character::debugDraw(DebugGraphics *debugGraphics)
     {
-        DebugColor color = (state == characterStates::walking) ? debugColors::green() : debugColors::red();
-        if (!alive) {
-            color = debugColors::yellow();
+        DebugColor color = debugColors::white();
+        if (alive) {
+            switch (state) {
+            case characterStates::jumping:
+                color = debugColors::lightBlue();
+                break;
+
+            case characterStates::walking:
+                color = debugColors::yellow();
+                break;
+
+            case characterStates::wallSliding:
+                color = debugColors::red();
+                break;
+            }
         }
         debugGraphics->drawCircle(circle, color);
         Point2 eyeCenter1 = circle.center + circle.radius * Vector2(0.1f * float(face), 0.3f);

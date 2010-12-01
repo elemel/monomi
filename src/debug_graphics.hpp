@@ -21,6 +21,7 @@ namespace monomi {
         DebugColor cyan();
         DebugColor gray();
         DebugColor green();
+        DebugColor lightBlue();
         DebugColor magenta();
         DebugColor red();
         DebugColor white();

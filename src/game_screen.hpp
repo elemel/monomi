@@ -51,6 +51,7 @@ namespace monomi {
         void resolveCollisions();
         void resolveBlockCollisions();
         void resolveCharacterCollisions();
+        void updateStates();
 
         void draw();
     };

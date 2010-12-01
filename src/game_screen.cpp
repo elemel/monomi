@@ -163,19 +163,20 @@ namespace monomi {
         while (time_ + dt_ <= time) {
             time_ += dt_;
             performAI();
-            for (boost::ptr_vector<Character>::iterator i = characters_.begin();
-                 i != characters_.end(); ++i)
+            typedef boost::ptr_vector<Character>::iterator Iterator;
+            for (Iterator i = characters_.begin(); i != characters_.end(); ++i)
             {
                 i->step(dt_);
             }
             resolveCollisions();
+            updateStates();
         }
     }
 
     void GameScreen::performAI()
     {
-        for (boost::ptr_vector<Character>::iterator i = characters_.begin() + 1;
-             i != characters_.end(); ++i)
+        typedef boost::ptr_vector<Character>::iterator Iterator;
+        for (Iterator i = characters_.begin() + 1; i != characters_.end(); ++i)
         {
             if (random_->generate() <= dt_) {
                 int face = int(random_->generate() * 3.0f) - 1;
@@ -196,51 +197,42 @@ namespace monomi {
 
     void GameScreen::resolveBlockCollisions()
     {
-        for (boost::ptr_vector<Character>::iterator i = characters_.begin();
-             i != characters_.end(); ++i)
+        typedef boost::ptr_vector<Character>::iterator CharacterIterator;
+        for (CharacterIterator i = characters_.begin(); i != characters_.end();
+             ++i)
         {
-            // Mark the character as falling until proven otherwise.
-            //
-            // TODO: Something more robust that also works for wall sliding.
-            i->state = characterStates::jumping;
-
-            if (!i->alive) {
-                continue;
-            }
-
-            // Make multiple iterations, resolving only the deepest collision
-            // found during each iteration.
-            for (int j = 0; j < 3; ++j) {
-                // Find the deepest collision.
-                float maxSquaredLength = -1.0f;
-                LineSegment2 maxSeparator;
-                for (boost::ptr_vector<Block>::iterator k = blocks_.begin();
-                     k != blocks_.end(); ++k)
-                {
-                    if (intersects(i->circle, k->box)) {
-                        LineSegment2 separator =
-                            separate(i->circle, k->box);
-                        if (separator.squaredLength() >= maxSquaredLength) {
-                            maxSquaredLength = separator.squaredLength();
-                            maxSeparator = separator;
+            if (i->alive) {
+                // Make multiple iterations, resolving only the deepest
+                // collision found during each iteration.
+                for (int j = 0; j < 3; ++j) {
+                    // Find the deepest collision.
+                    float maxSquaredLength = -1.0f;
+                    LineSegment2 maxSeparator;
+                    typedef boost::ptr_vector<Block>::iterator BlockIterator;
+                    for (BlockIterator k = blocks_.begin(); k != blocks_.end();
+                         ++k)
+                    {
+                        if (intersects(i->circle, k->box)) {
+                            LineSegment2 separator =
+                                separate(i->circle, k->box);
+                            if (separator.squaredLength() >= maxSquaredLength)
+                            {
+                                maxSquaredLength = separator.squaredLength();
+                                maxSeparator = separator;
+                            }
                         }
                     }
-                }
 
-                // Resolve the deepest collision.
-                if (maxSquaredLength >= 0.0f) {
-                    // Separate the colliding shapes, and cancel any negative
-                    // velocity along the collision normal.
-                    Vector2 normal = maxSeparator.p2 - maxSeparator.p1;
-                    i->circle.center += normal;
-                    normal.normalize();
-                    i->velocity -= normal * std::min(dot(i->velocity, normal),
-                                                     0.0f);
-
-                    // Mark the character as standing if it collided with the
-                    // ground.
-                    if (normal.y >= 0.9f) {
-                        i->state = characterStates::walking;
+                    // Resolve the deepest collision.
+                    if (maxSquaredLength >= 0.0f) {
+                        // Separate the colliding shapes, and cancel any
+                        // negative velocity along the collision normal.
+                        Vector2 normal = maxSeparator.p2 - maxSeparator.p1;
+                        i->circle.center += normal;
+                        normal.normalize();
+                        i->velocity -= (normal *
+                                        std::min(dot(i->velocity, normal),
+                                                 0.0f));
                     }
                 }
             }
@@ -253,8 +245,11 @@ namespace monomi {
         typedef boost::ptr_vector<Character>::iterator Iterator;
         for (Iterator i = characters_.begin() + 1; i != characters_.end(); ++i)
         {
-            if (playerCharacter->alive && i->alive && intersects(playerCharacter->circle, i->circle)) {
-                int side = int(sign(i->circle.center.x - playerCharacter->circle.center.x));
+            if (playerCharacter->alive && i->alive &&
+                intersects(playerCharacter->circle, i->circle))
+            {
+                int side = int(sign(i->circle.center.x -
+                                    playerCharacter->circle.center.x));
                 if (side == i->face) {
                     i->alive = false;
                 } else {
@@ -266,6 +261,54 @@ namespace monomi {
         }
     }
 
+    void GameScreen::updateStates()
+    {
+        typedef boost::ptr_vector<Character>::iterator CharacterIterator;
+        for (CharacterIterator i = characters_.begin(); i != characters_.end();
+             ++i)
+        {
+            i->touchingLeftWall = false;
+            i->touchingRightWall = false;
+            i->touchingCeiling = false;
+            i->touchingFloor = false;
+            if (i->alive) {
+                Circle circle = i->circle;
+                circle.radius += 0.02f;
+                typedef boost::ptr_vector<Block>::iterator BlockIterator;
+                for (BlockIterator j = blocks_.begin(); j != blocks_.end();
+                     ++j)
+                {
+                    if (intersects(circle, j->box)) {
+                        LineSegment2 separator = separate(circle, j->box);
+                        Vector2 normal = separator.p2 - separator.p1;
+                        normal.normalize();
+                        float velocity = dot(i->velocity, normal);
+                        if (std::abs(velocity) <= 0.02f) {
+                            if (normal.x >= 0.98f) {
+                                i->touchingLeftWall = true;
+                            }
+                            if (normal.x <= -0.98f) {
+                                i->touchingRightWall = true;
+                            }
+                            if (normal.y <= -0.98f) {
+                                i->touchingCeiling = true;
+                            }
+                            if (normal.y >= 0.98f) {
+                                i->touchingFloor = true;
+                            }
+                        }
+                    }
+                }
+            }
+            if (i->touchingFloor) {
+                i->state = characterStates::walking;
+            } else if (i->touchingLeftWall || i->touchingRightWall) {
+                i->state = characterStates::wallSliding;
+            } else {
+                i->state = characterStates::jumping;
+            }
+        }
+    }
 
     void GameScreen::draw()
     {
@@ -287,13 +330,13 @@ namespace monomi {
         glClearColor(0.0f, 0.0f, 0.0f, 0.0f);
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT |
                 GL_STENCIL_BUFFER_BIT);
-        for (boost::ptr_vector<Block>::iterator i = blocks_.begin();
-             i != blocks_.end(); ++i)
-        {
+        typedef boost::ptr_vector<Block>::iterator BlockIterator;
+        for (BlockIterator i = blocks_.begin(); i != blocks_.end(); ++i) {
             i->debugDraw(debugGraphics_.get());
         }
-        for (boost::ptr_vector<Character>::iterator j = characters_.begin();
-             j != characters_.end(); ++j)
+        typedef boost::ptr_vector<Character>::iterator CharacterIterator;
+        for (CharacterIterator j = characters_.begin(); j != characters_.end();
+             ++j)
         {
             j->debugDraw(debugGraphics_.get());
         }

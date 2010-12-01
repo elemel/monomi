@@ -30,6 +30,11 @@ namespace monomi {
             return DebugColor(0.0f, 1.0f, 0.0f);
         }
 
+        DebugColor lightBlue()
+        {
+            return DebugColor(0.0f, 0.5f, 1.0f);
+        }
+
         DebugColor red()
         {
             return DebugColor(1.0f, 0.0f, 0.0f);
