@@ -37,7 +37,15 @@ namespace monomi {
         if (controls.jump && !oldControls.jump) {
             if (state == characterStates::walking) {
                 state = characterStates::jumping;
-                velocity.y += 12.0f;
+                velocity.y = 12.0f;
+            } else if (state == characterStates::wallSliding) {
+                state = characterStates::jumping;
+                int jumpFace = int(touchingLeftWall) - int(touchingRightWall);
+                if (jumpFace) {
+                    face = jumpFace;
+                }
+                velocity.x = float(jumpFace) * 6.0f;
+                velocity.y = 9.0f;
             }
         }
         int moveFace = int(controls.right) - int(controls.left);
@@ -47,14 +55,23 @@ namespace monomi {
         if (state == characterStates::walking) {
             if (moveFace) {
                 velocity.x += float(moveFace) * walkAcceleration * dt;
-                velocity.x = sign(velocity.x) * std::min(std::abs(velocity.x), maxWalkVelocity);
+                velocity.x = sign(velocity.x) * std::min(std::abs(velocity.x),
+                                                         maxWalkVelocity);
             } else {
-                velocity.x = sign(velocity.x) * std::max(std::abs(velocity.x) - walkAcceleration * dt, 0.0f);
+                velocity.x = (sign(velocity.x) *
+                              std::max(std::abs(velocity.x) -
+                                       walkAcceleration * dt, 0.0f));
             }
-        } else if (state == characterStates::jumping) {
+        } else if (state == characterStates::jumping ||
+                   state == characterStates::wallSliding)
+        {
             if (moveFace) {
-                float driftVelocity = velocity.x + float(moveFace) * driftAcceleration * dt;
-                velocity.x = sign(driftVelocity) * std::min(std::abs(driftVelocity), std::max(std::abs(velocity.x), maxDriftVelocity));
+                float driftVelocity = (velocity.x + float(moveFace) *
+                                       driftAcceleration * dt);
+                velocity.x = (sign(driftVelocity) *
+                              std::min(std::abs(driftVelocity),
+                                       std::max(std::abs(velocity.x),
+                                                maxDriftVelocity)));
             }
         }
         velocity += dt * gravity;
@@ -88,8 +105,10 @@ namespace monomi {
             }
         }
         debugGraphics->drawCircle(circle, color);
-        Point2 eyeCenter1 = circle.center + circle.radius * Vector2(0.1f * float(face), 0.3f);
-        Point2 eyeCenter2 = circle.center + circle.radius * Vector2(0.4f * float(face), 0.3f);
+        Point2 eyeCenter1 = (circle.center + circle.radius *
+                             Vector2(0.1f * float(face), 0.3f));
+        Point2 eyeCenter2 = (circle.center + circle.radius *
+                             Vector2(0.4f * float(face), 0.3f));
         debugGraphics->drawCircle(Circle(eyeCenter1, 0.1f * circle.radius), color);
         debugGraphics->drawCircle(Circle(eyeCenter2, 0.1f * circle.radius), color);
     }

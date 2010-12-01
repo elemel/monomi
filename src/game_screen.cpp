@@ -45,17 +45,26 @@ namespace monomi {
 
         // Create blocks.
         blocks_.push_back(createBlock(0, 0));
+        blocks_.push_back(createBlock(0, 3));
         blocks_.push_back(createBlock(1, 0));
         blocks_.push_back(createBlock(2, 0));
         blocks_.push_back(createBlock(3, 0));
         blocks_.push_back(createBlock(3, 1));
         blocks_.push_back(createBlock(3, 2));
         blocks_.push_back(createBlock(3, 3));
-        blocks_.push_back(createBlock(0, 3));
+        blocks_.push_back(createBlock(3, 4));
+        blocks_.push_back(createBlock(3, 5));
+        blocks_.push_back(createBlock(3, 6));
         blocks_.push_back(createBlock(4, 0));
         blocks_.push_back(createBlock(5, 0));
         blocks_.push_back(createBlock(6, 0));
         blocks_.push_back(createBlock(7, 0));
+        blocks_.push_back(createBlock(7, 3));
+        blocks_.push_back(createBlock(7, 4));
+        blocks_.push_back(createBlock(7, 5));
+        blocks_.push_back(createBlock(7, 6));
+        blocks_.push_back(createBlock(7, 7));
+        blocks_.push_back(createBlock(7, 8));
         blocks_.push_back(createBlock(8, 0));
         blocks_.push_back(createBlock(9, 0));
         blocks_.push_back(createBlock(10, 0));
