@@ -21,16 +21,16 @@ namespace monomi {
         circle(Point2(), 0.75f),
         gravity(0.0f, -20.0f),
         state(characterStates::jumping),
-        walkAcceleration(9.0f),
-        maxWalkVelocity(6.0f),
-        driftAcceleration(6.0f),
-        maxDriftVelocity(3.0f),
+        walkAcceleration(12.0f),
+        maxWalkVelocity(8.0f),
+        driftAcceleration(10.0f),
+        maxDriftVelocity(6.0f),
         maxVelocity(20.0f),
         touchingLeftWall(false),
         touchingRightWall(false),
         touchingCeiling(false),
         touchingFloor(false),
-        airJumpCount(2),
+        airJumpCount(0),
         maxAirJumpCount(1)
 
     { }
@@ -38,6 +38,8 @@ namespace monomi {
     void Character::step(float dt)
     {
         if (state == characterStates::walking) {
+            airJumpCount = maxAirJumpCount;
+        } else if (state == characterStates::wallSliding) {
             airJumpCount = 0;
         }
         if (controls.jump && !oldControls.jump) {
@@ -53,8 +55,8 @@ namespace monomi {
                 velocity.x = float(jumpFace) * 6.0f;
                 velocity.y = 9.0f;
             } else if (state == characterStates::jumping) {
-                if (airJumpCount < maxAirJumpCount) {
-                    ++airJumpCount;
+                if (airJumpCount) {
+                    --airJumpCount;
                     velocity.y = 12.0f;
                 }
             }
