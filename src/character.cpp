@@ -32,7 +32,6 @@ namespace monomi {
         touchingFloor(false),
         airJumpCount(0),
         maxAirJumpCount(1)
-
     { }
 
     void Character::step(float dt)
