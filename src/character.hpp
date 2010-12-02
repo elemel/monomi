@@ -58,6 +58,8 @@ namespace monomi {
         bool touchingRightWall;
         bool touchingCeiling;
         bool touchingFloor;
+        int airJumpCount;
+        int maxAirJumpCount;
 
         Character();
 
