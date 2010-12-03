@@ -6,6 +6,38 @@
 #include <iostream>
 
 namespace monomi {
+    Techniques::Techniques() :
+        ambush(false),
+        charge(false),
+        dive(false),
+        disguise(false),
+        doubleJump(false),
+        drop(false),
+        ledgeGrab(false),
+        ledgeJump(false),
+        run(false),
+        slam(false),
+        slowFall(false),
+        split(false),
+        sprint(false),
+        swim(false),
+        teleport(false),
+        tripleJump(false),
+        wallJump(false),
+        wallSlide(false)
+    { }
+
+    Equipment::Equipment() :
+        airSkin(false),
+        bambooFlute(false),
+        grapplingHook(false),
+        ironFan(false),
+        smokeBombs(false),
+        strawBasket(false),
+        tigerClaws(false),
+        throwingStars(false)
+    { }
+
     CharacterType::CharacterType() :
         key(0),
         radius(0.75f),
@@ -16,8 +48,7 @@ namespace monomi {
         maxDriftVelocity(6.0f),
         jumpVelocity(12.0f),
         wallJumpVelocity(6.0f, 9.0f),
-        airJumpVelocity(12.0f),
-        maxAirJumpCount(1)
+        airJumpVelocity(12.0f)
     { }
 
     CharacterControls::CharacterControls() :
@@ -31,6 +62,8 @@ namespace monomi {
 
     Character::Character(CharacterType const *type) :
         type(type),
+        techniques(type->techniques),
+        equipment(type->equipment),
         alive(true),
         face(1),
         gravity(0.0f, -20.0f),
@@ -45,7 +78,13 @@ namespace monomi {
     void Character::step(float dt)
     {
         if (state == characterStates::walking) {
-            airJumpCount = type->maxAirJumpCount;
+            if (techniques.tripleJump) {
+                airJumpCount = 2;
+            } else if (techniques.doubleJump) {
+                airJumpCount = 1;
+            } else {
+                airJumpCount = 0;
+            }
         } else if (state == characterStates::wallSliding) {
             airJumpCount = 0;
         }
