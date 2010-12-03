@@ -12,6 +12,7 @@
 namespace monomi {
     class Block;
     class Character;
+    class CharacterType;
     class DebugGraphics;
     class Random;
 
@@ -39,6 +40,7 @@ namespace monomi {
         std::auto_ptr<Random> random_;
         Camera camera_;
         std::auto_ptr<DebugGraphics> debugGraphics_;
+        std::auto_ptr<CharacterType> characterType_;
         boost::ptr_vector<Character> characters_;
         boost::ptr_vector<Block> blocks_;
         LineSegment2 separator_;

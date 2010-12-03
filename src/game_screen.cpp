@@ -29,19 +29,20 @@ namespace monomi {
         time_(0.0f),
         dt_(1.0f / 60.0f),
         random_(new Random(std::time(0))),
-        debugGraphics_(new DebugGraphics)
+        debugGraphics_(new DebugGraphics),
+        characterType_(new CharacterType)
     {
         camera_.scale = 7.0f;
 
         // Create characters.
-        characters_.push_back(new Character);
-        characters_.back().circle.center = Point2(2.0f, 2.0f);
-        characters_.push_back(new Character);
-        characters_.back().circle.center = Point2(7.0f, 5.0f);
-        characters_.push_back(new Character);
-        characters_.back().circle.center = Point2(9.0f, 5.0f);
-        characters_.push_back(new Character);
-        characters_.back().circle.center = Point2(11.0f, 5.0f);
+        characters_.push_back(new Character(characterType_.get()));
+        characters_.back().position = Point2(2.0f, 2.0f);
+        characters_.push_back(new Character(characterType_.get()));
+        characters_.back().position = Point2(7.0f, 5.0f);
+        characters_.push_back(new Character(characterType_.get()));
+        characters_.back().position = Point2(9.0f, 5.0f);
+        characters_.push_back(new Character(characterType_.get()));
+        characters_.back().position = Point2(11.0f, 5.0f);
 
         // Create blocks.
         blocks_.push_back(createBlock(0, 0));
@@ -221,9 +222,10 @@ namespace monomi {
                     for (BlockIterator k = blocks_.begin(); k != blocks_.end();
                          ++k)
                     {
-                        if (intersects(i->circle, k->box)) {
+                        Circle circle(i->position, i->type->radius);
+                        if (intersects(circle, k->box)) {
                             LineSegment2 separator =
-                                separate(i->circle, k->box);
+                                separate(circle, k->box);
                             if (separator.squaredLength() >= maxSquaredLength)
                             {
                                 maxSquaredLength = separator.squaredLength();
@@ -237,7 +239,7 @@ namespace monomi {
                         // Separate the colliding shapes, and cancel any
                         // negative velocity along the collision normal.
                         Vector2 normal = maxSeparator.p2 - maxSeparator.p1;
-                        i->circle.center += normal;
+                        i->position += normal;
                         normal.normalize();
                         i->velocity -= (normal *
                                         std::min(dot(i->velocity, normal),
@@ -255,10 +257,12 @@ namespace monomi {
         for (Iterator i = characters_.begin() + 1; i != characters_.end(); ++i)
         {
             if (playerCharacter->alive && i->alive &&
-                intersects(playerCharacter->circle, i->circle))
+                intersects(Circle(playerCharacter->position,
+                                  playerCharacter->type->radius),
+                           Circle(i->position, i->type->radius)))
             {
-                int side = int(sign(i->circle.center.x -
-                                    playerCharacter->circle.center.x));
+                int side = int(sign(i->position.x -
+                                    playerCharacter->position.x));
                 if (side == i->face) {
                     i->alive = false;
                 } else {
@@ -281,7 +285,7 @@ namespace monomi {
             i->touchingCeiling = false;
             i->touchingFloor = false;
             if (i->alive) {
-                Circle circle = i->circle;
+                Circle circle(i->position, i->type->radius);
                 circle.radius += 0.02f;
                 typedef boost::ptr_vector<Block>::iterator BlockIterator;
                 for (BlockIterator j = blocks_.begin(); j != blocks_.end();
@@ -327,7 +331,7 @@ namespace monomi {
                              float(videoSurface->h));
         glMatrixMode(GL_PROJECTION);
         glLoadIdentity();
-        camera_.position = characters_.front().circle.center;
+        camera_.position = characters_.front().position;
         glOrtho(camera_.position.x - camera_.scale * aspectRatio,
                 camera_.position.x + camera_.scale * aspectRatio,
                 camera_.position.y - camera_.scale,

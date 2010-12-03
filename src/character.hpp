@@ -25,43 +25,55 @@ namespace monomi {
 
     class CharacterControls {
     public:
-        CharacterControls();
-
         bool left;
         bool right;
         bool up;
         bool down;
         bool jump;
         bool action;
+
+        CharacterControls();
+    };
+
+    class CharacterType {
+    public:
+        int key;
+        float radius;
+        float maxVelocity;
+        float walkAcceleration;
+        float maxWalkVelocity;
+        float driftAcceleration;
+        float maxDriftVelocity;
+        float jumpVelocity;
+        Vector2 wallJumpVelocity;
+        float airJumpVelocity;
+        float maxAirJumpCount;
+
+        CharacterType();
     };
 
     class Character {
     public:
+        CharacterType const *type;
         bool alive;
 
         // Track which direction the character faces, -1 for left and +1 for
         // right.
         int face;
 
-        Circle circle;
+        Point2 position;
         Vector2 velocity;
         Vector2 gravity;
         CharacterState state;
         CharacterControls controls;
         CharacterControls oldControls;
-        float walkAcceleration;
-        float maxWalkVelocity;
-        float driftAcceleration;
-        float maxDriftVelocity;
-        float maxVelocity;
         bool touchingLeftWall;
         bool touchingRightWall;
         bool touchingCeiling;
         bool touchingFloor;
         int airJumpCount;
-        int maxAirJumpCount;
 
-        Character();
+        explicit Character(CharacterType const *type);
 
         void step(float dt);
         void debugDraw(DebugGraphics *debugGraphics);
