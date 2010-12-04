@@ -337,7 +337,7 @@ namespace monomi {
         character->touchDown = false;
         character->touchUp = false;
 
-        // Update touch flags.
+        // Set touch flags.
         Circle circle(character->position, character->type->radius);
         circle.radius += 0.02f;
         typedef boost::ptr_vector<Block>::iterator BlockIterator;
