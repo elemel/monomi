@@ -40,7 +40,14 @@ namespace monomi {
         std::auto_ptr<Random> random_;
         Camera camera_;
         std::auto_ptr<DebugGraphics> debugGraphics_;
-        std::auto_ptr<CharacterType> characterType_;
+        std::auto_ptr<CharacterType> ninjaType_;
+        std::auto_ptr<CharacterType> kunoichiType_;
+        std::auto_ptr<CharacterType> samuraiType_;
+        std::auto_ptr<CharacterType> earthMasterType_;
+        std::auto_ptr<CharacterType> fireMasterType_;
+        std::auto_ptr<CharacterType> airMasterType_;
+        std::auto_ptr<CharacterType> waterMasterType_;
+        std::auto_ptr<CharacterType> voidMasterType_;
         boost::ptr_vector<Character> characters_;
         boost::ptr_vector<Block> blocks_;
         LineSegment2 separator_;
