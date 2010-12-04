@@ -59,8 +59,8 @@ namespace monomi {
         void performAI();
         void resolveCollisions();
         void resolveBlockCollisions();
+        void updateTouchFlags(Character *character);
         void resolveCharacterCollisions();
-        void updateStates();
 
         void draw();
     };

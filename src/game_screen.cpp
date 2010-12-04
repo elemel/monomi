@@ -114,7 +114,7 @@ namespace monomi {
         camera_.scale = 7.0f;
 
         // Create characters.
-        characters_.push_back(new Character(earthMasterType_.get()));
+        characters_.push_back(new Character(airMasterType_.get()));
         characters_.back().position = Point2(2.0f, 2.0f);
         characters_.push_back(new Character(samuraiType_.get()));
         characters_.back().position = Point2(7.0f, 5.0f);
@@ -258,7 +258,6 @@ namespace monomi {
                 i->step(dt_);
             }
             resolveCollisions();
-            updateStates();
         }
     }
 
@@ -291,8 +290,8 @@ namespace monomi {
              ++i)
         {
             if (i->alive) {
-                // Make multiple iterations, resolving only the deepest
-                // collision found during each iteration.
+                // Resolve collisions. Make multiple iterations, resolving only
+                // the deepest collision found during each iteration.
                 for (int j = 0; j < 3; ++j) {
                     // Find the deepest collision.
                     float maxSquaredLength = -1.0f;
@@ -326,6 +325,43 @@ namespace monomi {
                     }
                 }
             }
+            updateTouchFlags(&*i);
+        }
+    }
+
+    void GameScreen::updateTouchFlags(Character *character)
+    {
+        // Clear touch flags.
+        character->touchLeft = false;
+        character->touchRight = false;
+        character->touchDown = false;
+        character->touchUp = false;
+
+        // Update touch flags.
+        Circle circle(character->position, character->type->radius);
+        circle.radius += 0.02f;
+        typedef boost::ptr_vector<Block>::iterator BlockIterator;
+        for (BlockIterator i = blocks_.begin(); i != blocks_.end(); ++i) {
+            if (intersects(circle, i->box)) {
+                LineSegment2 separator = separate(circle, i->box);
+                Vector2 normal = separator.p2 - separator.p1;
+                normal.normalize();
+                float velocity = dot(character->velocity, normal);
+                if (std::abs(velocity) <= 0.02f) {
+                    if (normal.x >= 0.98f) {
+                        character->touchLeft = true;
+                    }
+                    if (normal.x <= -0.98f) {
+                        character->touchRight = true;
+                    }
+                    if (normal.y >= 0.98f) {
+                        character->touchDown = true;
+                    }
+                    if (normal.y <= -0.98f) {
+                        character->touchUp = true;
+                    }
+                }
+            }
         }
     }
 
@@ -349,55 +385,6 @@ namespace monomi {
                 }
                 playerCharacter->velocity *= 0.5f;
                 i->velocity *= 0.5f;
-            }
-        }
-    }
-
-    void GameScreen::updateStates()
-    {
-        typedef boost::ptr_vector<Character>::iterator CharacterIterator;
-        for (CharacterIterator i = characters_.begin(); i != characters_.end();
-             ++i)
-        {
-            i->touchingLeftWall = false;
-            i->touchingRightWall = false;
-            i->touchingCeiling = false;
-            i->touchingFloor = false;
-            if (i->alive) {
-                Circle circle(i->position, i->type->radius);
-                circle.radius += 0.02f;
-                typedef boost::ptr_vector<Block>::iterator BlockIterator;
-                for (BlockIterator j = blocks_.begin(); j != blocks_.end();
-                     ++j)
-                {
-                    if (intersects(circle, j->box)) {
-                        LineSegment2 separator = separate(circle, j->box);
-                        Vector2 normal = separator.p2 - separator.p1;
-                        normal.normalize();
-                        float velocity = dot(i->velocity, normal);
-                        if (std::abs(velocity) <= 0.02f) {
-                            if (normal.x >= 0.98f) {
-                                i->touchingLeftWall = true;
-                            }
-                            if (normal.x <= -0.98f) {
-                                i->touchingRightWall = true;
-                            }
-                            if (normal.y <= -0.98f) {
-                                i->touchingCeiling = true;
-                            }
-                            if (normal.y >= 0.98f) {
-                                i->touchingFloor = true;
-                            }
-                        }
-                    }
-                }
-            }
-            if (i->touchingFloor) {
-                i->state = characterStates::walking;
-            } else if (i->touchingLeftWall || i->touchingRightWall) {
-                i->state = characterStates::wallSliding;
-            } else {
-                i->state = characterStates::jumping;
             }
         }
     }

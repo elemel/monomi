@@ -6,29 +6,12 @@
 namespace monomi {
     class DebugGraphics;
 
-    namespace characterStates {
-        enum CharacterState {
-            crouching,
-            diving,
-            jumping,
-            ledgeHanging,
-            running,
-            sliding,
-            stalking,
-            swimming,
-            walking,
-            wallSliding
-        };
-    }
-
-    using characterStates::CharacterState;
-
     class CharacterControls {
     public:
         bool left : 1;
         bool right : 1;
-        bool up : 1;
         bool down : 1;
+        bool up : 1;
         bool jump : 1;
         bool action : 1;
 
@@ -105,13 +88,12 @@ namespace monomi {
         Point2 position;
         Vector2 velocity;
         Vector2 gravity;
-        CharacterState state;
         CharacterControls controls;
         CharacterControls oldControls;
-        bool touchingLeftWall;
-        bool touchingRightWall;
-        bool touchingCeiling;
-        bool touchingFloor;
+        bool touchLeft;
+        bool touchRight;
+        bool touchDown;
+        bool touchUp;
         int airJumpCount;
 
         explicit Character(CharacterType const *type);

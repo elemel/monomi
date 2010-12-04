@@ -53,8 +53,8 @@ namespace monomi {
     CharacterControls::CharacterControls() :
         left(false),
         right(false),
-        up(false),
         down(false),
+        up(false),
         jump(false),
         action(false)
     { }
@@ -66,17 +66,16 @@ namespace monomi {
         alive(true),
         face(1),
         gravity(0.0f, -20.0f),
-        state(characterStates::jumping),
-        touchingLeftWall(false),
-        touchingRightWall(false),
-        touchingCeiling(false),
-        touchingFloor(false),
+        touchLeft(false),
+        touchRight(false),
+        touchDown(false),
+        touchUp(false),
         airJumpCount(0)
     { }
 
     void Character::step(float dt)
     {
-        if (state == characterStates::walking) {
+        if (touchDown) {
             if (techniques.tripleJump) {
                 airJumpCount = 2;
             } else if (techniques.doubleJump) {
@@ -84,23 +83,27 @@ namespace monomi {
             } else {
                 airJumpCount = 0;
             }
-        } else if (state == characterStates::wallSliding) {
+        } else if (techniques.wallSlide && equipment.tigerClaws &&
+                   (touchLeft || touchRight))
+        {
             airJumpCount = 0;
         }
         if (controls.jump && !oldControls.jump) {
-            if (state == characterStates::walking) {
-                state = characterStates::jumping;
+            if (touchDown) {
                 velocity.y = type->jumpVelocity;
-            } else if (state == characterStates::wallSliding) {
-                state = characterStates::jumping;
-                int jumpFace = int(touchingLeftWall) - int(touchingRightWall);
-                if (jumpFace) {
-                    face = jumpFace;
+            } else if (techniques.wallSlide && equipment.tigerClaws &&
+                       (touchLeft || touchRight))
+            {
+                if (techniques.wallJump) {
+                    int jumpFace = int(touchLeft) - int(touchRight);
+                    if (jumpFace) {
+                        face = jumpFace;
+                    }
+                    velocity.x = float(jumpFace) * type->wallJumpVelocity.x;
+                    velocity.y = type->wallJumpVelocity.y;
                 }
-                velocity.x = float(jumpFace) * type->wallJumpVelocity.x;
-                velocity.y = type->wallJumpVelocity.y;
-            } else if (state == characterStates::jumping) {
-                if (airJumpCount) {
+            } else {
+                if (equipment.ironFan && airJumpCount) {
                     --airJumpCount;
                     velocity.y = type->airJumpVelocity;
                 }
@@ -110,7 +113,7 @@ namespace monomi {
         if (moveFace) {
             face = moveFace;
         }
-        if (state == characterStates::walking) {
+        if (touchDown) {
             if (moveFace) {
                 velocity.x += (float(moveFace) * type->walkAcceleration *
                                dt);
@@ -122,9 +125,7 @@ namespace monomi {
                               std::max(std::abs(velocity.x) -
                                        type->walkAcceleration * dt, 0.0f));
             }
-        } else if (state == characterStates::jumping ||
-                   state == characterStates::wallSliding)
-        {
+        } else {
             if (moveFace) {
                 float driftVelocity = (velocity.x + float(moveFace) *
                                        type->driftAcceleration * dt);
@@ -135,7 +136,7 @@ namespace monomi {
             }
         }
         velocity += dt * gravity;
-        if (state == characterStates::jumping && !controls.jump) {
+        if (!controls.jump) {
             velocity.y = std::min(velocity.y, 3.0f);
         }
         if (velocity.squaredLength() >= type->maxVelocity * type->maxVelocity)
@@ -151,18 +152,14 @@ namespace monomi {
     {
         DebugColor color = debugColors::white();
         if (alive) {
-            switch (state) {
-            case characterStates::jumping:
-                color = debugColors::lightBlue();
-                break;
-
-            case characterStates::walking:
+            if (touchDown) {
                 color = debugColors::yellow();
-                break;
-
-            case characterStates::wallSliding:
+            } else if (techniques.wallSlide && equipment.tigerClaws &&
+                       (touchLeft || touchRight))
+            {
                 color = debugColors::red();
-                break;
+            } else {
+                color = debugColors::lightBlue();
             }
         }
         debugGraphics->drawCircle(Circle(position, type->radius), color);
