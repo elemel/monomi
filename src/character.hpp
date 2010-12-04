@@ -75,7 +75,6 @@ namespace monomi {
 
     class CharacterType {
     public:
-        int key;
         float radius;
         float maxVelocity;
         float walkAcceleration;

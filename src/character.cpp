@@ -39,7 +39,6 @@ namespace monomi {
     { }
 
     CharacterType::CharacterType() :
-        key(0),
         radius(0.75f),
         maxVelocity(20.0f),
         walkAcceleration(12.0f),
