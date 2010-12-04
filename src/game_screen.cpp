@@ -2,6 +2,7 @@
 
 #include "block.hpp"
 #include "character.hpp"
+#include "character_factory.hpp"
 #include "debug_graphics.hpp"
 #include "random.hpp"
 
@@ -11,78 +12,6 @@
 
 namespace monomi {
     namespace {
-        std::auto_ptr<CharacterType> createNinjaType()
-        {
-            std::auto_ptr<CharacterType> type(new CharacterType);
-            return type;
-        }
-
-        std::auto_ptr<CharacterType> createKunoichiType()
-        {
-            std::auto_ptr<CharacterType> type = createNinjaType();
-            return type;
-        }
-
-        std::auto_ptr<CharacterType> createSamuraiType()
-        {
-            std::auto_ptr<CharacterType> type = createNinjaType();
-            return type;
-        }
-
-        std::auto_ptr<CharacterType> createEarthMasterType()
-        {
-            std::auto_ptr<CharacterType> type = createNinjaType();
-            type->radius = 0.95f;
-            type->techniques.drop = true;
-            type->techniques.ledgeGrab = true;
-            type->techniques.ledgeJump = true;
-            type->techniques.slam = true;
-            return type;
-        }
-
-        std::auto_ptr<CharacterType> createFireMasterType()
-        {
-            std::auto_ptr<CharacterType> type = createNinjaType();
-            type->techniques.charge = true;
-            type->techniques.wallJump = true;
-            type->techniques.wallSlide = true;
-            type->equipment.smokeBombs = true;
-            type->equipment.tigerClaws = true;
-            return type;
-        }
-
-        std::auto_ptr<CharacterType> createAirMasterType()
-        {
-            std::auto_ptr<CharacterType> type = createNinjaType();
-            type->techniques.doubleJump = true;
-            type->techniques.slowFall = true;
-            type->techniques.sprint = true;
-            type->techniques.tripleJump = true;
-            type->equipment.ironFan = true;
-            type->equipment.throwingStars = true;
-            return type;
-        }
-
-        std::auto_ptr<CharacterType> createWaterMasterType()
-        {
-            std::auto_ptr<CharacterType> type = createNinjaType();
-            type->techniques.dive = true;
-            type->techniques.swim = true;
-            type->equipment.grapplingHook = true;
-            return type;
-        }
-
-        std::auto_ptr<CharacterType> createVoidMasterType()
-        {
-            std::auto_ptr<CharacterType> type = createNinjaType();
-            type->techniques.disguise = true;
-            type->techniques.split = true;
-            type->techniques.teleport = true;
-            type->equipment.bambooFlute = true;
-            type->equipment.strawBasket = true;
-            return type;
-        }
-
         std::auto_ptr<Block> createBlock(int x, int y)
         {
             std::auto_ptr<Block> block(new Block);
@@ -102,25 +31,18 @@ namespace monomi {
         dt_(1.0f / 60.0f),
         random_(new Random(std::time(0))),
         debugGraphics_(new DebugGraphics),
-        ninjaType_(createNinjaType()),
-        kunoichiType_(createKunoichiType()),
-        samuraiType_(createSamuraiType()),
-        earthMasterType_(createEarthMasterType()),
-        fireMasterType_(createFireMasterType()),
-        airMasterType_(createAirMasterType()),
-        waterMasterType_(createWaterMasterType()),
-        voidMasterType_(createVoidMasterType())
+        characterFactory_(new CharacterFactory)
     {
         camera_.scale = 7.0f;
 
         // Create characters.
-        characters_.push_back(new Character(airMasterType_.get()));
+        characters_.push_back(characterFactory_->createFireMaster());
         characters_.back().position = Point2(2.0f, 2.0f);
-        characters_.push_back(new Character(samuraiType_.get()));
+        characters_.push_back(characterFactory_->createSamurai());
         characters_.back().position = Point2(7.0f, 5.0f);
-        characters_.push_back(new Character(samuraiType_.get()));
+        characters_.push_back(characterFactory_->createSamurai());
         characters_.back().position = Point2(9.0f, 5.0f);
-        characters_.push_back(new Character(samuraiType_.get()));
+        characters_.push_back(characterFactory_->createSamurai());
         characters_.back().position = Point2(11.0f, 5.0f);
 
         // Create blocks.

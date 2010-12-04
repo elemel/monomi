@@ -25,6 +25,7 @@ endif
 objects := \
     block.o \
     character.o \
+    character_factory.o \
     debug_graphics.o \
 	game_screen.o \
 	geometry.o \
@@ -43,9 +44,11 @@ clean:
 
 block.o: block.hpp geometry.hpp debug_graphics.hpp
 character.o: character.hpp geometry.hpp debug_graphics.hpp
+character_factory.o: character_factory.hpp character.hpp geometry.hpp
 debug_graphics.o: debug_graphics.hpp geometry.hpp
 game_screen.o: game_screen.hpp screen.hpp geometry.hpp block.hpp
-game_screen.o: character.hpp debug_graphics.hpp random.hpp
+game_screen.o: character.hpp character_factory.hpp debug_graphics.hpp
+game_screen.o: random.hpp
 geometry.o: geometry.hpp
 main.o: title_screen.hpp screen.hpp
 random.o: random.hpp
