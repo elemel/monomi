@@ -87,6 +87,8 @@ namespace monomi {
 
         explicit Character(CharacterType const *type);
 
+        bool wallSliding() const;
+
         void step(float dt);
         void debugDraw(DebugGraphics *debugGraphics);
     };

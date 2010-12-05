@@ -32,6 +32,12 @@ namespace monomi {
         airJumpCount(0)
     { }
 
+    bool Character::wallSliding() const
+    {
+        return (techniques.test(wallSlideTechnique) &&
+                tools.test(tigerClawTool) && (touchLeft || touchRight));
+    }
+
     void Character::step(float dt)
     {
         if (touchDown) {
@@ -42,17 +48,13 @@ namespace monomi {
             } else {
                 airJumpCount = 0;
             }
-        } else if (techniques.test(wallSlideTechnique) &&
-                   tools.test(tigerClawTool) && (touchLeft || touchRight))
-        {
+        } else if (wallSliding()) {
             airJumpCount = 0;
         }
         if (controls.test(jumpControl) && !oldControls.test(jumpControl)) {
             if (touchDown) {
                 velocity.y = type->jumpVelocity;
-            } else if (techniques.test(wallSlideTechnique) &&
-                       tools.test(tigerClawTool) && (touchLeft || touchRight))
-            {
+            } else if (wallSliding()) {
                 if (techniques.test(wallJumpTechnique)) {
                     int jumpFace = int(touchLeft) - int(touchRight);
                     if (jumpFace) {
@@ -75,8 +77,7 @@ namespace monomi {
         }
         if (touchDown) {
             if (moveFace) {
-                velocity.x += (float(moveFace) * type->walkAcceleration *
-                               dt);
+                velocity.x += (float(moveFace) * type->walkAcceleration * dt);
                 velocity.x = (sign(velocity.x) *
                               std::min(std::abs(velocity.x),
                                        type->maxWalkVelocity));
@@ -114,9 +115,7 @@ namespace monomi {
         if (alive) {
             if (touchDown) {
                 color = debugColors::yellow();
-            } else if (techniques.test(wallSlideTechnique) &&
-                       tools.test(tigerClawTool) && (touchLeft || touchRight))
-            {
+            } else if (wallSliding()) {
                 color = debugColors::red();
             } else {
                 color = debugColors::lightBlue();
