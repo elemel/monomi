@@ -18,15 +18,6 @@ namespace monomi {
         airJumpVelocity(12.0f)
     { }
 
-    CharacterControls::CharacterControls() :
-        left(false),
-        right(false),
-        down(false),
-        up(false),
-        jump(false),
-        action(false)
-    { }
-
     Character::Character(CharacterType const *type) :
         type(type),
         techniques(type->techniques),
@@ -56,7 +47,7 @@ namespace monomi {
         {
             airJumpCount = 0;
         }
-        if (controls.jump && !oldControls.jump) {
+        if (controls.test(jumpControl) && !oldControls.test(jumpControl)) {
             if (touchDown) {
                 velocity.y = type->jumpVelocity;
             } else if (techniques.test(wallSlideTechnique) &&
@@ -77,7 +68,8 @@ namespace monomi {
                 }
             }
         }
-        int moveFace = int(controls.right) - int(controls.left);
+        int moveFace = (int(controls.test(rightControl)) -
+                        int(controls.test(leftControl)));
         if (moveFace) {
             face = moveFace;
         }
@@ -104,7 +96,7 @@ namespace monomi {
             }
         }
         velocity += dt * gravity;
-        if (!controls.jump) {
+        if (!controls.test(jumpControl)) {
             velocity.y = std::min(velocity.y, 3.0f);
         }
         if (velocity.squaredLength() >= type->maxVelocity * type->maxVelocity)

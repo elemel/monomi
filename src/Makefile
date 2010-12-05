@@ -43,12 +43,13 @@ clean:
 # DO NOT DELETE
 
 block.o: block.hpp geometry.hpp debug_graphics.hpp
-character.o: character.hpp geometry.hpp debug_graphics.hpp
-character_factory.o: character_factory.hpp character.hpp geometry.hpp
+character.o: character.hpp control.hpp geometry.hpp debug_graphics.hpp
+character_factory.o: character_factory.hpp character.hpp control.hpp
+character_factory.o: geometry.hpp
 debug_graphics.o: debug_graphics.hpp geometry.hpp
 game_screen.o: game_screen.hpp screen.hpp geometry.hpp block.hpp
-game_screen.o: character.hpp character_factory.hpp debug_graphics.hpp
-game_screen.o: random.hpp
+game_screen.o: character.hpp control.hpp character_factory.hpp
+game_screen.o: debug_graphics.hpp random.hpp
 geometry.o: geometry.hpp
 main.o: title_screen.hpp screen.hpp
 random.o: random.hpp

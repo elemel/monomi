@@ -122,23 +122,23 @@ namespace monomi {
             break;
 
         case SDLK_LEFT:
-            characters_.front().controls.left = true;
+            characters_.front().controls.set(leftControl);
             break;
 
         case SDLK_RIGHT:
-            characters_.front().controls.right = true;
+            characters_.front().controls.set(rightControl);
             break;
 
         case SDLK_DOWN:
-            characters_.front().controls.down = true;
+            characters_.front().controls.set(downControl);
             break;
 
         case SDLK_UP:
-            characters_.front().controls.up = true;
+            characters_.front().controls.set(upControl);
             break;
 
         case SDLK_SPACE:
-            characters_.front().controls.jump = true;
+            characters_.front().controls.set(jumpControl);
             break;
         }
     }
@@ -147,23 +147,23 @@ namespace monomi {
     {
         switch (event.key.keysym.sym) {
         case SDLK_LEFT:
-            characters_.front().controls.left = false;
+            characters_.front().controls.reset(leftControl);
             break;
 
         case SDLK_RIGHT:
-            characters_.front().controls.right = false;
+            characters_.front().controls.reset(rightControl);
             break;
 
         case SDLK_DOWN:
-            characters_.front().controls.down = false;
+            characters_.front().controls.reset(downControl);
             break;
 
         case SDLK_UP:
-            characters_.front().controls.up = false;
+            characters_.front().controls.reset(upControl);
             break;
 
         case SDLK_SPACE:
-            characters_.front().controls.jump = false;
+            characters_.front().controls.reset(jumpControl);
             break;
         }
     }
@@ -190,11 +190,11 @@ namespace monomi {
         {
             if (random_->generate() <= dt_) {
                 int face = int(random_->generate() * 3.0f) - 1;
-                i->controls.left = (face == -1);
-                i->controls.right = (face == 1);
+                i->controls.set(leftControl, (face == -1));
+                i->controls.set(rightControl, (face == 1));
             }
             if (random_->generate() <= dt_) {
-                i->controls.jump = (random_->generate() <= 0.5f);
+                i->controls.set(jumpControl, (random_->generate() <= 0.5f));
             }
         }
     }

@@ -1,24 +1,13 @@
 #ifndef MONOMI_CHARACTER_HPP
 #define MONOMI_CHARACTER_HPP
 
+#include "control.hpp"
 #include "geometry.hpp"
 
 #include <bitset>
 
 namespace monomi {
     class DebugGraphics;
-
-    class CharacterControls {
-    public:
-        bool left : 1;
-        bool right : 1;
-        bool down : 1;
-        bool up : 1;
-        bool jump : 1;
-        bool action : 1;
-
-        CharacterControls();
-    };
 
     enum Technique {
         ambushTechnique,
@@ -88,8 +77,8 @@ namespace monomi {
         Point2 position;
         Vector2 velocity;
         Vector2 gravity;
-        CharacterControls controls;
-        CharacterControls oldControls;
+        std::bitset<controlCount> controls;
+        std::bitset<controlCount> oldControls;
         bool touchLeft;
         bool touchRight;
         bool touchDown;
