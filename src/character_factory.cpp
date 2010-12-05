@@ -19,53 +19,53 @@ namespace monomi {
         {
             std::auto_ptr<CharacterType> type = createNinjaType();
             type->radius = 0.95f;
-            type->techniques.drop = true;
-            type->techniques.ledgeGrab = true;
-            type->techniques.ledgeJump = true;
-            type->techniques.stomp = true;
+            type->techniques.set(dropTechnique);
+            type->techniques.set(ledgeGrabTechnique);
+            type->techniques.set(ledgeJumpTechnique);
+            type->techniques.set(stompTechnique);
             return type;
         }
 
         std::auto_ptr<CharacterType> createFireMasterType()
         {
             std::auto_ptr<CharacterType> type = createNinjaType();
-            type->techniques.charge = true;
-            type->techniques.wallJump = true;
-            type->techniques.wallSlide = true;
-            type->equipment.smokeBombs = true;
-            type->equipment.tigerClaws = true;
+            type->techniques.set(chargeTechnique);
+            type->techniques.set(wallJumpTechnique);
+            type->techniques.set(wallSlideTechnique);
+            type->tools.set(smokeBombTool);
+            type->tools.set(tigerClawTool);
             return type;
         }
 
         std::auto_ptr<CharacterType> createAirMasterType()
         {
             std::auto_ptr<CharacterType> type = createNinjaType();
-            type->techniques.doubleJump = true;
-            type->techniques.slowFall = true;
-            type->techniques.sprint = true;
-            type->techniques.tripleJump = true;
-            type->equipment.ironFan = true;
-            type->equipment.throwingStars = true;
+            type->techniques.set(doubleJumpTechnique);
+            type->techniques.set(slowFallTechnique);
+            type->techniques.set(sprintTechnique);
+            type->techniques.set(tripleJumpTechnique);
+            type->tools.set(ironFanTool);
+            type->tools.set(throwingStarTool);
             return type;
         }
 
         std::auto_ptr<CharacterType> createWaterMasterType()
         {
             std::auto_ptr<CharacterType> type = createNinjaType();
-            type->techniques.dive = true;
-            type->techniques.swim = true;
-            type->equipment.grapplingHook = true;
+            type->techniques.set(diveTechnique);
+            type->techniques.set(swimTechnique);
+            type->tools.set(grapplingHookTool);
             return type;
         }
 
         std::auto_ptr<CharacterType> createVoidMasterType()
         {
             std::auto_ptr<CharacterType> type = createNinjaType();
-            type->techniques.disguise = true;
-            type->techniques.split = true;
-            type->techniques.teleport = true;
-            type->equipment.bambooFlute = true;
-            type->equipment.strawBasket = true;
+            type->techniques.set(disguiseTechnique);
+            type->techniques.set(splitTechnique);
+            type->techniques.set(teleportTechnique);
+            type->tools.set(bambooFluteTool);
+            type->tools.set(strawBasketTool);
             return type;
         }
     }

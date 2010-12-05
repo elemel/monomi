@@ -6,38 +6,6 @@
 #include <iostream>
 
 namespace monomi {
-    Techniques::Techniques() :
-        ambush(false),
-        charge(false),
-        dive(false),
-        disguise(false),
-        doubleJump(false),
-        drop(false),
-        ledgeGrab(false),
-        ledgeJump(false),
-        run(false),
-        slowFall(false),
-        split(false),
-        sprint(false),
-        stomp(false),
-        swim(false),
-        teleport(false),
-        tripleJump(false),
-        wallJump(false),
-        wallSlide(false)
-    { }
-
-    Equipment::Equipment() :
-        airSkin(false),
-        bambooFlute(false),
-        grapplingHook(false),
-        ironFan(false),
-        smokeBombs(false),
-        strawBasket(false),
-        tigerClaws(false),
-        throwingStars(false)
-    { }
-
     CharacterType::CharacterType() :
         radius(0.75f),
         maxVelocity(20.0f),
@@ -62,7 +30,7 @@ namespace monomi {
     Character::Character(CharacterType const *type) :
         type(type),
         techniques(type->techniques),
-        equipment(type->equipment),
+        tools(type->tools),
         alive(true),
         face(1),
         gravity(0.0f, -20.0f),
@@ -76,25 +44,25 @@ namespace monomi {
     void Character::step(float dt)
     {
         if (touchDown) {
-            if (techniques.tripleJump) {
+            if (techniques.test(tripleJumpTechnique)) {
                 airJumpCount = 2;
-            } else if (techniques.doubleJump) {
+            } else if (techniques.test(doubleJumpTechnique)) {
                 airJumpCount = 1;
             } else {
                 airJumpCount = 0;
             }
-        } else if (techniques.wallSlide && equipment.tigerClaws &&
-                   (touchLeft || touchRight))
+        } else if (techniques.test(wallSlideTechnique) &&
+                   tools.test(tigerClawTool) && (touchLeft || touchRight))
         {
             airJumpCount = 0;
         }
         if (controls.jump && !oldControls.jump) {
             if (touchDown) {
                 velocity.y = type->jumpVelocity;
-            } else if (techniques.wallSlide && equipment.tigerClaws &&
-                       (touchLeft || touchRight))
+            } else if (techniques.test(wallSlideTechnique) &&
+                       tools.test(tigerClawTool) && (touchLeft || touchRight))
             {
-                if (techniques.wallJump) {
+                if (techniques.test(wallJumpTechnique)) {
                     int jumpFace = int(touchLeft) - int(touchRight);
                     if (jumpFace) {
                         face = jumpFace;
@@ -103,7 +71,7 @@ namespace monomi {
                     velocity.y = type->wallJumpVelocity.y;
                 }
             } else {
-                if (equipment.ironFan && airJumpCount) {
+                if (tools.test(ironFanTool) && airJumpCount) {
                     --airJumpCount;
                     velocity.y = type->airJumpVelocity;
                 }
@@ -154,8 +122,8 @@ namespace monomi {
         if (alive) {
             if (touchDown) {
                 color = debugColors::yellow();
-            } else if (techniques.wallSlide && equipment.tigerClaws &&
-                       (touchLeft || touchRight))
+            } else if (techniques.test(wallSlideTechnique) &&
+                       tools.test(tigerClawTool) && (touchLeft || touchRight))
             {
                 color = debugColors::red();
             } else {
