@@ -22,7 +22,7 @@ namespace monomi {
             type->techniques.drop = true;
             type->techniques.ledgeGrab = true;
             type->techniques.ledgeJump = true;
-            type->techniques.slam = true;
+            type->techniques.stomp = true;
             return type;
         }
 

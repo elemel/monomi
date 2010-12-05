@@ -29,10 +29,10 @@ namespace monomi {
         bool ledgeGrab : 1;
         bool ledgeJump : 1;
         bool run : 1;
-        bool slam : 1;
         bool slowFall : 1;
         bool split : 1;
         bool sprint : 1;
+        bool stomp : 1;
         bool swim : 1;
         bool teleport : 1;
         bool tripleJump : 1;
