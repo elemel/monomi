@@ -3,6 +3,7 @@
 #include "block.hpp"
 #include "character.hpp"
 #include "character_factory.hpp"
+#include "character_type.hpp"
 #include "debug_graphics.hpp"
 #include "random.hpp"
 

@@ -3,64 +3,14 @@
 
 #include "control.hpp"
 #include "geometry.hpp"
+#include "technique.hpp"
+#include "tool.hpp"
 
 #include <bitset>
 
 namespace monomi {
+    class CharacterType;
     class DebugGraphics;
-
-    enum Technique {
-        ambushTechnique,
-        chargeTechnique,
-        diveTechnique,
-        disguiseTechnique,
-        doubleJumpTechnique,
-        dropTechnique,
-        ledgeGrabTechnique,
-        ledgeJumpTechnique,
-        runTechnique,
-        slowFallTechnique,
-        splitTechnique,
-        sprintTechnique,
-        stompTechnique,
-        swimTechnique,
-        teleportTechnique,
-        tripleJumpTechnique,
-        wallJumpTechnique,
-        wallSlideTechnique,
-
-        techniqueCount
-    };
-
-    enum Tool {
-        airSkinTool,
-        bambooFluteTool,
-        grapplingHookTool,
-        ironFanTool,
-        smokeBombTool,
-        strawBasketTool,
-        tigerClawTool,
-        throwingStarTool,
-
-        toolCount
-    };
-
-    class CharacterType {
-    public:
-        float radius;
-        float maxVelocity;
-        float walkAcceleration;
-        float maxWalkVelocity;
-        float driftAcceleration;
-        float maxDriftVelocity;
-        float jumpVelocity;
-        Vector2 wallJumpVelocity;
-        float airJumpVelocity;
-        std::bitset<techniqueCount> techniques;
-        std::bitset<toolCount> tools;
-
-        CharacterType();
-    };
 
     class Character {
     public:

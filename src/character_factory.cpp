@@ -1,6 +1,7 @@
 #include "character_factory.hpp"
 
 #include "character.hpp"
+#include "character_type.hpp"
 
 namespace monomi {
     namespace {
