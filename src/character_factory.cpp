@@ -19,7 +19,8 @@ namespace monomi {
         std::auto_ptr<CharacterType> createEarthMasterType()
         {
             std::auto_ptr<CharacterType> type = createNinjaType();
-            type->radius = 0.95f;
+            type->width = 1.4f;
+            type->height = 1.9f;
             type->techniques.set(dropTechnique);
             type->techniques.set(ledgeGrabTechnique);
             type->techniques.set(ledgeJumpTechnique);

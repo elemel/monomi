@@ -27,6 +27,20 @@ namespace monomi {
                 tools.test(tigerClawTool) && (touchLeft || touchRight));
     }
 
+    Circle Character::bottomCircle() const
+    {
+        return Circle(position -
+                      Vector2(0.0f, 0.5f * (type->height - type->width)),
+                      0.5f * type->width);
+    }
+
+    Circle Character::topCircle() const
+    {
+        return Circle(position +
+                      Vector2(0.0f, 0.5f * (type->height - type->width)),
+                      0.5f * type->width);
+    }
+
     void Character::step(float dt)
     {
         if (touchDown) {
@@ -110,14 +124,11 @@ namespace monomi {
                 color = debugColors::lightBlue();
             }
         }
-        debugGraphics->drawCircle(Circle(position, type->radius), color);
-        Point2 eyeCenter1 = (position + type->radius *
-                             Vector2(0.1f * float(face), 0.3f));
-        Point2 eyeCenter2 = (position + type->radius *
-                             Vector2(0.4f * float(face), 0.3f));
-        debugGraphics->drawCircle(Circle(eyeCenter1, 0.1f * type->radius),
-                                  color);
-        debugGraphics->drawCircle(Circle(eyeCenter2, 0.1f * type->radius),
-                                  color);
+        debugGraphics->drawCircle(bottomCircle(), color);
+        debugGraphics->drawCircle(topCircle(), color);
+        Circle c = topCircle();
+        LineSegment2 s(c.center,
+                       c.center + Vector2(float(face) * c.radius, 0.0f));
+        debugGraphics->drawLineSegment(s, color);
     }
 }

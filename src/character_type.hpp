@@ -10,7 +10,8 @@
 namespace monomi {
     class CharacterType {
     public:
-        float radius;
+        float width;
+        float height;
         float maxVelocity;
         float walkAcceleration;
         float maxWalkVelocity;

@@ -38,6 +38,8 @@ namespace monomi {
         explicit Character(CharacterType const *type);
 
         bool wallSliding() const;
+        Circle bottomCircle() const;
+        Circle topCircle() const;
 
         void step(float dt);
         void debugDraw(DebugGraphics *debugGraphics);

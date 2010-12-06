@@ -37,7 +37,7 @@ namespace monomi {
         camera_.scale = 7.0f;
 
         // Create characters.
-        characters_.push_back(characterFactory_->createFireMaster());
+        characters_.push_back(characterFactory_->createEarthMaster());
         characters_.back().position = Point2(2.0f, 2.0f);
         characters_.push_back(characterFactory_->createSamurai());
         characters_.back().position = Point2(7.0f, 5.0f);
@@ -223,10 +223,18 @@ namespace monomi {
                     for (BlockIterator k = blocks_.begin(); k != blocks_.end();
                          ++k)
                     {
-                        Circle circle(i->position, i->type->radius);
-                        if (intersects(circle, k->box)) {
+                        if (intersects(i->bottomCircle(), k->box)) {
                             LineSegment2 separator =
-                                separate(circle, k->box);
+                                separate(i->bottomCircle(), k->box);
+                            if (separator.squaredLength() >= maxSquaredLength)
+                            {
+                                maxSquaredLength = separator.squaredLength();
+                                maxSeparator = separator;
+                            }
+                        }
+                        if (intersects(i->topCircle(), k->box)) {
+                            LineSegment2 separator =
+                                separate(i->topCircle(), k->box);
                             if (separator.squaredLength() >= maxSquaredLength)
                             {
                                 maxSquaredLength = separator.squaredLength();
@@ -261,27 +269,30 @@ namespace monomi {
         character->touchUp = false;
 
         // Set touch flags.
-        Circle circle(character->position, character->type->radius);
-        circle.radius += 0.02f;
-        typedef boost::ptr_vector<Block>::iterator BlockIterator;
-        for (BlockIterator i = blocks_.begin(); i != blocks_.end(); ++i) {
-            if (intersects(circle, i->box)) {
-                LineSegment2 separator = separate(circle, i->box);
-                Vector2 normal = separator.p2 - separator.p1;
-                normal.normalize();
-                float velocity = dot(character->velocity, normal);
-                if (std::abs(velocity) <= 0.02f) {
-                    if (normal.x >= 0.98f) {
-                        character->touchLeft = true;
-                    }
-                    if (normal.x <= -0.98f) {
-                        character->touchRight = true;
-                    }
-                    if (normal.y >= 0.98f) {
-                        character->touchDown = true;
-                    }
-                    if (normal.y <= -0.98f) {
-                        character->touchUp = true;
+        for (int i = 0; i < 2; ++i) {
+            Circle circle = i ? character->bottomCircle() :
+                                character->topCircle();
+            circle.radius += 0.02f;
+            typedef boost::ptr_vector<Block>::iterator BlockIterator;
+            for (BlockIterator j = blocks_.begin(); j != blocks_.end(); ++j) {
+                if (intersects(circle, j->box)) {
+                    LineSegment2 separator = separate(circle, j->box);
+                    Vector2 normal = separator.p2 - separator.p1;
+                    normal.normalize();
+                    float velocity = dot(character->velocity, normal);
+                    if (std::abs(velocity) <= 0.02f) {
+                        if (normal.x >= 0.98f) {
+                            character->touchLeft = true;
+                        }
+                        if (normal.x <= -0.98f) {
+                            character->touchRight = true;
+                        }
+                        if (normal.y >= 0.98f) {
+                            character->touchDown = true;
+                        }
+                        if (normal.y <= -0.98f) {
+                            character->touchUp = true;
+                        }
                     }
                 }
             }
@@ -295,9 +306,14 @@ namespace monomi {
         for (Iterator i = characters_.begin() + 1; i != characters_.end(); ++i)
         {
             if (playerCharacter->alive && i->alive &&
-                intersects(Circle(playerCharacter->position,
-                                  playerCharacter->type->radius),
-                           Circle(i->position, i->type->radius)))
+                (intersects(playerCharacter->bottomCircle(),
+                            i->bottomCircle()) ||
+                 intersects(playerCharacter->bottomCircle(),
+                            i->topCircle()) ||
+                 intersects(playerCharacter->topCircle(),
+                            i->bottomCircle()) ||
+                 intersects(playerCharacter->topCircle(),
+                            i->topCircle())))
             {
                 int side = int(sign(i->position.x -
                                     playerCharacter->position.x));
