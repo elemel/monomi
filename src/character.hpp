@@ -1,6 +1,7 @@
 #ifndef MONOMI_CHARACTER_HPP
 #define MONOMI_CHARACTER_HPP
 
+#include "actor.hpp"
 #include "control.hpp"
 #include "geometry.hpp"
 #include "technique.hpp"
@@ -12,7 +13,9 @@ namespace monomi {
     class CharacterType;
     class DebugGraphics;
 
-    class Character {
+    class Character :
+        public Actor
+    {
     public:
         CharacterType const *type;
         std::bitset<techniqueCount> techniques;

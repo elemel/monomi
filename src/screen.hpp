@@ -6,8 +6,7 @@
 namespace monomi {
     class Screen {
     public:
-        virtual ~Screen()
-        { }
+        virtual ~Screen();
 
         virtual std::auto_ptr<Screen> run() = 0;
     };

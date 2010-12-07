@@ -1,33 +1,34 @@
 # Build.
 ifndef build
-    build := release
+	build := release
 endif
 ifeq ($(build), debug)
-    CXXFLAGS += -g -DDEBUG
+	CXXFLAGS += -g -DDEBUG
 else ifeq ($(build), release)
-    CXXFLAGS += -O3 -DNDEBUG
+	CXXFLAGS += -O3 -DNDEBUG
 else
-    $(error Invalid build "$(build)", please specify "debug" or "release")
+	$(error Invalid build "$(build)", please specify "debug" or "release")
 endif
 
 # Platform.
 ifndef platform
-    # TODO: Autodetect.
-    platform := mac
+	# TODO: Autodetect.
+	platform := mac
 endif
 ifeq ($(platform), mac)
-    CPPFLAGS += -I/usr/local/include/SDL -I/opt/local/include
-    LDFLAGS += -framework OpenGL -L/usr/local/lib -lSDL
+	CPPFLAGS += -I/usr/local/include/SDL -I/opt/local/include
+	LDFLAGS += -framework OpenGL -L/usr/local/lib -lSDL
 else
-    $(error Invalid platform "$(platform)", only "mac" is supported for now)
+	$(error Invalid platform "$(platform)", only "mac" is supported for now)
 endif
 
 objects := \
-    block.o \
-    character.o \
-    character_factory.o \
-    character_type.o \
-    debug_graphics.o \
+	actor.o \
+	block.o \
+	character.o \
+	character_factory.o \
+	character_type.o \
+	debug_graphics.o \
 	game_screen.o \
 	geometry.o \
 	main.o \
@@ -43,14 +44,16 @@ clean:
 
 # DO NOT DELETE
 
-block.o: block.hpp geometry.hpp debug_graphics.hpp
-character.o: character.hpp control.hpp geometry.hpp technique.hpp tool.hpp
-character.o: character_type.hpp debug_graphics.hpp
-character_factory.o: character_factory.hpp character.hpp control.hpp
-character_factory.o: geometry.hpp technique.hpp tool.hpp character_type.hpp
+actor.o: actor.hpp
+block.o: block.hpp actor.hpp geometry.hpp debug_graphics.hpp
+character.o: character.hpp actor.hpp control.hpp geometry.hpp technique.hpp
+character.o: tool.hpp character_type.hpp debug_graphics.hpp
+character_factory.o: character_factory.hpp character.hpp actor.hpp
+character_factory.o: control.hpp geometry.hpp technique.hpp tool.hpp
+character_factory.o: character_type.hpp
 character_type.o: character_type.hpp geometry.hpp technique.hpp tool.hpp
 debug_graphics.o: debug_graphics.hpp geometry.hpp
-game_screen.o: game_screen.hpp screen.hpp geometry.hpp block.hpp
+game_screen.o: game_screen.hpp screen.hpp geometry.hpp block.hpp actor.hpp
 game_screen.o: character.hpp control.hpp technique.hpp tool.hpp
 game_screen.o: character_factory.hpp character_type.hpp debug_graphics.hpp
 game_screen.o: random.hpp
