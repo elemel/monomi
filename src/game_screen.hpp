@@ -1,9 +1,9 @@
 #ifndef MONOMI_GAME_SCREEN_HPP
 #define MONOMI_GAME_SCREEN_HPP
 
-#include "screen.hpp"
-
+#include "camera.hpp"
 #include "geometry.hpp"
+#include "screen.hpp"
 
 #include <memory>
 #include <boost/ptr_container/ptr_vector.hpp>
@@ -15,14 +15,6 @@ namespace monomi {
     class CharacterFactory;
     class DebugGraphics;
     class Random;
-
-    class Camera {
-    public:
-        Camera();
-
-        Point2 position;
-        float scale;
-    };
 
     class GameScreen :
         public Screen

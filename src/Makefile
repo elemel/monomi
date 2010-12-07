@@ -25,6 +25,7 @@ endif
 objects := \
 	actor.o \
 	block.o \
+	camera.o \
 	character.o \
 	character_factory.o \
 	character_type.o \
@@ -46,6 +47,7 @@ clean:
 
 actor.o: actor.hpp
 block.o: block.hpp actor.hpp geometry.hpp debug_graphics.hpp
+camera.o: camera.hpp geometry.hpp
 character.o: character.hpp actor.hpp control.hpp geometry.hpp technique.hpp
 character.o: tool.hpp character_type.hpp debug_graphics.hpp
 character_factory.o: character_factory.hpp character.hpp actor.hpp
@@ -53,12 +55,13 @@ character_factory.o: control.hpp geometry.hpp technique.hpp tool.hpp
 character_factory.o: character_type.hpp
 character_type.o: character_type.hpp geometry.hpp technique.hpp tool.hpp
 debug_graphics.o: debug_graphics.hpp geometry.hpp
-game_screen.o: game_screen.hpp screen.hpp geometry.hpp block.hpp actor.hpp
-game_screen.o: character.hpp control.hpp technique.hpp tool.hpp
+game_screen.o: game_screen.hpp camera.hpp geometry.hpp screen.hpp block.hpp
+game_screen.o: actor.hpp character.hpp control.hpp technique.hpp tool.hpp
 game_screen.o: character_factory.hpp character_type.hpp debug_graphics.hpp
 game_screen.o: random.hpp
 geometry.o: geometry.hpp
 main.o: title_screen.hpp screen.hpp
 random.o: random.hpp
 screen.o: screen.hpp
-title_screen.o: title_screen.hpp screen.hpp game_screen.hpp geometry.hpp
+title_screen.o: title_screen.hpp screen.hpp game_screen.hpp camera.hpp
+title_screen.o: geometry.hpp

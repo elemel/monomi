@@ -22,10 +22,6 @@ namespace monomi {
         }
     }
 
-    Camera::Camera() :
-        scale(1.0f)
-    { }
-
     GameScreen::GameScreen() :
         quit_(false),
         time_(0.0f),
