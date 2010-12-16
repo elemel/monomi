@@ -1,18 +1,25 @@
 #ifndef MONOMI_GAME_HPP
 #define MONOMI_GAME_HPP
 
-#include <boost/shared_ptr.hpp>
-#include <boost/weak_ptr.hpp>
+#include "game_fwd.hpp"
+
+#include "actor_fwd.hpp"
+#include "process.hpp"
+
+#include <vector>
 
 namespace monomi {
-    class Game;
-
-    typedef boost::shared_ptr<Game> GamePtr;
-    typedef boost::weak_ptr<Game> GameWeakPtr;
-
-    class Game {
+    class Game :
+        public Process
+    {
     public:
+        bool alive() const;
         void update(float dt);
+
+    private:
+        typedef std::vector<ActorPtr> ActorVector;
+
+        ActorVector actors_;
     };
 }
 

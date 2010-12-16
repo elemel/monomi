@@ -8,6 +8,11 @@
 #include <boost/noncopyable.hpp>
 
 namespace monomi {
+    class GameApplication;
+
+    typedef boost::shared_ptr<GameApplication> GameApplicationPtr;
+    typedef boost::weak_ptr<GameApplication> GameApplicationWeakPtr;
+
     class GameApplication :
         private boost::noncopyable
     {
@@ -19,6 +24,7 @@ namespace monomi {
     private:
         typedef std::vector<GameViewPtr> ViewVector;
 
+        float dt_;
         GamePtr game_;
         ViewVector gameViews_;
     };
