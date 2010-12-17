@@ -13,6 +13,7 @@ namespace monomi {
     class Character;
     class CharacterFactory;
     class DebugGraphics;
+    class Game;
     class Random;
 
     class GameScreen :
@@ -35,6 +36,7 @@ namespace monomi {
         std::vector<boost::shared_ptr<Character> > characters_;
         std::vector<boost::shared_ptr<Block> > blocks_;
         LineSegment2 separator_;
+        boost::shared_ptr<Game> game_;
 
         void pumpEvents();
         void onKeyDown(SDL_Event const &event);

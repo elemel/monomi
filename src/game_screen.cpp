@@ -5,6 +5,7 @@
 #include "character_factory.hpp"
 #include "character_type.hpp"
 #include "debug_graphics.hpp"
+#include "game.hpp"
 #include "random.hpp"
 
 #include <ctime>
@@ -28,7 +29,8 @@ namespace monomi {
         dt_(1.0f / 60.0f),
         random_(new Random(std::time(0))),
         debugGraphics_(new DebugGraphics),
-        characterFactory_(new CharacterFactory)
+        characterFactory_(new CharacterFactory),
+        game_(new Game)
     {
         camera_.scale = 7.0f;
 

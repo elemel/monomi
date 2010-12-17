@@ -30,6 +30,7 @@ objects := \
 	character_factory.o \
 	character_type.o \
 	debug_graphics.o \
+	game.o \
 	game_screen.o \
 	geometry.o \
 	main.o \
