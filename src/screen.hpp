@@ -1,14 +1,14 @@
 #ifndef MONOMI_SCREEN_HPP
 #define MONOMI_SCREEN_HPP
 
-#include <memory>
+#include <boost/shared_ptr.hpp>
 
 namespace monomi {
     class Screen {
     public:
         virtual ~Screen();
 
-        virtual std::auto_ptr<Screen> run() = 0;
+        virtual boost::shared_ptr<Screen> run() = 0;
     };
 }
 

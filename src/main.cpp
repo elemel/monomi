@@ -43,7 +43,7 @@ int main(int argc, char *argv[])
         }
 
         // Run screens.
-        std::auto_ptr<monomi::Screen> screen(new monomi::TitleScreen);
+        boost::shared_ptr<monomi::Screen> screen(new monomi::TitleScreen);
         do {
             screen = screen->run();
         } while (screen.get());

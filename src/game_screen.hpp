@@ -5,9 +5,8 @@
 #include "geometry.hpp"
 #include "screen.hpp"
 
-#include <memory>
-#include <boost/ptr_container/ptr_vector.hpp>
 #include <SDL.h>
+#include <vector>
 
 namespace monomi {
     class Block;
@@ -23,18 +22,18 @@ namespace monomi {
         GameScreen();
         ~GameScreen();
 
-        std::auto_ptr<Screen> run();
+        boost::shared_ptr<Screen> run();
 
     private:
         bool quit_;
         float time_;
         float dt_;
-        std::auto_ptr<Random> random_;
+        boost::shared_ptr<Random> random_;
         Camera camera_;
-        std::auto_ptr<DebugGraphics> debugGraphics_;
-        std::auto_ptr<CharacterFactory> characterFactory_;
-        boost::ptr_vector<Character> characters_;
-        boost::ptr_vector<Block> blocks_;
+        boost::shared_ptr<DebugGraphics> debugGraphics_;
+        boost::shared_ptr<CharacterFactory> characterFactory_;
+        std::vector<boost::shared_ptr<Character> > characters_;
+        std::vector<boost::shared_ptr<Block> > blocks_;
         LineSegment2 separator_;
 
         void pumpEvents();

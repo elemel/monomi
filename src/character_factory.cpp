@@ -5,20 +5,20 @@
 
 namespace monomi {
     namespace {
-        std::auto_ptr<CharacterType> createNinjaType()
+        boost::shared_ptr<CharacterType> createNinjaType()
         {
-            return std::auto_ptr<CharacterType>(new CharacterType);
+            return boost::shared_ptr<CharacterType>(new CharacterType);
         }
 
-        std::auto_ptr<CharacterType> createSamuraiType()
+        boost::shared_ptr<CharacterType> createSamuraiType()
         {
-            std::auto_ptr<CharacterType> type = createNinjaType();
+            boost::shared_ptr<CharacterType> type = createNinjaType();
             return type;
         }
 
-        std::auto_ptr<CharacterType> createEarthMasterType()
+        boost::shared_ptr<CharacterType> createEarthMasterType()
         {
-            std::auto_ptr<CharacterType> type = createNinjaType();
+            boost::shared_ptr<CharacterType> type = createNinjaType();
             type->width = 1.4f;
             type->height = 1.9f;
             type->techniques.set(dropTechnique);
@@ -28,9 +28,9 @@ namespace monomi {
             return type;
         }
 
-        std::auto_ptr<CharacterType> createFireMasterType()
+        boost::shared_ptr<CharacterType> createFireMasterType()
         {
-            std::auto_ptr<CharacterType> type = createNinjaType();
+            boost::shared_ptr<CharacterType> type = createNinjaType();
             type->techniques.set(chargeTechnique);
             type->techniques.set(wallJumpTechnique);
             type->techniques.set(wallSlideTechnique);
@@ -39,9 +39,9 @@ namespace monomi {
             return type;
         }
 
-        std::auto_ptr<CharacterType> createAirMasterType()
+        boost::shared_ptr<CharacterType> createAirMasterType()
         {
-            std::auto_ptr<CharacterType> type = createNinjaType();
+            boost::shared_ptr<CharacterType> type = createNinjaType();
             type->techniques.set(doubleJumpTechnique);
             type->techniques.set(slowFallTechnique);
             type->techniques.set(sprintTechnique);
@@ -51,18 +51,18 @@ namespace monomi {
             return type;
         }
 
-        std::auto_ptr<CharacterType> createWaterMasterType()
+        boost::shared_ptr<CharacterType> createWaterMasterType()
         {
-            std::auto_ptr<CharacterType> type = createNinjaType();
+            boost::shared_ptr<CharacterType> type = createNinjaType();
             type->techniques.set(diveTechnique);
             type->techniques.set(swimTechnique);
             type->tools.set(grapplingHookTool);
             return type;
         }
 
-        std::auto_ptr<CharacterType> createVoidMasterType()
+        boost::shared_ptr<CharacterType> createVoidMasterType()
         {
-            std::auto_ptr<CharacterType> type = createNinjaType();
+            boost::shared_ptr<CharacterType> type = createNinjaType();
             type->techniques.set(disguiseTechnique);
             type->techniques.set(splitTechnique);
             type->techniques.set(teleportTechnique);
@@ -82,38 +82,38 @@ namespace monomi {
         voidMasterType_(createVoidMasterType())
     { }
 
-    std::auto_ptr<Character> CharacterFactory::createNinja()
+    boost::shared_ptr<Character> CharacterFactory::createNinja()
     {
-        return std::auto_ptr<Character>(new Character(ninjaType_.get()));
+        return boost::shared_ptr<Character>(new Character(ninjaType_.get()));
     }
 
-    std::auto_ptr<Character> CharacterFactory::createSamurai()
+    boost::shared_ptr<Character> CharacterFactory::createSamurai()
     {
-        return std::auto_ptr<Character>(new Character(samuraiType_.get()));
+        return boost::shared_ptr<Character>(new Character(samuraiType_.get()));
     }
 
-    std::auto_ptr<Character> CharacterFactory::createEarthMaster()
+    boost::shared_ptr<Character> CharacterFactory::createEarthMaster()
     {
-        return std::auto_ptr<Character>(new Character(earthMasterType_.get()));
+        return boost::shared_ptr<Character>(new Character(earthMasterType_.get()));
     }
 
-    std::auto_ptr<Character> CharacterFactory::createFireMaster()
+    boost::shared_ptr<Character> CharacterFactory::createFireMaster()
     {
-        return std::auto_ptr<Character>(new Character(fireMasterType_.get()));
+        return boost::shared_ptr<Character>(new Character(fireMasterType_.get()));
     }
 
-    std::auto_ptr<Character> CharacterFactory::createAirMaster()
+    boost::shared_ptr<Character> CharacterFactory::createAirMaster()
     {
-        return std::auto_ptr<Character>(new Character(airMasterType_.get()));
+        return boost::shared_ptr<Character>(new Character(airMasterType_.get()));
     }
 
-    std::auto_ptr<Character> CharacterFactory::createWaterMaster()
+    boost::shared_ptr<Character> CharacterFactory::createWaterMaster()
     {
-        return std::auto_ptr<Character>(new Character(waterMasterType_.get()));
+        return boost::shared_ptr<Character>(new Character(waterMasterType_.get()));
     }
 
-    std::auto_ptr<Character> CharacterFactory::createVoidMaster()
+    boost::shared_ptr<Character> CharacterFactory::createVoidMaster()
     {
-        return std::auto_ptr<Character>(new Character(voidMasterType_.get()));
+        return boost::shared_ptr<Character>(new Character(voidMasterType_.get()));
     }
 }

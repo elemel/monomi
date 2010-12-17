@@ -9,13 +9,13 @@ namespace monomi {
         quit_(false)
     { }
 
-    std::auto_ptr<Screen> TitleScreen::run()
+    boost::shared_ptr<Screen> TitleScreen::run()
     {
         do {
             pollEvents();
             draw();
         } while (!quit_);
-        return std::auto_ptr<Screen>();
+        return boost::shared_ptr<Screen>();
     }
 
     void TitleScreen::pollEvents()
@@ -46,7 +46,7 @@ namespace monomi {
 
         case SDLK_SPACE:
         case SDLK_RETURN:
-            std::auto_ptr<GameScreen> gameScreen(new GameScreen);
+            boost::shared_ptr<GameScreen> gameScreen(new GameScreen);
             gameScreen->run();
             break;
         }

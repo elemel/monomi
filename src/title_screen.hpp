@@ -12,7 +12,7 @@ namespace monomi {
     public:
         TitleScreen();
 
-        std::auto_ptr<Screen> run();
+        boost::shared_ptr<Screen> run();
 
     private:
         bool quit_;

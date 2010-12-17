@@ -1,7 +1,7 @@
 #ifndef MONOMI_CHARACTER_FACTORY_HPP
 #define MONOMI_CHARACTER_FACTORY_HPP
 
-#include <memory>
+#include <boost/shared_ptr.hpp>
 
 namespace monomi {
     class Character;
@@ -11,22 +11,22 @@ namespace monomi {
     public:
         CharacterFactory();
 
-        std::auto_ptr<Character> createNinja();
-        std::auto_ptr<Character> createSamurai();
-        std::auto_ptr<Character> createEarthMaster();
-        std::auto_ptr<Character> createFireMaster();
-        std::auto_ptr<Character> createAirMaster();
-        std::auto_ptr<Character> createWaterMaster();
-        std::auto_ptr<Character> createVoidMaster();
+        boost::shared_ptr<Character> createNinja();
+        boost::shared_ptr<Character> createSamurai();
+        boost::shared_ptr<Character> createEarthMaster();
+        boost::shared_ptr<Character> createFireMaster();
+        boost::shared_ptr<Character> createAirMaster();
+        boost::shared_ptr<Character> createWaterMaster();
+        boost::shared_ptr<Character> createVoidMaster();
 
     private:
-        std::auto_ptr<CharacterType> ninjaType_;
-        std::auto_ptr<CharacterType> samuraiType_;
-        std::auto_ptr<CharacterType> earthMasterType_;
-        std::auto_ptr<CharacterType> fireMasterType_;
-        std::auto_ptr<CharacterType> airMasterType_;
-        std::auto_ptr<CharacterType> waterMasterType_;
-        std::auto_ptr<CharacterType> voidMasterType_;
+        boost::shared_ptr<CharacterType> ninjaType_;
+        boost::shared_ptr<CharacterType> samuraiType_;
+        boost::shared_ptr<CharacterType> earthMasterType_;
+        boost::shared_ptr<CharacterType> fireMasterType_;
+        boost::shared_ptr<CharacterType> airMasterType_;
+        boost::shared_ptr<CharacterType> waterMasterType_;
+        boost::shared_ptr<CharacterType> voidMasterType_;
     };
 }
 
