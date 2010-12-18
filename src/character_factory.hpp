@@ -4,6 +4,7 @@
 #include "character_tag.hpp"
 
 #include <vector>
+#include <boost/array.hpp>
 #include <boost/shared_ptr.hpp>
 
 namespace monomi {
@@ -18,8 +19,9 @@ namespace monomi {
 
     private:
         typedef boost::shared_ptr<CharacterType> TypePtr;
+        typedef boost::array<TypePtr, characterTagCount> TypeArray;
 
-        TypePtr types_[characterTagCount];
+        TypeArray types_;
     };
 }
 
