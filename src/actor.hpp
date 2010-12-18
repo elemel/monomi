@@ -8,7 +8,7 @@ namespace monomi {
     public:
         virtual ~Actor();
 
-        virtual void step(float dt) = 0;
+        virtual void update(float dt) = 0;
         virtual void debugDraw(DebugGraphics *debugGraphics) = 0;
     };
 }

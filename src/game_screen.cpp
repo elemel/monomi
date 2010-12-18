@@ -28,7 +28,7 @@ namespace monomi {
         time_ = 0.001f * float(SDL_GetTicks());
         do {
             pumpEvents();
-            step();
+            update();
             draw();
         } while (!quit_);
         return boost::shared_ptr<Screen>();
@@ -108,12 +108,12 @@ namespace monomi {
         }
     }
 
-    void GameScreen::step()
+    void GameScreen::update()
     {
         float time = 0.001f * float(SDL_GetTicks());
         while (time_ + dt_ <= time) {
             time_ += dt_;
-            game_->step(dt_);
+            game_->update(dt_);
         }
     }
 

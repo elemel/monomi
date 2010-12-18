@@ -41,7 +41,7 @@ namespace monomi {
                       0.5f * type->width);
     }
 
-    void Character::step(float dt)
+    void Character::update(float dt)
     {
         if (touchDown) {
             if (techniques.test(tripleJumpTechnique)) {

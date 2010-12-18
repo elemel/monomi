@@ -44,7 +44,7 @@ namespace monomi {
         Circle bottomCircle() const;
         Circle topCircle() const;
 
-        void step(float dt);
+        void update(float dt);
         void debugDraw(DebugGraphics *debugGraphics);
     };
 }

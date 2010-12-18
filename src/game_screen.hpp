@@ -32,7 +32,7 @@ namespace monomi {
         void pumpEvents();
         void onKeyDown(SDL_Event const &event);
         void onKeyUp(SDL_Event const &event);
-        void step();
+        void update();
 
         void draw();
     };

@@ -20,7 +20,7 @@ namespace monomi {
 
         Game();
 
-        void step(float dt);
+        void update(float dt);
         void performAI(float dt);
         void resolveCollisions();
         void resolveBlockCollisions();

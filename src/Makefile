@@ -56,10 +56,12 @@ character_factory.o: control.hpp geometry.hpp technique.hpp tool.hpp
 character_factory.o: character_type.hpp
 character_type.o: character_type.hpp geometry.hpp technique.hpp tool.hpp
 debug_graphics.o: debug_graphics.hpp geometry.hpp
+game.o: game.hpp block.hpp actor.hpp geometry.hpp character.hpp control.hpp
+game.o: technique.hpp tool.hpp character_factory.hpp character_type.hpp
+game.o: random.hpp
 game_screen.o: game_screen.hpp camera.hpp geometry.hpp screen.hpp block.hpp
 game_screen.o: actor.hpp character.hpp control.hpp technique.hpp tool.hpp
-game_screen.o: character_factory.hpp character_type.hpp debug_graphics.hpp
-game_screen.o: random.hpp
+game_screen.o: debug_graphics.hpp game.hpp
 geometry.o: geometry.hpp
 main.o: title_screen.hpp screen.hpp
 random.o: random.hpp

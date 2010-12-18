@@ -67,13 +67,13 @@ namespace monomi {
         blocks_.push_back(createBlock(18, 0));
     }
 
-    void Game::step(float dt)
+    void Game::update(float dt)
     {
         performAI(dt);
         typedef std::vector<boost::shared_ptr<Character> >::iterator Iterator;
         for (Iterator i = characters_.begin(); i != characters_.end(); ++i)
         {
-            (*i)->step(dt);
+            (*i)->update(dt);
         }
         resolveCollisions();
     }

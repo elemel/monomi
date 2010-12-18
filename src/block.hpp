@@ -13,7 +13,7 @@ namespace monomi {
     public:
         Box2 box;
 
-        void step(float dt);
+        void update(float dt);
         void debugDraw(DebugGraphics *debugGraphics);
     };
 }
