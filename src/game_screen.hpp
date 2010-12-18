@@ -33,6 +33,7 @@ namespace monomi {
         void onKeyDown(SDL_Event const &event);
         void onKeyUp(SDL_Event const &event);
         void update();
+        void performAI(float dt);
 
         void draw();
     };

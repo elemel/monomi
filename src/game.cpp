@@ -69,29 +69,12 @@ namespace monomi {
 
     void Game::update(float dt)
     {
-        performAI(dt);
         typedef std::vector<boost::shared_ptr<CharacterActor> >::iterator Iterator;
         for (Iterator i = characters_.begin(); i != characters_.end(); ++i)
         {
             (*i)->update(dt);
         }
         resolveCollisions();
-    }
-
-    void Game::performAI(float dt)
-    {
-        typedef std::vector<boost::shared_ptr<CharacterActor> >::iterator Iterator;
-        for (Iterator i = characters_.begin() + 1; i != characters_.end(); ++i)
-        {
-            if (random_->generate() <= dt) {
-                int face = int(random_->generate() * 3.0f) - 1;
-                (*i)->controls.set(leftControl, (face == -1));
-                (*i)->controls.set(rightControl, (face == 1));
-            }
-            if (random_->generate() <= dt) {
-                (*i)->controls.set(jumpControl, (random_->generate() <= 0.5f));
-            }
-        }
     }
 
     void Game::resolveCollisions()

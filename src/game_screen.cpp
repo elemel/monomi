@@ -4,6 +4,7 @@
 #include "character_actor.hpp"
 #include "debug_graphics.hpp"
 #include "game.hpp"
+#include "random.hpp"
 
 #include <ctime>
 #include <iostream>
@@ -113,7 +114,26 @@ namespace monomi {
         float time = 0.001f * float(SDL_GetTicks());
         while (time_ + dt_ <= time) {
             time_ += dt_;
+            performAI(dt_);
             game_->update(dt_);
+        }
+    }
+
+    void GameScreen::performAI(float dt)
+    {
+        typedef std::vector<boost::shared_ptr<CharacterActor> >::iterator Iterator;
+        for (Iterator i = game_->characters_.begin() + 1;
+             i != game_->characters_.end(); ++i)
+        {
+            if (game_->random_->generate() <= dt) {
+                int face = int(game_->random_->generate() * 3.0f) - 1;
+                (*i)->controls.set(leftControl, (face == -1));
+                (*i)->controls.set(rightControl, (face == 1));
+            }
+            if (game_->random_->generate() <= dt) {
+                (*i)->controls.set(jumpControl,
+                                   (game_->random_->generate() <= 0.5f));
+            }
         }
     }
 

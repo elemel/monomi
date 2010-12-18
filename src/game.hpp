@@ -21,7 +21,6 @@ namespace monomi {
         Game();
 
         void update(float dt);
-        void performAI(float dt);
         void resolveCollisions();
         void resolveBlockCollisions();
         void updateTouchFlags(CharacterActor *character);

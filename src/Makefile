@@ -66,7 +66,7 @@ game.o: character_type.hpp random.hpp
 game_screen.o: game_screen.hpp camera.hpp geometry.hpp screen.hpp
 game_screen.o: block_actor.hpp actor.hpp character_actor.hpp control.hpp
 game_screen.o: technique.hpp tool.hpp debug_graphics.hpp debug_color.hpp
-game_screen.o: game.hpp
+game_screen.o: game.hpp random.hpp
 geometry.o: geometry.hpp
 main.o: title_screen.hpp screen.hpp
 random.o: random.hpp
