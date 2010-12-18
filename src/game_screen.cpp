@@ -8,7 +8,7 @@
 
 #include <ctime>
 #include <iostream>
-#include <GL/gl.h>
+#include <SDL_opengl.h>
 
 namespace monomi {
     GameScreen::GameScreen() :

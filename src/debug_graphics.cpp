@@ -1,7 +1,7 @@
 #include "debug_graphics.hpp"
 
 #include <cmath>
-#include <GL/gl.h>
+#include <SDL_opengl.h>
 
 namespace monomi {
     DebugGraphics::DebugGraphics(int circleVertexCount)

@@ -3,8 +3,8 @@
 #include <iostream>
 #include <stdexcept>
 #include <sstream>
-#include <GL/gl.h>
 #include <SDL.h>
+#include <SDL_opengl.h>
 
 struct ScopedQuit {
     ~ScopedQuit()
