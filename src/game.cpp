@@ -1,16 +1,16 @@
 #include "game.hpp"
 
-#include "block.hpp"
-#include "character.hpp"
+#include "block_actor.hpp"
+#include "character_actor.hpp"
 #include "character_factory.hpp"
 #include "character_type.hpp"
 #include "random.hpp"
 
 namespace monomi {
     namespace {
-        boost::shared_ptr<Block> createBlock(int x, int y)
+        boost::shared_ptr<BlockActor> createBlock(int x, int y)
         {
-            boost::shared_ptr<Block> block(new Block);
+            boost::shared_ptr<BlockActor> block(new BlockActor);
             block->box.p1 = Point2(float(x), float(y));
             block->box.p2 = Point2(float(x + 1), float(y + 1));
             return block;
@@ -70,7 +70,7 @@ namespace monomi {
     void Game::update(float dt)
     {
         performAI(dt);
-        typedef std::vector<boost::shared_ptr<Character> >::iterator Iterator;
+        typedef std::vector<boost::shared_ptr<CharacterActor> >::iterator Iterator;
         for (Iterator i = characters_.begin(); i != characters_.end(); ++i)
         {
             (*i)->update(dt);
@@ -80,7 +80,7 @@ namespace monomi {
 
     void Game::performAI(float dt)
     {
-        typedef std::vector<boost::shared_ptr<Character> >::iterator Iterator;
+        typedef std::vector<boost::shared_ptr<CharacterActor> >::iterator Iterator;
         for (Iterator i = characters_.begin() + 1; i != characters_.end(); ++i)
         {
             if (random_->generate() <= dt) {
@@ -102,7 +102,7 @@ namespace monomi {
 
     void Game::resolveBlockCollisions()
     {
-        typedef std::vector<boost::shared_ptr<Character> >::iterator CharacterIterator;
+        typedef std::vector<boost::shared_ptr<CharacterActor> >::iterator CharacterIterator;
         for (CharacterIterator i = characters_.begin(); i != characters_.end();
              ++i)
         {
@@ -113,7 +113,7 @@ namespace monomi {
                     // Find the deepest collision.
                     float maxSquaredLength = -1.0f;
                     LineSegment2 maxSeparator;
-                    typedef std::vector<boost::shared_ptr<Block> >::iterator BlockIterator;
+                    typedef std::vector<boost::shared_ptr<BlockActor> >::iterator BlockIterator;
                     for (BlockIterator k = blocks_.begin(); k != blocks_.end();
                          ++k)
                     {
@@ -154,7 +154,7 @@ namespace monomi {
         }
     }
 
-    void Game::updateTouchFlags(Character *character)
+    void Game::updateTouchFlags(CharacterActor *character)
     {
         // Clear touch flags.
         character->touchLeft = false;
@@ -167,7 +167,7 @@ namespace monomi {
             Circle circle = i ? character->bottomCircle() :
                                 character->topCircle();
             circle.radius += 0.02f;
-            typedef std::vector<boost::shared_ptr<Block> >::iterator Iterator;
+            typedef std::vector<boost::shared_ptr<BlockActor> >::iterator Iterator;
             for (Iterator j = blocks_.begin(); j != blocks_.end(); ++j) {
                 if (intersects(circle, (*j)->box)) {
                     LineSegment2 separator = separate(circle, (*j)->box);
@@ -195,8 +195,8 @@ namespace monomi {
 
     void Game::resolveCharacterCollisions()
     {
-        boost::shared_ptr<Character> playerCharacter = characters_.front();
-        typedef std::vector<boost::shared_ptr<Character> >::iterator Iterator;
+        boost::shared_ptr<CharacterActor> playerCharacter = characters_.front();
+        typedef std::vector<boost::shared_ptr<CharacterActor> >::iterator Iterator;
         for (Iterator i = characters_.begin() + 1; i != characters_.end(); ++i)
         {
             if (playerCharacter->alive && (*i)->alive &&

@@ -4,20 +4,20 @@
 #include <boost/shared_ptr.hpp>
 
 namespace monomi {
-    class Character;
+    class CharacterActor;
     class CharacterType;
 
     class CharacterFactory {
     public:
         CharacterFactory();
 
-        boost::shared_ptr<Character> createNinja();
-        boost::shared_ptr<Character> createSamurai();
-        boost::shared_ptr<Character> createEarthMaster();
-        boost::shared_ptr<Character> createFireMaster();
-        boost::shared_ptr<Character> createAirMaster();
-        boost::shared_ptr<Character> createWaterMaster();
-        boost::shared_ptr<Character> createVoidMaster();
+        boost::shared_ptr<CharacterActor> createNinja();
+        boost::shared_ptr<CharacterActor> createSamurai();
+        boost::shared_ptr<CharacterActor> createEarthMaster();
+        boost::shared_ptr<CharacterActor> createFireMaster();
+        boost::shared_ptr<CharacterActor> createAirMaster();
+        boost::shared_ptr<CharacterActor> createWaterMaster();
+        boost::shared_ptr<CharacterActor> createVoidMaster();
 
     private:
         boost::shared_ptr<CharacterType> ninjaType_;

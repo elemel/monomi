@@ -13,7 +13,7 @@ namespace monomi {
     class CharacterType;
     class DebugGraphics;
 
-    class Character :
+    class CharacterActor :
         public Actor
     {
     public:
@@ -38,7 +38,7 @@ namespace monomi {
         bool touchUp;
         int airJumpCount;
 
-        explicit Character(CharacterType const *type);
+        explicit CharacterActor(CharacterType const *type);
 
         bool wallSliding() const;
         Circle bottomCircle() const;

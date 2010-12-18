@@ -1,7 +1,7 @@
 #include "game_screen.hpp"
 
-#include "block.hpp"
-#include "character.hpp"
+#include "block_actor.hpp"
+#include "character_actor.hpp"
 #include "debug_graphics.hpp"
 #include "game.hpp"
 
@@ -137,11 +137,11 @@ namespace monomi {
         glClearColor(0.0f, 0.0f, 0.0f, 0.0f);
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT |
                 GL_STENCIL_BUFFER_BIT);
-        typedef std::vector<boost::shared_ptr<Block> >::iterator BlockIterator;
+        typedef std::vector<boost::shared_ptr<BlockActor> >::iterator BlockIterator;
         for (BlockIterator i = game_->blocks_.begin(); i != game_->blocks_.end(); ++i) {
             (*i)->debugDraw(debugGraphics_.get());
         }
-        typedef std::vector<boost::shared_ptr<Character> >::iterator CharacterIterator;
+        typedef std::vector<boost::shared_ptr<CharacterActor> >::iterator CharacterIterator;
         for (CharacterIterator j = game_->characters_.begin(); j != game_->characters_.end();
              ++j)
         {

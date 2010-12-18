@@ -7,7 +7,7 @@
 namespace monomi {
     class DebugGraphics;
 
-    class Block :
+    class BlockActor :
         public Actor
     {
     public:

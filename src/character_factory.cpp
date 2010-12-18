@@ -1,6 +1,6 @@
 #include "character_factory.hpp"
 
-#include "character.hpp"
+#include "character_actor.hpp"
 #include "character_type.hpp"
 
 namespace monomi {
@@ -82,38 +82,38 @@ namespace monomi {
         voidMasterType_(createVoidMasterType())
     { }
 
-    boost::shared_ptr<Character> CharacterFactory::createNinja()
+    boost::shared_ptr<CharacterActor> CharacterFactory::createNinja()
     {
-        return boost::shared_ptr<Character>(new Character(ninjaType_.get()));
+        return boost::shared_ptr<CharacterActor>(new CharacterActor(ninjaType_.get()));
     }
 
-    boost::shared_ptr<Character> CharacterFactory::createSamurai()
+    boost::shared_ptr<CharacterActor> CharacterFactory::createSamurai()
     {
-        return boost::shared_ptr<Character>(new Character(samuraiType_.get()));
+        return boost::shared_ptr<CharacterActor>(new CharacterActor(samuraiType_.get()));
     }
 
-    boost::shared_ptr<Character> CharacterFactory::createEarthMaster()
+    boost::shared_ptr<CharacterActor> CharacterFactory::createEarthMaster()
     {
-        return boost::shared_ptr<Character>(new Character(earthMasterType_.get()));
+        return boost::shared_ptr<CharacterActor>(new CharacterActor(earthMasterType_.get()));
     }
 
-    boost::shared_ptr<Character> CharacterFactory::createFireMaster()
+    boost::shared_ptr<CharacterActor> CharacterFactory::createFireMaster()
     {
-        return boost::shared_ptr<Character>(new Character(fireMasterType_.get()));
+        return boost::shared_ptr<CharacterActor>(new CharacterActor(fireMasterType_.get()));
     }
 
-    boost::shared_ptr<Character> CharacterFactory::createAirMaster()
+    boost::shared_ptr<CharacterActor> CharacterFactory::createAirMaster()
     {
-        return boost::shared_ptr<Character>(new Character(airMasterType_.get()));
+        return boost::shared_ptr<CharacterActor>(new CharacterActor(airMasterType_.get()));
     }
 
-    boost::shared_ptr<Character> CharacterFactory::createWaterMaster()
+    boost::shared_ptr<CharacterActor> CharacterFactory::createWaterMaster()
     {
-        return boost::shared_ptr<Character>(new Character(waterMasterType_.get()));
+        return boost::shared_ptr<CharacterActor>(new CharacterActor(waterMasterType_.get()));
     }
 
-    boost::shared_ptr<Character> CharacterFactory::createVoidMaster()
+    boost::shared_ptr<CharacterActor> CharacterFactory::createVoidMaster()
     {
-        return boost::shared_ptr<Character>(new Character(voidMasterType_.get()));
+        return boost::shared_ptr<CharacterActor>(new CharacterActor(voidMasterType_.get()));
     }
 }

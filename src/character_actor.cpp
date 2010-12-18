@@ -1,4 +1,4 @@
-#include "character.hpp"
+#include "character_actor.hpp"
 
 #include "character_type.hpp"
 #include "debug_graphics.hpp"
@@ -7,7 +7,7 @@
 #include <iostream>
 
 namespace monomi {
-    Character::Character(CharacterType const *type) :
+    CharacterActor::CharacterActor(CharacterType const *type) :
         type(type),
         techniques(type->techniques),
         tools(type->tools),
@@ -21,27 +21,27 @@ namespace monomi {
         airJumpCount(0)
     { }
 
-    bool Character::wallSliding() const
+    bool CharacterActor::wallSliding() const
     {
         return (techniques.test(wallSlideTechnique) &&
                 tools.test(tigerClawTool) && (touchLeft || touchRight));
     }
 
-    Circle Character::bottomCircle() const
+    Circle CharacterActor::bottomCircle() const
     {
         return Circle(position -
                       Vector2(0.0f, 0.5f * (type->height - type->width)),
                       0.5f * type->width);
     }
 
-    Circle Character::topCircle() const
+    Circle CharacterActor::topCircle() const
     {
         return Circle(position +
                       Vector2(0.0f, 0.5f * (type->height - type->width)),
                       0.5f * type->width);
     }
 
-    void Character::update(float dt)
+    void CharacterActor::update(float dt)
     {
         if (touchDown) {
             if (techniques.test(tripleJumpTechnique)) {
@@ -112,7 +112,7 @@ namespace monomi {
         oldControls = controls;
     }
 
-    void Character::debugDraw(DebugGraphics *debugGraphics)
+    void CharacterActor::debugDraw(DebugGraphics *debugGraphics)
     {
         DebugColor color = debugColors::white();
         if (alive) {
