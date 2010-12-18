@@ -8,6 +8,7 @@
 #include "tool.hpp"
 
 #include <bitset>
+#include <boost/shared_ptr.hpp>
 
 namespace monomi {
     class CharacterType;
@@ -17,7 +18,7 @@ namespace monomi {
         public Actor
     {
     public:
-        CharacterType const *type;
+        boost::shared_ptr<CharacterType const> type;
         std::bitset<techniqueCount> techniques;
         std::bitset<toolCount> tools;
 
@@ -38,7 +39,7 @@ namespace monomi {
         bool touchUp;
         int airJumpCount;
 
-        explicit CharacterActor(CharacterType const *type);
+        explicit CharacterActor(boost::shared_ptr<CharacterType const> const &type);
 
         bool wallSliding() const;
         Circle bottomCircle() const;

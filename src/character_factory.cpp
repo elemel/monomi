@@ -3,6 +3,8 @@
 #include "character_actor.hpp"
 #include "character_type.hpp"
 
+#include <stdexcept>
+
 namespace monomi {
     namespace {
         boost::shared_ptr<CharacterType> createNinjaType()
@@ -72,48 +74,23 @@ namespace monomi {
         }
     }
 
-    CharacterFactory::CharacterFactory() :
-        ninjaType_(createNinjaType()),
-        samuraiType_(createSamuraiType()),
-        earthMasterType_(createEarthMasterType()),
-        fireMasterType_(createFireMasterType()),
-        airMasterType_(createAirMasterType()),
-        waterMasterType_(createFireMasterType()),
-        voidMasterType_(createVoidMasterType())
-    { }
-
-    boost::shared_ptr<CharacterActor> CharacterFactory::createNinja()
+    CharacterFactory::CharacterFactory()
     {
-        return boost::shared_ptr<CharacterActor>(new CharacterActor(ninjaType_.get()));
+        types_[ninjaCharacterTag] = createNinjaType();
+        types_[samuraiCharacterTag] = createSamuraiType();
+        types_[earthMasterCharacterTag] = createEarthMasterType();
+        types_[fireMasterCharacterTag] = createFireMasterType();
+        types_[airMasterCharacterTag] = createAirMasterType();
+        types_[waterMasterCharacterTag] = createFireMasterType();
+        types_[voidMasterCharacterTag] = createVoidMasterType();
     }
 
-    boost::shared_ptr<CharacterActor> CharacterFactory::createSamurai()
+    boost::shared_ptr<CharacterActor> CharacterFactory::create(CharacterTag tag) const
     {
-        return boost::shared_ptr<CharacterActor>(new CharacterActor(samuraiType_.get()));
-    }
-
-    boost::shared_ptr<CharacterActor> CharacterFactory::createEarthMaster()
-    {
-        return boost::shared_ptr<CharacterActor>(new CharacterActor(earthMasterType_.get()));
-    }
-
-    boost::shared_ptr<CharacterActor> CharacterFactory::createFireMaster()
-    {
-        return boost::shared_ptr<CharacterActor>(new CharacterActor(fireMasterType_.get()));
-    }
-
-    boost::shared_ptr<CharacterActor> CharacterFactory::createAirMaster()
-    {
-        return boost::shared_ptr<CharacterActor>(new CharacterActor(airMasterType_.get()));
-    }
-
-    boost::shared_ptr<CharacterActor> CharacterFactory::createWaterMaster()
-    {
-        return boost::shared_ptr<CharacterActor>(new CharacterActor(waterMasterType_.get()));
-    }
-
-    boost::shared_ptr<CharacterActor> CharacterFactory::createVoidMaster()
-    {
-        return boost::shared_ptr<CharacterActor>(new CharacterActor(voidMasterType_.get()));
+        TypeConstIterator i = types_.find(tag);
+        if (i == types_.end()) {
+            throw std::runtime_error("Unknown character tag: " + tag);
+        }
+        return boost::shared_ptr<CharacterActor>(new CharacterActor(i->second));
     }
 }

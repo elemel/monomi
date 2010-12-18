@@ -3,6 +3,7 @@
 #include "block_actor.hpp"
 #include "character_actor.hpp"
 #include "character_factory.hpp"
+#include "character_tag.hpp"
 #include "character_type.hpp"
 #include "random.hpp"
 
@@ -23,13 +24,13 @@ namespace monomi {
         characterFactory_(new CharacterFactory)
     {
         // Create characters.
-        characters_.push_back(characterFactory_->createEarthMaster());
+        characters_.push_back(characterFactory_->create(earthMasterCharacterTag));
         characters_.back()->position = Point2(2.0f, 2.0f);
-        characters_.push_back(characterFactory_->createSamurai());
+        characters_.push_back(characterFactory_->create(samuraiCharacterTag));
         characters_.back()->position = Point2(7.0f, 5.0f);
-        characters_.push_back(characterFactory_->createSamurai());
+        characters_.push_back(characterFactory_->create(samuraiCharacterTag));
         characters_.back()->position = Point2(9.0f, 5.0f);
-        characters_.push_back(characterFactory_->createSamurai());
+        characters_.push_back(characterFactory_->create(samuraiCharacterTag));
         characters_.back()->position = Point2(11.0f, 5.0f);
 
         // Create blocks.

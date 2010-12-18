@@ -7,7 +7,7 @@
 #include <iostream>
 
 namespace monomi {
-    CharacterActor::CharacterActor(CharacterType const *type) :
+    CharacterActor::CharacterActor(boost::shared_ptr<CharacterType const> const &type) :
         type(type),
         techniques(type->techniques),
         tools(type->tools),

@@ -54,15 +54,15 @@ camera.o: camera.hpp geometry.hpp
 character_actor.o: character_actor.hpp actor.hpp control.hpp geometry.hpp
 character_actor.o: technique.hpp tool.hpp character_type.hpp
 character_actor.o: debug_graphics.hpp debug_color.hpp
-character_factory.o: character_factory.hpp character_actor.hpp actor.hpp
-character_factory.o: control.hpp geometry.hpp technique.hpp tool.hpp
-character_factory.o: character_type.hpp
+character_factory.o: character_factory.hpp character_tag.hpp
+character_factory.o: character_actor.hpp actor.hpp control.hpp geometry.hpp
+character_factory.o: technique.hpp tool.hpp character_type.hpp
 character_type.o: character_type.hpp geometry.hpp technique.hpp tool.hpp
 debug_color.o: debug_color.hpp
 debug_graphics.o: debug_graphics.hpp debug_color.hpp geometry.hpp
 game.o: game.hpp block_actor.hpp actor.hpp geometry.hpp character_actor.hpp
 game.o: control.hpp technique.hpp tool.hpp character_factory.hpp
-game.o: character_type.hpp random.hpp
+game.o: character_tag.hpp character_type.hpp random.hpp
 game_screen.o: game_screen.hpp camera.hpp geometry.hpp screen.hpp
 game_screen.o: block_actor.hpp actor.hpp character_actor.hpp control.hpp
 game_screen.o: technique.hpp tool.hpp debug_graphics.hpp debug_color.hpp
