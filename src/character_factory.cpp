@@ -76,21 +76,17 @@ namespace monomi {
 
     CharacterFactory::CharacterFactory()
     {
-        types_[ninjaCharacterTag] = createNinjaType();
-        types_[samuraiCharacterTag] = createSamuraiType();
-        types_[earthMasterCharacterTag] = createEarthMasterType();
-        types_[fireMasterCharacterTag] = createFireMasterType();
-        types_[airMasterCharacterTag] = createAirMasterType();
-        types_[waterMasterCharacterTag] = createFireMasterType();
-        types_[voidMasterCharacterTag] = createVoidMasterType();
+        types_[ninjaTag] = createNinjaType();
+        types_[samuraiTag] = createSamuraiType();
+        types_[earthMasterTag] = createEarthMasterType();
+        types_[fireMasterTag] = createFireMasterType();
+        types_[airMasterTag] = createAirMasterType();
+        types_[waterMasterTag] = createFireMasterType();
+        types_[voidMasterTag] = createVoidMasterType();
     }
 
     boost::shared_ptr<CharacterActor> CharacterFactory::create(CharacterTag tag) const
     {
-        TypeConstIterator i = types_.find(tag);
-        if (i == types_.end()) {
-            throw std::runtime_error("Unknown character tag: " + tag);
-        }
-        return boost::shared_ptr<CharacterActor>(new CharacterActor(i->second));
+        return boost::shared_ptr<CharacterActor>(new CharacterActor(types_[tag]));
     }
 }

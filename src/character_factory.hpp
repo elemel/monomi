@@ -3,8 +3,8 @@
 
 #include "character_tag.hpp"
 
+#include <vector>
 #include <boost/shared_ptr.hpp>
-#include <boost/unordered_map.hpp>
 
 namespace monomi {
     class CharacterActor;
@@ -18,10 +18,8 @@ namespace monomi {
 
     private:
         typedef boost::shared_ptr<CharacterType> TypePtr;
-        typedef boost::unordered_map<CharacterTag, TypePtr> TypeMap;
-        typedef TypeMap::const_iterator TypeConstIterator;
 
-        TypeMap types_;
+        TypePtr types_[characterTagCount];
     };
 }
 

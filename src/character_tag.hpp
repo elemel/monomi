@@ -3,13 +3,13 @@
 
 namespace monomi {
     enum CharacterTag {
-        airMasterCharacterTag,
-        earthMasterCharacterTag,
-        fireMasterCharacterTag,
-        ninjaCharacterTag,
-        samuraiCharacterTag,
-        waterMasterCharacterTag,
-        voidMasterCharacterTag,
+        airMasterTag,
+        earthMasterTag,
+        fireMasterTag,
+        ninjaTag,
+        samuraiTag,
+        waterMasterTag,
+        voidMasterTag,
 
         characterTagCount
     };
