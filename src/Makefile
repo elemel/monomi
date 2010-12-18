@@ -29,6 +29,7 @@ objects := \
 	character.o \
 	character_factory.o \
 	character_type.o \
+	debug_color.o \
 	debug_graphics.o \
 	game.o \
 	game_screen.o \
@@ -47,21 +48,22 @@ clean:
 # DO NOT DELETE
 
 actor.o: actor.hpp
-block.o: block.hpp actor.hpp geometry.hpp debug_graphics.hpp
+block.o: block.hpp actor.hpp geometry.hpp debug_graphics.hpp debug_color.hpp
 camera.o: camera.hpp geometry.hpp
 character.o: character.hpp actor.hpp control.hpp geometry.hpp technique.hpp
-character.o: tool.hpp character_type.hpp debug_graphics.hpp
+character.o: tool.hpp character_type.hpp debug_graphics.hpp debug_color.hpp
 character_factory.o: character_factory.hpp character.hpp actor.hpp
 character_factory.o: control.hpp geometry.hpp technique.hpp tool.hpp
 character_factory.o: character_type.hpp
 character_type.o: character_type.hpp geometry.hpp technique.hpp tool.hpp
-debug_graphics.o: debug_graphics.hpp geometry.hpp
+debug_color.o: debug_color.hpp
+debug_graphics.o: debug_graphics.hpp debug_color.hpp geometry.hpp
 game.o: game.hpp block.hpp actor.hpp geometry.hpp character.hpp control.hpp
 game.o: technique.hpp tool.hpp character_factory.hpp character_type.hpp
 game.o: random.hpp
 game_screen.o: game_screen.hpp camera.hpp geometry.hpp screen.hpp block.hpp
 game_screen.o: actor.hpp character.hpp control.hpp technique.hpp tool.hpp
-game_screen.o: debug_graphics.hpp game.hpp
+game_screen.o: debug_graphics.hpp debug_color.hpp game.hpp
 geometry.o: geometry.hpp
 main.o: title_screen.hpp screen.hpp
 random.o: random.hpp

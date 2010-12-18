@@ -1,33 +1,13 @@
 #ifndef MONOMI_DEBUG_GRAPHICS_HPP
 #define MONOMI_DEBUG_GRAPHICS_HPP
 
+#include "debug_color.hpp"
 #include "geometry.hpp"
 
 #include <vector>
 #include <boost/noncopyable.hpp>
 
 namespace monomi {
-    class DebugColor {
-    public:
-        float red, green, blue;
-
-        DebugColor();
-        DebugColor(float red, float green, float blue);
-    };
-
-    namespace debugColors {
-        DebugColor black();
-        DebugColor blue();
-        DebugColor cyan();
-        DebugColor gray();
-        DebugColor green();
-        DebugColor lightBlue();
-        DebugColor magenta();
-        DebugColor red();
-        DebugColor white();
-        DebugColor yellow();
-    }
-
     class DebugGraphics :
         private boost::noncopyable
     {
@@ -46,4 +26,4 @@ namespace monomi {
     };
 }
 
-#endif // MONOMI_OPENGL_DEBUG_GRAPHICS_HPP
+#endif // MONOMI_DEBUG_GRAPHICS_HPP
