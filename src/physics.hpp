@@ -14,10 +14,9 @@ namespace monomi {
     private:
         Game *game_;
 
-        void resolveCollisions();
-        void resolveBlockCollisions();
+        void applyConstraints();
         void updateTouchFlags(CharacterActor *character);
-        void resolveCharacterCollisions();
+        void resolveCollisions();
     };
 }
 

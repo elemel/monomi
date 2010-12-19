@@ -19,16 +19,11 @@ namespace monomi {
         {
             (*i)->update(dt);
         }
+        applyConstraints();
         resolveCollisions();
     }
 
-    void Physics::resolveCollisions()
-    {
-        resolveBlockCollisions();
-        resolveCharacterCollisions();
-    }
-
-    void Physics::resolveBlockCollisions()
+    void Physics::applyConstraints()
     {
         typedef std::vector<boost::shared_ptr<CharacterActor> >::iterator CharacterIterator;
         for (CharacterIterator i = game_->characters_.begin();
@@ -123,7 +118,7 @@ namespace monomi {
         }
     }
 
-    void Physics::resolveCharacterCollisions()
+    void Physics::resolveCollisions()
     {
         boost::shared_ptr<CharacterActor> playerCharacter = game_->characters_.front();
         typedef std::vector<boost::shared_ptr<CharacterActor> >::iterator Iterator;
