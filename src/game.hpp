@@ -8,6 +8,7 @@ namespace monomi {
     class BlockActor;
     class CharacterActor;
     class CharacterFactory;
+    class Physics;
     class Random;
 
     class Game {
@@ -17,14 +18,11 @@ namespace monomi {
         boost::shared_ptr<CharacterFactory> characterFactory_;
         std::vector<boost::shared_ptr<CharacterActor> > characters_;
         std::vector<boost::shared_ptr<BlockActor> > blocks_;
+        boost::shared_ptr<Physics> physics_;
 
         Game();
 
         void update(float dt);
-        void resolveCollisions();
-        void resolveBlockCollisions();
-        void updateTouchFlags(CharacterActor *character);
-        void resolveCharacterCollisions();
     };
 }
 

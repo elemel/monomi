@@ -35,6 +35,7 @@ objects := \
 	game_screen.o \
 	geometry.o \
 	main.o \
+	physics.o \
 	random.o \
 	screen.o \
 	title_screen.o
@@ -62,13 +63,15 @@ debug_color.o: debug_color.hpp
 debug_graphics.o: debug_graphics.hpp debug_color.hpp geometry.hpp
 game.o: game.hpp block_actor.hpp actor.hpp geometry.hpp character_actor.hpp
 game.o: control.hpp technique.hpp tool.hpp character_factory.hpp
-game.o: character_tag.hpp character_type.hpp random.hpp
+game.o: character_tag.hpp character_type.hpp physics.hpp random.hpp
 game_screen.o: game_screen.hpp camera.hpp geometry.hpp screen.hpp
 game_screen.o: block_actor.hpp actor.hpp character_actor.hpp control.hpp
 game_screen.o: technique.hpp tool.hpp debug_graphics.hpp debug_color.hpp
 game_screen.o: game.hpp random.hpp
 geometry.o: geometry.hpp
 main.o: title_screen.hpp screen.hpp
+physics.o: physics.hpp block_actor.hpp actor.hpp geometry.hpp
+physics.o: character_actor.hpp control.hpp technique.hpp tool.hpp game.hpp
 random.o: random.hpp
 screen.o: screen.hpp
 title_screen.o: title_screen.hpp screen.hpp game_screen.hpp camera.hpp
