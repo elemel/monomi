@@ -1,6 +1,8 @@
 #include "character_factory.hpp"
 
 #include "character_actor.hpp"
+#include "character_collision_component.hpp"
+#include "character_physics_component.hpp"
 #include "character_type.hpp"
 
 #include <stdexcept>
@@ -74,7 +76,8 @@ namespace monomi {
         }
     }
 
-    CharacterFactory::CharacterFactory()
+    CharacterFactory::CharacterFactory(Game *game) :
+        game_(game)
     {
         types_[ninjaTag] = createNinjaType();
         types_[samuraiTag] = createSamuraiType();
@@ -87,6 +90,9 @@ namespace monomi {
 
     boost::shared_ptr<CharacterActor> CharacterFactory::create(CharacterTag tag) const
     {
-        return boost::shared_ptr<CharacterActor>(new CharacterActor(types_[tag]));
+        boost::shared_ptr<CharacterActor> character(new CharacterActor(types_[tag]));
+        character->physicsComponent_.reset(new CharacterPhysicsComponent(character.get(), game_));
+        character->collisionComponent_.reset(new CharacterCollisionComponent(character.get(), game_));
+        return character;
     }
 }

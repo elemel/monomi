@@ -7,18 +7,21 @@
 namespace monomi {
     class Actor;
     class CharacterFactory;
-    class Physics;
+    class Component;
     class Random;
 
     class Game {
     public:
         float time_;
         boost::shared_ptr<Random> random_;
-        boost::shared_ptr<CharacterFactory> characterFactory_;
         std::vector<boost::shared_ptr<Actor> > actors_;
-        boost::shared_ptr<Physics> physics_;
+        std::vector<boost::shared_ptr<Component> > physicsComponents_;
+        std::vector<boost::shared_ptr<Component> > collisionComponents_;
+        boost::shared_ptr<CharacterFactory> characterFactory_;
 
         Game();
+
+        void addActor(boost::shared_ptr<Actor> const &actor);
 
         void update(float dt);
     };

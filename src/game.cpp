@@ -5,7 +5,7 @@
 #include "character_factory.hpp"
 #include "character_tag.hpp"
 #include "character_type.hpp"
-#include "physics.hpp"
+#include "component.hpp"
 #include "random.hpp"
 
 namespace monomi {
@@ -21,58 +21,84 @@ namespace monomi {
 
     Game::Game() :
         time_(0.0f),
-        random_(new Random(std::time(0))),
-        characterFactory_(new CharacterFactory)
+        random_(new Random(std::time(0)))
     {
-        physics_.reset(new Physics(this));
+        characterFactory_.reset(new CharacterFactory(this));
 
         // Create characters.
-        actors_.push_back(characterFactory_->create(earthMasterTag));
-        boost::dynamic_pointer_cast<CharacterActor>(actors_.back())->position = Point2(2.0f, 2.0f);
-        actors_.push_back(characterFactory_->create(samuraiTag));
-        boost::dynamic_pointer_cast<CharacterActor>(actors_.back())->position = Point2(7.0f, 5.0f);
-        actors_.push_back(characterFactory_->create(samuraiTag));
-        boost::dynamic_pointer_cast<CharacterActor>(actors_.back())->position = Point2(9.0f, 5.0f);
-        actors_.push_back(characterFactory_->create(samuraiTag));
-        boost::dynamic_pointer_cast<CharacterActor>(actors_.back())->position = Point2(11.0f, 5.0f);
+        boost::shared_ptr<CharacterActor> character;
+        character = characterFactory_->create(earthMasterTag);
+        character->position = Point2(2.0f, 2.0f);
+        addActor(character);
+        character = characterFactory_->create(samuraiTag);
+        character->position = Point2(7.0f, 5.0f);
+        addActor(character);
+        character = characterFactory_->create(samuraiTag);
+        character->position = Point2(9.0f, 5.0f);
+        addActor(character);
+        character = characterFactory_->create(samuraiTag);
+        character->position = Point2(11.0f, 5.0f);
+        addActor(character);
 
         // Create blocks.
-        actors_.push_back(createBlock(0, 0));
-        actors_.push_back(createBlock(0, 3));
-        actors_.push_back(createBlock(1, 0));
-        actors_.push_back(createBlock(2, 0));
-        actors_.push_back(createBlock(3, 0));
-        actors_.push_back(createBlock(3, 1));
-        actors_.push_back(createBlock(3, 2));
-        actors_.push_back(createBlock(3, 3));
-        actors_.push_back(createBlock(3, 4));
-        actors_.push_back(createBlock(3, 5));
-        actors_.push_back(createBlock(3, 6));
-        actors_.push_back(createBlock(4, 0));
-        actors_.push_back(createBlock(5, 0));
-        actors_.push_back(createBlock(6, 0));
-        actors_.push_back(createBlock(7, 0));
-        actors_.push_back(createBlock(7, 3));
-        actors_.push_back(createBlock(7, 4));
-        actors_.push_back(createBlock(7, 5));
-        actors_.push_back(createBlock(7, 6));
-        actors_.push_back(createBlock(7, 7));
-        actors_.push_back(createBlock(7, 8));
-        actors_.push_back(createBlock(8, 0));
-        actors_.push_back(createBlock(9, 0));
-        actors_.push_back(createBlock(10, 0));
-        actors_.push_back(createBlock(11, 0));
-        actors_.push_back(createBlock(12, 0));
-        actors_.push_back(createBlock(13, 0));
-        actors_.push_back(createBlock(14, 0));
-        actors_.push_back(createBlock(15, 0));
-        actors_.push_back(createBlock(16, 0));
-        actors_.push_back(createBlock(17, 0));
-        actors_.push_back(createBlock(18, 0));
+        addActor(createBlock(0, 0));
+        addActor(createBlock(0, 3));
+        addActor(createBlock(1, 0));
+        addActor(createBlock(2, 0));
+        addActor(createBlock(3, 0));
+        addActor(createBlock(3, 1));
+        addActor(createBlock(3, 2));
+        addActor(createBlock(3, 3));
+        addActor(createBlock(3, 4));
+        addActor(createBlock(3, 5));
+        addActor(createBlock(3, 6));
+        addActor(createBlock(4, 0));
+        addActor(createBlock(5, 0));
+        addActor(createBlock(6, 0));
+        addActor(createBlock(7, 0));
+        addActor(createBlock(7, 3));
+        addActor(createBlock(7, 4));
+        addActor(createBlock(7, 5));
+        addActor(createBlock(7, 6));
+        addActor(createBlock(7, 7));
+        addActor(createBlock(7, 8));
+        addActor(createBlock(8, 0));
+        addActor(createBlock(9, 0));
+        addActor(createBlock(10, 0));
+        addActor(createBlock(11, 0));
+        addActor(createBlock(12, 0));
+        addActor(createBlock(13, 0));
+        addActor(createBlock(14, 0));
+        addActor(createBlock(15, 0));
+        addActor(createBlock(16, 0));
+        addActor(createBlock(17, 0));
+        addActor(createBlock(18, 0));
+    }
+
+    void Game::addActor(boost::shared_ptr<Actor> const &actor)
+    {
+        actors_.push_back(actor);
+        physicsComponents_.push_back(actor->physicsComponent());
+        collisionComponents_.push_back(actor->collisionComponent());
     }
 
     void Game::update(float dt)
     {
-        physics_->update(dt);
+        typedef std::vector<boost::shared_ptr<Component> >::iterator
+            ComponentIterator;
+        for (ComponentIterator j = physicsComponents_.begin();
+             j != physicsComponents_.end(); ++j)
+        {
+            if (*j) {
+                (*j)->update(dt);
+            }
+        }
+        for (ComponentIterator k = collisionComponents_.begin();
+             k != collisionComponents_.end(); ++k)
+        {
+            if (*k) {
+                (*k)->update(dt);
+            }
+        }
     }
 }

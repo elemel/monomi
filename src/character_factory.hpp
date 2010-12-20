@@ -10,10 +10,11 @@
 namespace monomi {
     class CharacterActor;
     class CharacterType;
+    class Game;
 
     class CharacterFactory {
     public:
-        CharacterFactory();
+        CharacterFactory(Game *game);
 
         boost::shared_ptr<CharacterActor> create(CharacterTag tag) const;
 
@@ -21,6 +22,7 @@ namespace monomi {
         typedef boost::shared_ptr<CharacterType> TypePtr;
         typedef boost::array<TypePtr, characterTagCount> TypeArray;
 
+        Game *game_;
         TypeArray types_;
     };
 }

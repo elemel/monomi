@@ -4,7 +4,10 @@
 #include "actor.hpp"
 #include "geometry.hpp"
 
+#include <boost/shared_ptr.hpp>
+
 namespace monomi {
+    class Component;
     class DebugGraphics;
 
     class BlockActor :
@@ -12,6 +15,9 @@ namespace monomi {
     {
     public:
         Box2 box;
+
+        boost::shared_ptr<Component> physicsComponent();
+        boost::shared_ptr<Component> collisionComponent();
 
         void update(float dt);
         void debugDraw(DebugGraphics *debugGraphics);
