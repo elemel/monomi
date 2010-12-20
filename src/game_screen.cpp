@@ -57,54 +57,58 @@ namespace monomi {
 
     void GameScreen::onKeyDown(SDL_Event const &event)
     {
+        boost::shared_ptr<CharacterActor> actor =
+            boost::dynamic_pointer_cast<CharacterActor>(game_->actors_.front());
         switch (event.key.keysym.sym) {
         case SDLK_ESCAPE:
             quit_ = true;
             break;
 
         case SDLK_LEFT:
-            game_->characters_.front()->controls.set(leftControl);
+            actor->controls.set(leftControl);
             break;
 
         case SDLK_RIGHT:
-            game_->characters_.front()->controls.set(rightControl);
+            actor->controls.set(rightControl);
             break;
 
         case SDLK_DOWN:
-            game_->characters_.front()->controls.set(downControl);
+            actor->controls.set(downControl);
             break;
 
         case SDLK_UP:
-            game_->characters_.front()->controls.set(upControl);
+            actor->controls.set(upControl);
             break;
 
         case SDLK_SPACE:
-            game_->characters_.front()->controls.set(jumpControl);
+            actor->controls.set(jumpControl);
             break;
         }
     }
 
     void GameScreen::onKeyUp(SDL_Event const &event)
     {
+        boost::shared_ptr<CharacterActor> actor =
+            boost::dynamic_pointer_cast<CharacterActor>(game_->actors_.front());
         switch (event.key.keysym.sym) {
         case SDLK_LEFT:
-            game_->characters_.front()->controls.reset(leftControl);
+            actor->controls.reset(leftControl);
             break;
 
         case SDLK_RIGHT:
-            game_->characters_.front()->controls.reset(rightControl);
+            actor->controls.reset(rightControl);
             break;
 
         case SDLK_DOWN:
-            game_->characters_.front()->controls.reset(downControl);
+            actor->controls.reset(downControl);
             break;
 
         case SDLK_UP:
-            game_->characters_.front()->controls.reset(upControl);
+            actor->controls.reset(upControl);
             break;
 
         case SDLK_SPACE:
-            game_->characters_.front()->controls.reset(jumpControl);
+            actor->controls.reset(jumpControl);
             break;
         }
     }
@@ -121,18 +125,20 @@ namespace monomi {
 
     void GameScreen::performAI(float dt)
     {
-        typedef std::vector<boost::shared_ptr<CharacterActor> >::iterator Iterator;
-        for (Iterator i = game_->characters_.begin() + 1;
-             i != game_->characters_.end(); ++i)
+        typedef std::vector<boost::shared_ptr<Actor> >::iterator Iterator;
+        for (Iterator i = game_->actors_.begin() + 1;
+             i != game_->actors_.end(); ++i)
         {
-            if (game_->random_->generate() <= dt) {
-                int face = int(game_->random_->generate() * 3.0f) - 1;
-                (*i)->controls.set(leftControl, (face == -1));
-                (*i)->controls.set(rightControl, (face == 1));
-            }
-            if (game_->random_->generate() <= dt) {
-                (*i)->controls.set(jumpControl,
-                                   (game_->random_->generate() <= 0.5f));
+            if (boost::shared_ptr<CharacterActor> actor = boost::dynamic_pointer_cast<CharacterActor>(*i)) {
+                if (game_->random_->generate() <= dt) {
+                    int face = int(game_->random_->generate() * 3.0f) - 1;
+                    actor->controls.set(leftControl, (face == -1));
+                    actor->controls.set(rightControl, (face == 1));
+                }
+                if (game_->random_->generate() <= dt) {
+                    actor->controls.set(jumpControl,
+                                        (game_->random_->generate() <= 0.5f));
+                }
             }
         }
     }
@@ -145,7 +151,7 @@ namespace monomi {
                              float(videoSurface->h));
         glMatrixMode(GL_PROJECTION);
         glLoadIdentity();
-        camera_.position = game_->characters_.front()->position;
+        camera_.position = boost::dynamic_pointer_cast<CharacterActor>(game_->actors_.front())->position;
         glOrtho(camera_.position.x - camera_.scale * aspectRatio,
                 camera_.position.x + camera_.scale * aspectRatio,
                 camera_.position.y - camera_.scale,
@@ -157,15 +163,9 @@ namespace monomi {
         glClearColor(0.0f, 0.0f, 0.0f, 0.0f);
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT |
                 GL_STENCIL_BUFFER_BIT);
-        typedef std::vector<boost::shared_ptr<BlockActor> >::iterator BlockIterator;
-        for (BlockIterator i = game_->blocks_.begin(); i != game_->blocks_.end(); ++i) {
+        typedef std::vector<boost::shared_ptr<Actor> >::iterator BlockIterator;
+        for (BlockIterator i = game_->actors_.begin(); i != game_->actors_.end(); ++i) {
             (*i)->debugDraw(debugGraphics_.get());
-        }
-        typedef std::vector<boost::shared_ptr<CharacterActor> >::iterator CharacterIterator;
-        for (CharacterIterator j = game_->characters_.begin(); j != game_->characters_.end();
-             ++j)
-        {
-            (*j)->debugDraw(debugGraphics_.get());
         }
         SDL_GL_SwapBuffers();
     }

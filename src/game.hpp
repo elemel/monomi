@@ -5,8 +5,7 @@
 #include <boost/shared_ptr.hpp>
 
 namespace monomi {
-    class BlockActor;
-    class CharacterActor;
+    class Actor;
     class CharacterFactory;
     class Physics;
     class Random;
@@ -16,8 +15,7 @@ namespace monomi {
         float time_;
         boost::shared_ptr<Random> random_;
         boost::shared_ptr<CharacterFactory> characterFactory_;
-        std::vector<boost::shared_ptr<CharacterActor> > characters_;
-        std::vector<boost::shared_ptr<BlockActor> > blocks_;
+        std::vector<boost::shared_ptr<Actor> > actors_;
         boost::shared_ptr<Physics> physics_;
 
         Game();
