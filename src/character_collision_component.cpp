@@ -24,7 +24,7 @@ namespace monomi {
                 if (boost::shared_ptr<CharacterActor> otherCharacter =
                     boost::dynamic_pointer_cast<CharacterActor>(*i))
                 {
-                    if (playerCharacter->alive && otherCharacter->alive &&
+                    if (playerCharacter->alive_ && otherCharacter->alive_ &&
                         (intersects(playerCharacter->bottomCircle(),
                                     otherCharacter->bottomCircle()) ||
                          intersects(playerCharacter->bottomCircle(),
@@ -37,9 +37,9 @@ namespace monomi {
                         int side = int(sign(otherCharacter->position.x -
                                             playerCharacter->position.x));
                         if (side == otherCharacter->face) {
-                            otherCharacter->alive = false;
+                            otherCharacter->alive_ = false;
                         } else {
-                            playerCharacter->alive = false;
+                            playerCharacter->alive_ = false;
                         }
                         playerCharacter->velocity *= 0.5f;
                         otherCharacter->velocity *= 0.5f;

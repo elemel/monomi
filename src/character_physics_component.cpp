@@ -18,7 +18,9 @@ namespace monomi {
     void CharacterPhysicsComponent::update(float dt)
     {
         // Handle states.
-        if (character_->alive) {
+        //
+        // TODO: Extract separate states. Add a state component?
+        if (character_->alive_) {
             if (character_->touchDown) {
                 if (character_->techniques.test(tripleJumpTechnique)) {
                     character_->airJumpCount = 2;
@@ -90,10 +92,12 @@ namespace monomi {
         character_->position += dt * character_->velocity;
 
         // Copy controls.
+        //
+        // TODO: Move elsewhere.
         character_->oldControls = character_->controls;
 
         // Apply constraints.
-        if (character_->alive) {
+        if (character_->alive_) {
             // Make multiple iterations, separating only the deepest
             // penetration found during each iteration.
             for (int j = 0; j < 3; ++j) {

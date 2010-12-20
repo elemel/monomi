@@ -13,8 +13,10 @@ namespace monomi {
         return boost::shared_ptr<Component>();
     }
 
-    void BlockActor::update(float dt)
-    { }
+    bool BlockActor::alive() const
+    {
+        return true;
+    }
 
     void BlockActor::debugDraw(DebugGraphics *debugGraphics)
     {

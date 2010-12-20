@@ -12,7 +12,7 @@ namespace monomi {
         type(type),
         techniques(type->techniques),
         tools(type->tools),
-        alive(true),
+        alive_(true),
         face(1),
         gravity(0.0f, -20.0f),
         touchLeft(false),
@@ -52,13 +52,15 @@ namespace monomi {
         return collisionComponent_;
     }
 
-    void CharacterActor::update(float dt)
-    { }
+    bool CharacterActor::alive() const
+    {
+        return true;
+    }
 
     void CharacterActor::debugDraw(DebugGraphics *debugGraphics)
     {
         DebugColor color = debugColors::white();
-        if (alive) {
+        if (alive_) {
             if (touchDown) {
                 color = debugColors::yellow();
             } else if (wallSliding()) {

@@ -19,7 +19,7 @@ namespace monomi {
         boost::shared_ptr<Component> physicsComponent();
         boost::shared_ptr<Component> collisionComponent();
 
-        void update(float dt);
+        bool alive() const;
         void debugDraw(DebugGraphics *debugGraphics);
     };
 }

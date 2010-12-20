@@ -23,7 +23,7 @@ namespace monomi {
         std::bitset<techniqueCount> techniques;
         std::bitset<toolCount> tools;
 
-        bool alive;
+        bool alive_;
 
         // Track which direction the character faces, -1 for left and +1 for
         // right.
@@ -51,7 +51,7 @@ namespace monomi {
         boost::shared_ptr<Component> physicsComponent();
         boost::shared_ptr<Component> collisionComponent();
 
-        void update(float dt);
+        bool alive() const;
         void debugDraw(DebugGraphics *debugGraphics);
     };
 }
