@@ -77,25 +77,38 @@ namespace monomi {
 
     void Game::addActor(boost::shared_ptr<Actor> const &actor)
     {
-        deferredActors_.push_back(actor);
+        waitingActors_.push_back(actor);
     }
 
     void Game::update(float dt)
     {
-        addDeferredActors();
+        addWaitingActors();
         physicsComponents_.update(dt);
         collisionComponents_.update(dt);
+        removeDeadActors();
     }
 
-    void Game::addDeferredActors()
+    void Game::addWaitingActors()
     {
-        std::reverse(deferredActors_.begin(), deferredActors_.end());
-        while (!deferredActors_.empty()) {
-            boost::shared_ptr<Actor> actor = deferredActors_.back();
-            deferredActors_.pop_back();
+        std::reverse(waitingActors_.begin(), waitingActors_.end());
+        while (!waitingActors_.empty()) {
+            boost::shared_ptr<Actor> actor = waitingActors_.back();
+            waitingActors_.pop_back();
             actors_.push_back(actor);
             physicsComponents_.add(actor->physicsComponent());
             collisionComponents_.add(actor->collisionComponent());
         }
+    }
+
+    void Game::removeDeadActors()
+    {
+        typedef std::vector<boost::shared_ptr<Actor> >::iterator Iterator;
+        Iterator i = actors_.begin();
+        for (Iterator j = actors_.begin(); j != actors_.end(); ++j) {
+            if ((*j)->alive()) {
+                *i++ = *j;
+            }
+        }
+        actors_.erase(i, actors_.end());
     }
 }

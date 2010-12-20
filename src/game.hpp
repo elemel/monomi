@@ -17,7 +17,6 @@ namespace monomi {
     public:
         float time_;
         boost::shared_ptr<Random> random_;
-        std::vector<boost::shared_ptr<Actor> > deferredActors_;
         std::vector<boost::shared_ptr<Actor> > actors_;
         ComponentRegistry physicsComponents_;
         ComponentRegistry collisionComponents_;
@@ -30,7 +29,10 @@ namespace monomi {
         void update(float dt);
 
     private:
-        void addDeferredActors();
+        std::vector<boost::shared_ptr<Actor> > waitingActors_;
+
+        void addWaitingActors();
+        void removeDeadActors();
     };
 }
 
