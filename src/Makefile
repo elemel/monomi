@@ -61,7 +61,7 @@ character_actor.o: debug_color.hpp
 character_collision_component.o: character_collision_component.hpp
 character_collision_component.o: component.hpp character_actor.hpp actor.hpp
 character_collision_component.o: control.hpp geometry.hpp technique.hpp
-character_collision_component.o: tool.hpp game.hpp
+character_collision_component.o: tool.hpp game.hpp component_registry.hpp
 character_factory.o: character_factory.hpp character_tag.hpp
 character_factory.o: character_actor.hpp actor.hpp control.hpp geometry.hpp
 character_factory.o: technique.hpp tool.hpp character_collision_component.hpp
@@ -71,17 +71,19 @@ character_physics_component.o: character_physics_component.hpp component.hpp
 character_physics_component.o: block_actor.hpp actor.hpp geometry.hpp
 character_physics_component.o: character_actor.hpp control.hpp technique.hpp
 character_physics_component.o: tool.hpp character_type.hpp game.hpp
+character_physics_component.o: component_registry.hpp
 character_type.o: character_type.hpp geometry.hpp technique.hpp tool.hpp
 component_registry.o: component_registry.hpp component.hpp
 debug_color.o: debug_color.hpp
 debug_graphics.o: debug_graphics.hpp debug_color.hpp geometry.hpp
-game.o: game.hpp block_actor.hpp actor.hpp geometry.hpp character_actor.hpp
-game.o: control.hpp technique.hpp tool.hpp character_factory.hpp
-game.o: character_tag.hpp character_type.hpp component.hpp random.hpp
+game.o: game.hpp component_registry.hpp block_actor.hpp actor.hpp
+game.o: geometry.hpp character_actor.hpp control.hpp technique.hpp tool.hpp
+game.o: character_factory.hpp character_tag.hpp character_type.hpp
+game.o: component.hpp random.hpp
 game_screen.o: game_screen.hpp camera.hpp geometry.hpp screen.hpp
 game_screen.o: block_actor.hpp actor.hpp character_actor.hpp control.hpp
 game_screen.o: technique.hpp tool.hpp debug_graphics.hpp debug_color.hpp
-game_screen.o: game.hpp random.hpp
+game_screen.o: game.hpp component_registry.hpp random.hpp
 geometry.o: geometry.hpp
 main.o: title_screen.hpp screen.hpp
 random.o: random.hpp

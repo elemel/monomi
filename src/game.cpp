@@ -77,14 +77,25 @@ namespace monomi {
 
     void Game::addActor(boost::shared_ptr<Actor> const &actor)
     {
-        actors_.push_back(actor);
-        physicsComponents_.add(actor->physicsComponent());
-        collisionComponents_.add(actor->collisionComponent());
+        deferredActors_.push_back(actor);
     }
 
     void Game::update(float dt)
     {
+        addDeferredActors();
         physicsComponents_.update(dt);
         collisionComponents_.update(dt);
+    }
+
+    void Game::addDeferredActors()
+    {
+        std::reverse(deferredActors_.begin(), deferredActors_.end());
+        while (!deferredActors_.empty()) {
+            boost::shared_ptr<Actor> actor = deferredActors_.back();
+            deferredActors_.pop_back();
+            actors_.push_back(actor);
+            physicsComponents_.add(actor->physicsComponent());
+            collisionComponents_.add(actor->collisionComponent());
+        }
     }
 }
