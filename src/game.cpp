@@ -78,27 +78,13 @@ namespace monomi {
     void Game::addActor(boost::shared_ptr<Actor> const &actor)
     {
         actors_.push_back(actor);
-        physicsComponents_.push_back(actor->physicsComponent());
-        collisionComponents_.push_back(actor->collisionComponent());
+        physicsComponents_.add(actor->physicsComponent());
+        collisionComponents_.add(actor->collisionComponent());
     }
 
     void Game::update(float dt)
     {
-        typedef std::vector<boost::shared_ptr<Component> >::iterator
-            ComponentIterator;
-        for (ComponentIterator j = physicsComponents_.begin();
-             j != physicsComponents_.end(); ++j)
-        {
-            if (*j) {
-                (*j)->update(dt);
-            }
-        }
-        for (ComponentIterator k = collisionComponents_.begin();
-             k != collisionComponents_.end(); ++k)
-        {
-            if (*k) {
-                (*k)->update(dt);
-            }
-        }
+        physicsComponents_.update(dt);
+        collisionComponents_.update(dt);
     }
 }

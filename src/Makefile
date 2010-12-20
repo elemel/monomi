@@ -31,6 +31,7 @@ objects := \
 	character_factory.o \
 	character_physics_component.o \
 	character_type.o \
+	component_registry.o \
 	debug_color.o \
 	debug_graphics.o \
 	game.o \
@@ -71,6 +72,7 @@ character_physics_component.o: block_actor.hpp actor.hpp geometry.hpp
 character_physics_component.o: character_actor.hpp control.hpp technique.hpp
 character_physics_component.o: tool.hpp character_type.hpp game.hpp
 character_type.o: character_type.hpp geometry.hpp technique.hpp tool.hpp
+component_registry.o: component_registry.hpp component.hpp
 debug_color.o: debug_color.hpp
 debug_graphics.o: debug_graphics.hpp debug_color.hpp geometry.hpp
 game.o: game.hpp block_actor.hpp actor.hpp geometry.hpp character_actor.hpp
