@@ -7,7 +7,6 @@
 #include <boost/shared_ptr.hpp>
 
 namespace monomi {
-    class Component;
     class DebugGraphics;
 
     class BlockActor :
@@ -15,8 +14,6 @@ namespace monomi {
     {
     public:
         Box2 box;
-
-        boost::shared_ptr<Component> physicsComponent();
 
         bool alive() const;
         void update(float dt);

@@ -1,7 +1,6 @@
 #include "character_factory.hpp"
 
 #include "character_actor.hpp"
-#include "character_physics_component.hpp"
 #include "character_type.hpp"
 #include "character_walk_state.hpp"
 #include "state_machine.hpp"
@@ -95,7 +94,6 @@ namespace monomi {
         boost::shared_ptr<State> state(new CharacterWalkState(character.get(), game_));
         boost::shared_ptr<StateMachine> stateMachine(new StateMachine(state));
         character->stateMachine_ = stateMachine;
-        character->physicsComponent_.reset(new CharacterPhysicsComponent(character.get(), game_));
         return character;
     }
 }

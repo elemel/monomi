@@ -5,7 +5,6 @@
 #include "character_factory.hpp"
 #include "character_tag.hpp"
 #include "character_type.hpp"
-#include "component.hpp"
 #include "random.hpp"
 
 namespace monomi {
@@ -87,7 +86,6 @@ namespace monomi {
         for (Iterator i = actors_.begin(); i != actors_.end(); ++i) {
             (*i)->update(dt);
         }
-        physicsComponents_.update(dt);
         for (Iterator i = actors_.begin(); i != actors_.end(); ++i) {
             (*i)->handleCollisions();
         }
@@ -101,7 +99,6 @@ namespace monomi {
             boost::shared_ptr<Actor> actor = newActors_.back();
             newActors_.pop_back();
             actors_.push_back(actor);
-            physicsComponents_.add(actor->physicsComponent());
         }
     }
 
