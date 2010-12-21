@@ -25,12 +25,6 @@ namespace monomi {
         airJumpCount(0)
     { }
 
-    bool CharacterActor::wallSliding() const
-    {
-        return (techniques.test(wallSlideTechnique) &&
-                tools.test(tigerClawTool) && (touchLeft || touchRight));
-    }
-
     Circle CharacterActor::bottomCircle() const
     {
         return Circle(position -
@@ -108,7 +102,7 @@ namespace monomi {
         if (alive_) {
             if (touchDown) {
                 color = debugColors::yellow();
-            } else if (wallSliding()) {
+            } else if (touchLeft || touchRight) {
                 color = debugColors::red();
             } else {
                 color = debugColors::lightBlue();

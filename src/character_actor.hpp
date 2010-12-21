@@ -46,7 +46,6 @@ namespace monomi {
 
         explicit CharacterActor(Game *game, boost::shared_ptr<CharacterType const> const &type);
 
-        bool wallSliding() const;
         Circle bottomCircle() const;
         Circle topCircle() const;
 
