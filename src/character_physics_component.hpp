@@ -19,6 +19,10 @@ namespace monomi {
     private:
         CharacterActor *character_;
         Game *game_;
+
+        void updatePhysics(float dt);
+        void applyConstraints();
+        void updateTouchFlags();
     };
 }
 

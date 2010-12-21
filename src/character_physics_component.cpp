@@ -17,7 +17,13 @@ namespace monomi {
 
     void CharacterPhysicsComponent::update(float dt)
     {
-        // Physics simulation.
+        updatePhysics(dt);
+        applyConstraints();
+        updateTouchFlags();
+    }
+
+    void CharacterPhysicsComponent::updatePhysics(float dt)
+    {
         character_->velocity += dt * character_->gravity;
         if (character_->velocity.squaredLength() >= character_->type->maxVelocity * character_->type->maxVelocity)
         {
@@ -25,8 +31,10 @@ namespace monomi {
             character_->velocity *= character_->type->maxVelocity;
         }
         character_->position += dt * character_->velocity;
+    }
 
-        // Apply constraints.
+    void CharacterPhysicsComponent::applyConstraints()
+    {
         if (character_->alive_) {
             // Make multiple iterations, separating only the deepest
             // penetration found during each iteration.
@@ -75,7 +83,10 @@ namespace monomi {
                 }
             }
         }
+    }
 
+    void CharacterPhysicsComponent::updateTouchFlags()
+    {
         // Clear touch flags.
         character_->touchLeft = false;
         character_->touchRight = false;
