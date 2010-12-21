@@ -27,7 +27,6 @@ objects := \
 	block_actor.o \
 	camera.o \
 	character_actor.o \
-	character_collision_component.o \
 	character_factory.o \
 	character_jump_state.o \
 	character_physics_component.o \
@@ -61,17 +60,13 @@ camera.o: camera.hpp geometry.hpp
 character_actor.o: character_actor.hpp actor.hpp control.hpp geometry.hpp
 character_actor.o: technique.hpp tool.hpp character_physics_component.hpp
 character_actor.o: component.hpp character_type.hpp debug_graphics.hpp
-character_actor.o: debug_color.hpp state_machine.hpp state.hpp
-character_collision_component.o: character_collision_component.hpp
-character_collision_component.o: component.hpp character_actor.hpp actor.hpp
-character_collision_component.o: control.hpp geometry.hpp technique.hpp
-character_collision_component.o: tool.hpp game.hpp component_registry.hpp
+character_actor.o: debug_color.hpp game.hpp component_registry.hpp
+character_actor.o: state_machine.hpp state.hpp
 character_factory.o: character_factory.hpp character_tag.hpp
 character_factory.o: character_actor.hpp actor.hpp control.hpp geometry.hpp
-character_factory.o: technique.hpp tool.hpp character_collision_component.hpp
-character_factory.o: component.hpp character_physics_component.hpp
-character_factory.o: character_type.hpp character_walk_state.hpp state.hpp
-character_factory.o: state_machine.hpp
+character_factory.o: technique.hpp tool.hpp character_physics_component.hpp
+character_factory.o: component.hpp character_type.hpp
+character_factory.o: character_walk_state.hpp state.hpp state_machine.hpp
 character_jump_state.o: character_jump_state.hpp geometry.hpp state.hpp
 character_jump_state.o: character_actor.hpp actor.hpp control.hpp
 character_jump_state.o: technique.hpp tool.hpp character_type.hpp

@@ -14,12 +14,14 @@ namespace monomi {
     class CharacterType;
     class Component;
     class DebugGraphics;
+    class Game;
     class StateMachine;
 
     class CharacterActor :
         public Actor
     {
     public:
+        Game *game;
         boost::shared_ptr<CharacterType const> type;
         std::bitset<techniqueCount> techniques;
         std::bitset<toolCount> tools;
@@ -43,19 +45,18 @@ namespace monomi {
 
         boost::shared_ptr<StateMachine> stateMachine_;
         boost::shared_ptr<Component> physicsComponent_;
-        boost::shared_ptr<Component> collisionComponent_;
 
-        explicit CharacterActor(boost::shared_ptr<CharacterType const> const &type);
+        explicit CharacterActor(Game *game, boost::shared_ptr<CharacterType const> const &type);
 
         bool wallSliding() const;
         Circle bottomCircle() const;
         Circle topCircle() const;
 
         boost::shared_ptr<Component> physicsComponent();
-        boost::shared_ptr<Component> collisionComponent();
 
         bool alive() const;
         void update(float dt);
+        void handleCollisions();
         void debugDraw(DebugGraphics *debugGraphics);
     };
 }

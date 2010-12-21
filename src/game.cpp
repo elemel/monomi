@@ -88,7 +88,9 @@ namespace monomi {
             (*i)->update(dt);
         }
         physicsComponents_.update(dt);
-        collisionComponents_.update(dt);
+        for (Iterator i = actors_.begin(); i != actors_.end(); ++i) {
+            (*i)->handleCollisions();
+        }
         removeDeadActors();
     }
 
@@ -100,7 +102,6 @@ namespace monomi {
             newActors_.pop_back();
             actors_.push_back(actor);
             physicsComponents_.add(actor->physicsComponent());
-            collisionComponents_.add(actor->collisionComponent());
         }
     }
 

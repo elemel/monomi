@@ -20,7 +20,6 @@ namespace monomi {
         std::vector<boost::shared_ptr<Actor> > actors_;
 
         ComponentRegistry physicsComponents_;
-        ComponentRegistry collisionComponents_;
 
         boost::shared_ptr<CharacterFactory> characterFactory_;
 

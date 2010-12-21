@@ -8,17 +8,15 @@ namespace monomi {
         return boost::shared_ptr<Component>();
     }
 
-    boost::shared_ptr<Component> BlockActor::collisionComponent()
-    {
-        return boost::shared_ptr<Component>();
-    }
-
     bool BlockActor::alive() const
     {
         return true;
     }
 
     void BlockActor::update(float dt)
+    { }
+
+    void BlockActor::handleCollisions()
     { }
 
     void BlockActor::debugDraw(DebugGraphics *debugGraphics)
