@@ -14,6 +14,7 @@ namespace monomi {
     class CharacterType;
     class Component;
     class DebugGraphics;
+    class StateMachine;
 
     class CharacterActor :
         public Actor
@@ -40,7 +41,7 @@ namespace monomi {
         bool touchUp;
         int airJumpCount;
 
-        boost::shared_ptr<Component> stateComponent_;
+        boost::shared_ptr<StateMachine> stateMachine_;
         boost::shared_ptr<Component> physicsComponent_;
         boost::shared_ptr<Component> collisionComponent_;
 
@@ -50,11 +51,11 @@ namespace monomi {
         Circle bottomCircle() const;
         Circle topCircle() const;
 
-        boost::shared_ptr<Component> stateComponent();
         boost::shared_ptr<Component> physicsComponent();
         boost::shared_ptr<Component> collisionComponent();
 
         bool alive() const;
+        void update(float dt);
         void debugDraw(DebugGraphics *debugGraphics);
     };
 }

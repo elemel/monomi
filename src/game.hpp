@@ -19,7 +19,6 @@ namespace monomi {
         boost::shared_ptr<Random> random_;
         std::vector<boost::shared_ptr<Actor> > actors_;
 
-        ComponentRegistry stateComponents_;
         ComponentRegistry physicsComponents_;
         ComponentRegistry collisionComponents_;
 

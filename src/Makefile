@@ -31,7 +31,6 @@ objects := \
 	character_factory.o \
 	character_jump_state.o \
 	character_physics_component.o \
-	character_state_component.o \
 	character_type.o \
 	character_walk_state.o \
 	character_wall_slide_state.o \
@@ -44,6 +43,7 @@ objects := \
 	main.o \
 	random.o \
 	screen.o \
+	state_machine.o \
 	title_screen.o
 
 monomi: $(objects)
@@ -61,7 +61,7 @@ camera.o: camera.hpp geometry.hpp
 character_actor.o: character_actor.hpp actor.hpp control.hpp geometry.hpp
 character_actor.o: technique.hpp tool.hpp character_physics_component.hpp
 character_actor.o: component.hpp character_type.hpp debug_graphics.hpp
-character_actor.o: debug_color.hpp
+character_actor.o: debug_color.hpp state_machine.hpp state.hpp
 character_collision_component.o: character_collision_component.hpp
 character_collision_component.o: component.hpp character_actor.hpp actor.hpp
 character_collision_component.o: control.hpp geometry.hpp technique.hpp
@@ -70,8 +70,8 @@ character_factory.o: character_factory.hpp character_tag.hpp
 character_factory.o: character_actor.hpp actor.hpp control.hpp geometry.hpp
 character_factory.o: technique.hpp tool.hpp character_collision_component.hpp
 character_factory.o: component.hpp character_physics_component.hpp
-character_factory.o: character_state_component.hpp character_type.hpp
-character_factory.o: character_walk_state.hpp state.hpp
+character_factory.o: character_type.hpp character_walk_state.hpp state.hpp
+character_factory.o: state_machine.hpp
 character_jump_state.o: character_jump_state.hpp geometry.hpp state.hpp
 character_jump_state.o: character_actor.hpp actor.hpp control.hpp
 character_jump_state.o: technique.hpp tool.hpp character_type.hpp
@@ -82,9 +82,6 @@ character_physics_component.o: block_actor.hpp actor.hpp geometry.hpp
 character_physics_component.o: character_actor.hpp control.hpp technique.hpp
 character_physics_component.o: tool.hpp character_type.hpp game.hpp
 character_physics_component.o: component_registry.hpp
-character_state_component.o: character_state_component.hpp component.hpp
-character_state_component.o: character_actor.hpp actor.hpp control.hpp
-character_state_component.o: geometry.hpp technique.hpp tool.hpp state.hpp
 character_type.o: character_type.hpp geometry.hpp technique.hpp tool.hpp
 character_walk_state.o: character_walk_state.hpp state.hpp
 character_walk_state.o: character_actor.hpp actor.hpp control.hpp
@@ -110,5 +107,6 @@ geometry.o: geometry.hpp
 main.o: title_screen.hpp screen.hpp
 random.o: random.hpp
 screen.o: screen.hpp
+state_machine.o: state_machine.hpp state.hpp
 title_screen.o: title_screen.hpp screen.hpp game_screen.hpp camera.hpp
 title_screen.o: geometry.hpp

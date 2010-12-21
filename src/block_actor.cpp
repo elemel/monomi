@@ -3,11 +3,6 @@
 #include "debug_graphics.hpp"
 
 namespace monomi {
-    boost::shared_ptr<Component> BlockActor::stateComponent()
-    {
-        return boost::shared_ptr<Component>();
-    }
-
     boost::shared_ptr<Component> BlockActor::physicsComponent()
     {
         return boost::shared_ptr<Component>();
@@ -22,6 +17,9 @@ namespace monomi {
     {
         return true;
     }
+
+    void BlockActor::update(float dt)
+    { }
 
     void BlockActor::debugDraw(DebugGraphics *debugGraphics)
     {

@@ -3,6 +3,7 @@
 #include "character_physics_component.hpp"
 #include "character_type.hpp"
 #include "debug_graphics.hpp"
+#include "state_machine.hpp"
 
 #include <cmath>
 #include <iostream>
@@ -42,11 +43,6 @@ namespace monomi {
                       0.5f * type->width);
     }
 
-    boost::shared_ptr<Component> CharacterActor::stateComponent()
-    {
-        return stateComponent_;
-    }
-
     boost::shared_ptr<Component> CharacterActor::physicsComponent()
     {
         return physicsComponent_;
@@ -60,6 +56,16 @@ namespace monomi {
     bool CharacterActor::alive() const
     {
         return true;
+    }
+
+    void CharacterActor::update(float dt)
+    {
+        if (stateMachine_) {
+            stateMachine_->update(dt);
+        }
+
+        // Copy controls.
+        oldControls = controls;
     }
 
     void CharacterActor::debugDraw(DebugGraphics *debugGraphics)

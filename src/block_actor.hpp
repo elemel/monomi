@@ -16,11 +16,11 @@ namespace monomi {
     public:
         Box2 box;
 
-        boost::shared_ptr<Component> stateComponent();
         boost::shared_ptr<Component> physicsComponent();
         boost::shared_ptr<Component> collisionComponent();
 
         bool alive() const;
+        void update(float dt);
         void debugDraw(DebugGraphics *debugGraphics);
     };
 }

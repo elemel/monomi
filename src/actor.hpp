@@ -11,11 +11,11 @@ namespace monomi {
     public:
         virtual ~Actor();
 
-        virtual boost::shared_ptr<Component> stateComponent() = 0;
         virtual boost::shared_ptr<Component> physicsComponent() = 0;
         virtual boost::shared_ptr<Component> collisionComponent() = 0;
 
         virtual bool alive() const = 0;
+        virtual void update(float dt) = 0;
         virtual void debugDraw(DebugGraphics *debugGraphics) = 0;
     };
 }
