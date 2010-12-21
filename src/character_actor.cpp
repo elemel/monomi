@@ -42,6 +42,11 @@ namespace monomi {
                       0.5f * type->width);
     }
 
+    boost::shared_ptr<Component> CharacterActor::stateComponent()
+    {
+        return stateComponent_;
+    }
+
     boost::shared_ptr<Component> CharacterActor::physicsComponent()
     {
         return physicsComponent_;

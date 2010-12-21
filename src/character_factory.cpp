@@ -3,6 +3,7 @@
 #include "character_actor.hpp"
 #include "character_collision_component.hpp"
 #include "character_physics_component.hpp"
+#include "character_state_component.hpp"
 #include "character_type.hpp"
 
 #include <stdexcept>
@@ -91,6 +92,7 @@ namespace monomi {
     boost::shared_ptr<CharacterActor> CharacterFactory::create(CharacterTag tag) const
     {
         boost::shared_ptr<CharacterActor> character(new CharacterActor(types_[tag]));
+        character->stateComponent_.reset(new CharacterStateComponent(character.get(), game_));
         character->physicsComponent_.reset(new CharacterPhysicsComponent(character.get(), game_));
         character->collisionComponent_.reset(new CharacterCollisionComponent(character.get(), game_));
         return character;

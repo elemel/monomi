@@ -39,6 +39,8 @@ namespace monomi {
         bool touchDown;
         bool touchUp;
         int airJumpCount;
+
+        boost::shared_ptr<Component> stateComponent_;
         boost::shared_ptr<Component> physicsComponent_;
         boost::shared_ptr<Component> collisionComponent_;
 
@@ -48,6 +50,7 @@ namespace monomi {
         Circle bottomCircle() const;
         Circle topCircle() const;
 
+        boost::shared_ptr<Component> stateComponent();
         boost::shared_ptr<Component> physicsComponent();
         boost::shared_ptr<Component> collisionComponent();
 

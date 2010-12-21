@@ -11,6 +11,7 @@ namespace monomi {
     public:
         virtual ~Actor();
 
+        virtual boost::shared_ptr<Component> stateComponent() = 0;
         virtual boost::shared_ptr<Component> physicsComponent() = 0;
         virtual boost::shared_ptr<Component> collisionComponent() = 0;
 

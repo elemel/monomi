@@ -30,6 +30,7 @@ objects := \
 	character_collision_component.o \
 	character_factory.o \
 	character_physics_component.o \
+	character_state_component.o \
 	character_type.o \
 	component_registry.o \
 	debug_color.o \
@@ -66,12 +67,16 @@ character_factory.o: character_factory.hpp character_tag.hpp
 character_factory.o: character_actor.hpp actor.hpp control.hpp geometry.hpp
 character_factory.o: technique.hpp tool.hpp character_collision_component.hpp
 character_factory.o: component.hpp character_physics_component.hpp
-character_factory.o: character_type.hpp
+character_factory.o: character_state_component.hpp character_type.hpp
 character_physics_component.o: character_physics_component.hpp component.hpp
 character_physics_component.o: block_actor.hpp actor.hpp geometry.hpp
 character_physics_component.o: character_actor.hpp control.hpp technique.hpp
 character_physics_component.o: tool.hpp character_type.hpp game.hpp
 character_physics_component.o: component_registry.hpp
+character_state_component.o: character_state_component.hpp component.hpp
+character_state_component.o: character_actor.hpp actor.hpp control.hpp
+character_state_component.o: geometry.hpp technique.hpp tool.hpp
+character_state_component.o: character_type.hpp
 character_type.o: character_type.hpp geometry.hpp technique.hpp tool.hpp
 component_registry.o: component_registry.hpp component.hpp
 debug_color.o: debug_color.hpp

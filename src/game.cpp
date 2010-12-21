@@ -83,6 +83,7 @@ namespace monomi {
     void Game::update(float dt)
     {
         addWaitingActors();
+        stateComponents_.update(dt);
         physicsComponents_.update(dt);
         collisionComponents_.update(dt);
         removeDeadActors();
@@ -95,6 +96,7 @@ namespace monomi {
             boost::shared_ptr<Actor> actor = waitingActors_.back();
             waitingActors_.pop_back();
             actors_.push_back(actor);
+            stateComponents_.add(actor->stateComponent());
             physicsComponents_.add(actor->physicsComponent());
             collisionComponents_.add(actor->collisionComponent());
         }
