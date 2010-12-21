@@ -32,9 +32,9 @@ namespace monomi {
         void update(float dt);
 
     private:
-        std::vector<boost::shared_ptr<Actor> > waitingActors_;
+        std::vector<boost::shared_ptr<Actor> > newActors_;
 
-        void addWaitingActors();
+        void addNewActors();
         void removeDeadActors();
     };
 }

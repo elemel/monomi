@@ -29,9 +29,12 @@ objects := \
 	character_actor.o \
 	character_collision_component.o \
 	character_factory.o \
+	character_jump_state.o \
 	character_physics_component.o \
 	character_state_component.o \
 	character_type.o \
+	character_walk_state.o \
+	character_wall_slide_state.o \
 	component_registry.o \
 	debug_color.o \
 	debug_graphics.o \
@@ -68,6 +71,12 @@ character_factory.o: character_actor.hpp actor.hpp control.hpp geometry.hpp
 character_factory.o: technique.hpp tool.hpp character_collision_component.hpp
 character_factory.o: component.hpp character_physics_component.hpp
 character_factory.o: character_state_component.hpp character_type.hpp
+character_factory.o: character_walk_state.hpp state.hpp
+character_jump_state.o: character_jump_state.hpp geometry.hpp state.hpp
+character_jump_state.o: character_actor.hpp actor.hpp control.hpp
+character_jump_state.o: technique.hpp tool.hpp character_type.hpp
+character_jump_state.o: character_walk_state.hpp
+character_jump_state.o: character_wall_slide_state.hpp
 character_physics_component.o: character_physics_component.hpp component.hpp
 character_physics_component.o: block_actor.hpp actor.hpp geometry.hpp
 character_physics_component.o: character_actor.hpp control.hpp technique.hpp
@@ -75,9 +84,17 @@ character_physics_component.o: tool.hpp character_type.hpp game.hpp
 character_physics_component.o: component_registry.hpp
 character_state_component.o: character_state_component.hpp component.hpp
 character_state_component.o: character_actor.hpp actor.hpp control.hpp
-character_state_component.o: geometry.hpp technique.hpp tool.hpp
-character_state_component.o: character_type.hpp
+character_state_component.o: geometry.hpp technique.hpp tool.hpp state.hpp
 character_type.o: character_type.hpp geometry.hpp technique.hpp tool.hpp
+character_walk_state.o: character_walk_state.hpp state.hpp
+character_walk_state.o: character_actor.hpp actor.hpp control.hpp
+character_walk_state.o: geometry.hpp technique.hpp tool.hpp
+character_walk_state.o: character_jump_state.hpp character_type.hpp
+character_wall_slide_state.o: character_wall_slide_state.hpp state.hpp
+character_wall_slide_state.o: character_actor.hpp actor.hpp control.hpp
+character_wall_slide_state.o: geometry.hpp technique.hpp tool.hpp
+character_wall_slide_state.o: character_jump_state.hpp character_type.hpp
+character_wall_slide_state.o: character_walk_state.hpp
 component_registry.o: component_registry.hpp component.hpp
 debug_color.o: debug_color.hpp
 debug_graphics.o: debug_graphics.hpp debug_color.hpp geometry.hpp

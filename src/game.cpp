@@ -27,7 +27,7 @@ namespace monomi {
 
         // Create characters.
         boost::shared_ptr<CharacterActor> character;
-        character = characterFactory_->create(earthMasterTag);
+        character = characterFactory_->create(airMasterTag);
         character->position = Point2(2.0f, 2.0f);
         addActor(character);
         character = characterFactory_->create(samuraiTag);
@@ -77,24 +77,24 @@ namespace monomi {
 
     void Game::addActor(boost::shared_ptr<Actor> const &actor)
     {
-        waitingActors_.push_back(actor);
+        newActors_.push_back(actor);
     }
 
     void Game::update(float dt)
     {
-        addWaitingActors();
+        addNewActors();
         stateComponents_.update(dt);
         physicsComponents_.update(dt);
         collisionComponents_.update(dt);
         removeDeadActors();
     }
 
-    void Game::addWaitingActors()
+    void Game::addNewActors()
     {
-        std::reverse(waitingActors_.begin(), waitingActors_.end());
-        while (!waitingActors_.empty()) {
-            boost::shared_ptr<Actor> actor = waitingActors_.back();
-            waitingActors_.pop_back();
+        std::reverse(newActors_.begin(), newActors_.end());
+        while (!newActors_.empty()) {
+            boost::shared_ptr<Actor> actor = newActors_.back();
+            newActors_.pop_back();
             actors_.push_back(actor);
             stateComponents_.add(actor->stateComponent());
             physicsComponents_.add(actor->physicsComponent());
