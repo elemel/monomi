@@ -31,6 +31,11 @@ namespace monomi {
             return boost::shared_ptr<State>(new CharacterJumpState(character_, game_));
         } else if (character_->touchDown) {
             return boost::shared_ptr<State>(new CharacterWalkState(character_, game_));
+        } else if (!character_->touchLeft && !character_->touchRight ||
+                   !character_->touchLeft && character_->controls.test(leftControl) ||
+                   !character_->touchRight && character_->controls.test(rightControl))
+        {
+            return boost::shared_ptr<State>(new CharacterJumpState(character_, game_));
         } else {
             return boost::shared_ptr<State>();
         }
