@@ -1,5 +1,5 @@
-#ifndef MONOMI_CHARACTER_JUMP_STATE_HPP
-#define MONOMI_CHARACTER_JUMP_STATE_HPP
+#ifndef MONOMI_CHARACTER_WALL_JUMP_STATE_HPP
+#define MONOMI_CHARACTER_WALL_JUMP_STATE_HPP
 
 #include "state.hpp"
 
@@ -7,11 +7,11 @@ namespace monomi {
     class CharacterActor;
     class Game;
 
-    class CharacterJumpState :
+    class CharacterWallJumpState :
         public State
     {
     public:
-        CharacterJumpState(CharacterActor *character, Game *game);
+        CharacterWallJumpState(CharacterActor *character, Game *game);
 
         void enter();
         boost::shared_ptr<State> transition();
@@ -24,4 +24,4 @@ namespace monomi {
     };
 }
 
-#endif // MONOMI_CHARACTER_JUMP_STATE_HPP
+#endif // MONOMI_CHARACTER_WALL_JUMP_STATE_HPP

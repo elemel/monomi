@@ -2,6 +2,8 @@
 
 #include "state.hpp"
 
+#include <iostream>
+
 namespace monomi {
     StateMachine::StateMachine()
     { }
@@ -16,6 +18,7 @@ namespace monomi {
             if (boost::shared_ptr<State> newState = state->transition()) {
                 state->exit();
                 state = newState;
+                std::cout << "Changing to new state: " << typeid(*newState).name() << std::endl;
                 state->enter();
             }
             state->update(dt);

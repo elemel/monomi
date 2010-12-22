@@ -1,6 +1,7 @@
 #include "character_walk_state.hpp"
 
 #include "character_actor.hpp"
+#include "character_fall_state.hpp"
 #include "character_jump_state.hpp"
 #include "character_type.hpp"
 
@@ -26,10 +27,9 @@ namespace monomi {
     boost::shared_ptr<State> CharacterWalkState::transition()
     {
         if (character_->controls.test(jumpControl) && !character_->oldControls.test(jumpControl)) {
-            character_->velocity.y = character_->type->jumpVelocity;
             return boost::shared_ptr<State>(new CharacterJumpState(character_, game_));
         } else if (!character_->touchDown) {
-            return boost::shared_ptr<State>(new CharacterJumpState(character_, game_));
+            return boost::shared_ptr<State>(new CharacterFallState(character_, game_));
         } else {
             return boost::shared_ptr<State>();
         }

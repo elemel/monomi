@@ -26,7 +26,7 @@ namespace monomi {
 
         // Create characters.
         boost::shared_ptr<CharacterActor> character;
-        character = characterFactory_->create(fireMasterTag);
+        character = characterFactory_->create(airMasterTag);
         character->position = Point2(2.0f, 2.0f);
         addActor(character);
         character = characterFactory_->create(samuraiTag);

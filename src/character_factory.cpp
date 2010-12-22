@@ -1,8 +1,8 @@
 #include "character_factory.hpp"
 
 #include "character_actor.hpp"
+#include "character_fall_state.hpp"
 #include "character_type.hpp"
-#include "character_walk_state.hpp"
 #include "state_machine.hpp"
 
 #include <stdexcept>
@@ -91,7 +91,7 @@ namespace monomi {
     boost::shared_ptr<CharacterActor> CharacterFactory::create(CharacterTag tag) const
     {
         boost::shared_ptr<CharacterActor> character(new CharacterActor(game_, types_[tag]));
-        boost::shared_ptr<State> state(new CharacterWalkState(character.get(), game_));
+        boost::shared_ptr<State> state(new CharacterFallState(character.get(), game_));
         boost::shared_ptr<StateMachine> stateMachine(new StateMachine(state));
         character->stateMachine_ = stateMachine;
         return character;
