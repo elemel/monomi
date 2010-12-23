@@ -6,6 +6,7 @@
 #include "state_machine.hpp"
 
 #include <stdexcept>
+#include <boost/bind.hpp>
 
 namespace monomi {
     namespace {
@@ -94,6 +95,7 @@ namespace monomi {
         boost::shared_ptr<State> state(new CharacterFallState(character.get(), game_));
         boost::shared_ptr<StateMachine> stateMachine(new StateMachine(state));
         character->stateMachine_ = stateMachine;
+        character->stateMachine_->connectTransitionSlot(boost::bind(&CharacterActor::onTransition, character.get()));
         return character;
     }
 }

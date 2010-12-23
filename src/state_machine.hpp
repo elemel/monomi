@@ -3,19 +3,34 @@
 
 #include "state.hpp"
 
+#include <boost/noncopyable.hpp>
 #include <boost/shared_ptr.hpp>
+#include <boost/signal.hpp>
 
 namespace monomi {
     class State;
 
-    class StateMachine {
+    class StateMachine :
+        private boost::noncopyable
+    {
     public:
-        StateMachine();
+        typedef boost::signal<void ()> TransitionSignal;
+        typedef TransitionSignal::slot_type TransitionSlot;
+
         explicit StateMachine(boost::shared_ptr<State> const &state);
+
+        boost::shared_ptr<State> state();
+        boost::shared_ptr<State const> state() const;
+        void state(boost::shared_ptr<State> const &state);
 
         void update(float dt);
 
-        boost::shared_ptr<State> state;
+        boost::signals::connection
+        connectTransitionSlot(TransitionSlot const &slot);
+
+    private:
+        boost::shared_ptr<State> state_;
+        TransitionSignal transitionSignal_;
     };
 }
 

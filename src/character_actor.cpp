@@ -5,6 +5,7 @@
 #include "debug_graphics.hpp"
 #include "game.hpp"
 #include "state_machine.hpp"
+#include "type.hpp"
 
 #include <cmath>
 #include <iostream>
@@ -226,5 +227,10 @@ namespace monomi {
                 }
             }
         }
+    }
+
+    void CharacterActor::onTransition()
+    {
+        std::cout << "CharacterActor#" << this << " changes state to " << Type(typeid(*stateMachine_->state())) << std::endl;
     }
 }

@@ -1,27 +1,48 @@
 #include "state_machine.hpp"
 
 #include "state.hpp"
+#include "type.hpp"
 
+#include <cassert>
 #include <iostream>
 
 namespace monomi {
-    StateMachine::StateMachine()
-    { }
-
     StateMachine::StateMachine(boost::shared_ptr<State> const &state) :
-        state(state)
-    { }
+        state_(state)
+    {
+        assert(state);
+    }
+
+    boost::shared_ptr<State> StateMachine::state()
+    {
+        return state_;
+    }
+
+    boost::shared_ptr<State const> StateMachine::state() const
+    {
+        return state_;
+    }
+
+    void StateMachine::state(boost::shared_ptr<State> const &state)
+    {
+        assert(state);
+        state_ = state;
+    }
 
     void StateMachine::update(float dt)
     {
-        if (state) {
-            if (boost::shared_ptr<State> newState = state->transition()) {
-                state->exit();
-                state = newState;
-                std::cout << "Changing to new state: " << typeid(*newState).name() << std::endl;
-                state->enter();
-            }
-            state->update(dt);
+        if (boost::shared_ptr<State> newState = state_->transition()) {
+            state_->exit();
+            state_ = newState;
+            transitionSignal_();
+            state_->enter();
         }
+        state_->update(dt);
+    }
+
+    boost::signals::connection
+    StateMachine::connectTransitionSlot(TransitionSlot const &slot)
+    {
+        return transitionSignal_.connect(slot);
     }
 }

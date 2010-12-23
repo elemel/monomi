@@ -54,6 +54,8 @@ namespace monomi {
         void handleCollisions();
         void debugDraw(DebugGraphics *debugGraphics);
 
+        void onTransition();
+
     private:
         void updatePhysics(float dt);
         void applyConstraints();
