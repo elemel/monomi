@@ -26,9 +26,9 @@ namespace monomi {
 
     boost::shared_ptr<State> CharacterWalkState::transition()
     {
-        if (character_->controls.test(jumpControl) && !character_->oldControls.test(jumpControl)) {
+        if (character_->inputs.test(jumpInput) && !character_->oldInputs.test(jumpInput)) {
             return boost::shared_ptr<State>(new CharacterJumpState(character_, game_));
-        } else if (!character_->touchDown) {
+        } else if (!character_->contacts.test(downContact)) {
             return boost::shared_ptr<State>(new CharacterFallState(character_, game_));
         } else {
             return boost::shared_ptr<State>();
@@ -37,8 +37,8 @@ namespace monomi {
 
     void CharacterWalkState::update(float dt)
     {
-        int moveFace = (int(character_->controls.test(rightControl)) -
-                        int(character_->controls.test(leftControl)));
+        int moveFace = (int(character_->inputs.test(rightInput)) -
+                        int(character_->inputs.test(leftInput)));
         if (moveFace) {
             character_->face = moveFace;
         }

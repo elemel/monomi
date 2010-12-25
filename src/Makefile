@@ -59,47 +59,57 @@ actor.o: actor.hpp
 block_actor.o: block_actor.hpp actor.hpp geometry.hpp debug_graphics.hpp
 block_actor.o: debug_color.hpp
 camera.o: camera.hpp geometry.hpp
-character_actor.o: character_actor.hpp actor.hpp control.hpp geometry.hpp
+character_actor.o: character_actor.hpp actor.hpp geometry.hpp input.hpp
 character_actor.o: technique.hpp tool.hpp block_actor.hpp character_type.hpp
 character_actor.o: debug_graphics.hpp debug_color.hpp game.hpp
-character_actor.o: state_machine.hpp state.hpp
+character_actor.o: state_machine.hpp state.hpp type.hpp
+character_air_jump_state.o: character_air_jump_state.hpp state.hpp
+character_air_jump_state.o: character_actor.hpp actor.hpp geometry.hpp
+character_air_jump_state.o: input.hpp technique.hpp tool.hpp
+character_air_jump_state.o: character_fall_state.hpp character_type.hpp
 character_factory.o: character_factory.hpp character_tag.hpp
-character_factory.o: character_actor.hpp actor.hpp control.hpp geometry.hpp
-character_factory.o: technique.hpp tool.hpp character_type.hpp
-character_factory.o: character_walk_state.hpp state.hpp state_machine.hpp
+character_factory.o: character_actor.hpp actor.hpp geometry.hpp input.hpp
+character_factory.o: technique.hpp tool.hpp character_fall_state.hpp
+character_factory.o: state.hpp character_type.hpp state_machine.hpp
 character_fall_state.o: character_fall_state.hpp state.hpp
-character_fall_state.o: character_actor.hpp actor.hpp control.hpp
-character_fall_state.o: geometry.hpp technique.hpp tool.hpp
-character_fall_state.o: character_type.hpp character_walk_state.hpp
+character_fall_state.o: character_actor.hpp actor.hpp geometry.hpp input.hpp
+character_fall_state.o: technique.hpp tool.hpp character_air_jump_state.hpp
+character_fall_state.o: character_jump_state.hpp character_type.hpp
+character_fall_state.o: character_walk_state.hpp
 character_fall_state.o: character_wall_slide_state.hpp
 character_jump_state.o: character_jump_state.hpp state.hpp
-character_jump_state.o: character_actor.hpp actor.hpp control.hpp
-character_jump_state.o: geometry.hpp technique.hpp tool.hpp
-character_jump_state.o: character_type.hpp character_walk_state.hpp
-character_jump_state.o: character_wall_slide_state.hpp
+character_jump_state.o: character_actor.hpp actor.hpp geometry.hpp input.hpp
+character_jump_state.o: technique.hpp tool.hpp character_fall_state.hpp
+character_jump_state.o: character_type.hpp
 character_type.o: character_type.hpp geometry.hpp technique.hpp tool.hpp
 character_walk_state.o: character_walk_state.hpp state.hpp
-character_walk_state.o: character_actor.hpp actor.hpp control.hpp
-character_walk_state.o: geometry.hpp technique.hpp tool.hpp
+character_walk_state.o: character_actor.hpp actor.hpp geometry.hpp input.hpp
+character_walk_state.o: technique.hpp tool.hpp character_fall_state.hpp
 character_walk_state.o: character_jump_state.hpp character_type.hpp
+character_wall_jump_state.o: character_wall_jump_state.hpp state.hpp
+character_wall_jump_state.o: character_actor.hpp actor.hpp geometry.hpp
+character_wall_jump_state.o: input.hpp technique.hpp tool.hpp
+character_wall_jump_state.o: character_fall_state.hpp character_type.hpp
 character_wall_slide_state.o: character_wall_slide_state.hpp state.hpp
-character_wall_slide_state.o: character_actor.hpp actor.hpp control.hpp
-character_wall_slide_state.o: geometry.hpp technique.hpp tool.hpp
-character_wall_slide_state.o: character_jump_state.hpp character_type.hpp
+character_wall_slide_state.o: character_actor.hpp actor.hpp geometry.hpp
+character_wall_slide_state.o: input.hpp technique.hpp tool.hpp
+character_wall_slide_state.o: character_fall_state.hpp character_type.hpp
 character_wall_slide_state.o: character_walk_state.hpp
+character_wall_slide_state.o: character_wall_jump_state.hpp
 debug_color.o: debug_color.hpp
 debug_graphics.o: debug_graphics.hpp debug_color.hpp geometry.hpp
 game.o: game.hpp block_actor.hpp actor.hpp geometry.hpp character_actor.hpp
-game.o: control.hpp technique.hpp tool.hpp character_factory.hpp
+game.o: input.hpp technique.hpp tool.hpp character_factory.hpp
 game.o: character_tag.hpp character_type.hpp random.hpp
 game_screen.o: game_screen.hpp camera.hpp geometry.hpp screen.hpp
-game_screen.o: block_actor.hpp actor.hpp character_actor.hpp control.hpp
+game_screen.o: block_actor.hpp actor.hpp character_actor.hpp input.hpp
 game_screen.o: technique.hpp tool.hpp debug_graphics.hpp debug_color.hpp
 game_screen.o: game.hpp random.hpp
 geometry.o: geometry.hpp
 main.o: title_screen.hpp screen.hpp
 random.o: random.hpp
 screen.o: screen.hpp
-state_machine.o: state_machine.hpp state.hpp
+state_machine.o: state_machine.hpp state.hpp type.hpp
 title_screen.o: title_screen.hpp screen.hpp game_screen.hpp camera.hpp
 title_screen.o: geometry.hpp
+type.o: type.hpp

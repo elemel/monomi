@@ -91,7 +91,7 @@ namespace monomi {
 
     boost::shared_ptr<CharacterActor> CharacterFactory::create(CharacterTag tag) const
     {
-        boost::shared_ptr<CharacterActor> character(new CharacterActor(game_, types_[tag]));
+        boost::shared_ptr<CharacterActor> character(new CharacterActor(game_, types_[tag].get()));
         boost::shared_ptr<State> state(new CharacterFallState(character.get(), game_));
         boost::shared_ptr<StateMachine> stateMachine(new StateMachine(state));
         character->stateMachine_ = stateMachine;

@@ -65,23 +65,23 @@ namespace monomi {
             break;
 
         case SDLK_LEFT:
-            actor->controls.set(leftControl);
+            actor->inputs.set(leftInput);
             break;
 
         case SDLK_RIGHT:
-            actor->controls.set(rightControl);
+            actor->inputs.set(rightInput);
             break;
 
         case SDLK_DOWN:
-            actor->controls.set(downControl);
+            actor->inputs.set(downInput);
             break;
 
         case SDLK_UP:
-            actor->controls.set(upControl);
+            actor->inputs.set(upInput);
             break;
 
         case SDLK_SPACE:
-            actor->controls.set(jumpControl);
+            actor->inputs.set(jumpInput);
             break;
         }
     }
@@ -92,23 +92,23 @@ namespace monomi {
             boost::dynamic_pointer_cast<CharacterActor>(game_->actors_.front());
         switch (event.key.keysym.sym) {
         case SDLK_LEFT:
-            actor->controls.reset(leftControl);
+            actor->inputs.reset(leftInput);
             break;
 
         case SDLK_RIGHT:
-            actor->controls.reset(rightControl);
+            actor->inputs.reset(rightInput);
             break;
 
         case SDLK_DOWN:
-            actor->controls.reset(downControl);
+            actor->inputs.reset(downInput);
             break;
 
         case SDLK_UP:
-            actor->controls.reset(upControl);
+            actor->inputs.reset(upInput);
             break;
 
         case SDLK_SPACE:
-            actor->controls.reset(jumpControl);
+            actor->inputs.reset(jumpInput);
             break;
         }
     }
@@ -133,12 +133,12 @@ namespace monomi {
                 if (boost::shared_ptr<CharacterActor> actor = boost::dynamic_pointer_cast<CharacterActor>(*i)) {
                     if (game_->random_->generate() <= dt) {
                         int face = int(game_->random_->generate() * 3.0f) - 1;
-                        actor->controls.set(leftControl, (face == -1));
-                        actor->controls.set(rightControl, (face == 1));
+                        actor->inputs.set(leftInput, (face == -1));
+                        actor->inputs.set(rightInput, (face == 1));
                     }
                     if (game_->random_->generate() <= dt) {
-                        actor->controls.set(jumpControl,
-                                            (game_->random_->generate() <= 0.5f));
+                        actor->inputs.set(jumpInput,
+                                          (game_->random_->generate() <= 0.5f));
                     }
                 }
             }

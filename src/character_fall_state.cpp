@@ -21,15 +21,17 @@ namespace monomi {
 
     boost::shared_ptr<State> CharacterFallState::transition()
     {
-        if (character_->controls.test(jumpControl) &&
-            !character_->oldControls.test(jumpControl) &&
-            !character_->touchLeft && !character_->touchRight &&
+        if (character_->inputs.test(jumpInput) &&
+            !character_->oldInputs.test(jumpInput) &&
+            !character_->contacts.test(leftContact) &&
+            !character_->contacts.test(rightContact) &&
             character_->tools.test(ironFanTool) && character_->airJumpCount)
         {
             return boost::shared_ptr<State>(new CharacterAirJumpState(character_, game_));
-        } else if (character_->touchDown) {
+        } else if (character_->contacts.test(downContact)) {
             return boost::shared_ptr<State>(new CharacterWalkState(character_, game_));
-        } else if ((character_->touchLeft || character_->touchRight) &&
+        } else if ((character_->contacts.test(leftContact) ||
+                    character_->contacts.test(rightContact)) &&
                    character_->techniques.test(wallSlideTechnique) &&
                    character_->tools.test(tigerClawTool))
         {
@@ -41,8 +43,8 @@ namespace monomi {
 
     void CharacterFallState::update(float dt)
     {
-        int driftFace = (int(character_->controls.test(rightControl)) -
-                         int(character_->controls.test(leftControl)));
+        int driftFace = (int(character_->inputs.test(rightInput)) -
+                         int(character_->inputs.test(leftInput)));
         if (driftFace) {
             character_->face = driftFace;
         }
@@ -54,7 +56,7 @@ namespace monomi {
                                                std::max(std::abs(character_->velocity.x),
                                                         character_->type->maxDriftVelocity)));
         }
-        if (!character_->controls.test(jumpControl)) {
+        if (!character_->inputs.test(jumpInput)) {
             character_->velocity.y = std::min(character_->velocity.y, 3.0f);
         }
     }

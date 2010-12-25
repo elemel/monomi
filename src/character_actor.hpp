@@ -2,13 +2,14 @@
 #define MONOMI_CHARACTER_HPP
 
 #include "actor.hpp"
-#include "control.hpp"
 #include "geometry.hpp"
+#include "input.hpp"
 #include "technique.hpp"
 #include "tool.hpp"
 
 #include <bitset>
 #include <boost/shared_ptr.hpp>
+#include <boost/signal.hpp>
 
 namespace monomi {
     class CharacterType;
@@ -16,14 +17,31 @@ namespace monomi {
     class Game;
     class StateMachine;
 
+    enum Contact {
+        downContact,
+        upContact,
+        leftContact,
+        rightContact,
+
+        contactCount
+    };
+
     class CharacterActor :
         public Actor
     {
     public:
+        typedef std::bitset<techniqueCount> TechniqueBits;
+        typedef std::bitset<toolCount> ToolBits;
+        typedef std::bitset<inputCount> InputBits;
+        typedef std::bitset<contactCount> ContactBits;
+
+        typedef boost::signal<void ()> ContactSignal;
+        typedef ContactSignal::slot_type ContactSlot;
+
         Game *game;
-        boost::shared_ptr<CharacterType const> type;
-        std::bitset<techniqueCount> techniques;
-        std::bitset<toolCount> tools;
+        CharacterType const *type;
+        TechniqueBits techniques;
+        ToolBits tools;
 
         bool alive_;
 
@@ -34,17 +52,12 @@ namespace monomi {
         Point2 position;
         Vector2 velocity;
         Vector2 gravity;
-        std::bitset<controlCount> controls;
-        std::bitset<controlCount> oldControls;
-        bool touchLeft;
-        bool touchRight;
-        bool touchDown;
-        bool touchUp;
+        InputBits inputs;
+        InputBits oldInputs;
+        ContactBits contacts;
         int airJumpCount;
 
-        boost::shared_ptr<StateMachine> stateMachine_;
-
-        explicit CharacterActor(Game *game, boost::shared_ptr<CharacterType const> const &type);
+        explicit CharacterActor(Game *game, CharacterType const *type);
 
         Circle bottomCircle() const;
         Circle topCircle() const;
@@ -54,12 +67,17 @@ namespace monomi {
         void handleCollisions();
         void debugDraw(DebugGraphics *debugGraphics);
 
-        void onTransition();
-
     private:
+        friend class CharacterFactory;
+
+        boost::shared_ptr<StateMachine> stateMachine_;
+        ContactSignal contactSignal_;
+
         void updatePhysics(float dt);
         void applyConstraints();
-        void updateTouchFlags();
+        void updateContacts();
+
+        void onTransition();
     };
 }
 

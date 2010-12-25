@@ -19,16 +19,19 @@ namespace monomi {
 
     boost::shared_ptr<State> CharacterWallSlideState::transition()
     {
-        if (character_->controls.test(jumpControl) &&
-            !character_->oldControls.test(jumpControl) &&
+        if (character_->inputs.test(jumpInput) &&
+            !character_->oldInputs.test(jumpInput) &&
             character_->techniques.test(wallJumpTechnique))
         {
             return boost::shared_ptr<State>(new CharacterWallJumpState(character_, game_));
-        } else if (character_->touchDown) {
+        } else if (character_->contacts.test(downContact)) {
             return boost::shared_ptr<State>(new CharacterWalkState(character_, game_));
-        } else if (!character_->touchLeft && !character_->touchRight ||
-                   !character_->touchLeft && character_->controls.test(leftControl) ||
-                   !character_->touchRight && character_->controls.test(rightControl))
+        } else if (!character_->contacts.test(leftContact) &&
+                   !character_->contacts.test(rightContact) ||
+                   !character_->contacts.test(leftContact) &&
+                   character_->inputs.test(leftInput) ||
+                   !character_->contacts.test(rightContact) &&
+                   character_->inputs.test(rightInput))
         {
             return boost::shared_ptr<State>(new CharacterFallState(character_, game_));
         } else {
@@ -38,12 +41,12 @@ namespace monomi {
 
     void CharacterWallSlideState::update(float dt)
     {
-        int slideFace = (int(character_->touchLeft) -
-                         int(character_->touchRight));
+        int slideFace = (int(character_->contacts.test(leftContact)) -
+                         int(character_->contacts.test(rightContact)));
         if (slideFace) {
             character_->face = slideFace;
         }
-        if (!character_->controls.test(jumpControl)) {
+        if (!character_->inputs.test(jumpInput)) {
             character_->velocity.y = std::min(character_->velocity.y, 3.0f);
         }
     }

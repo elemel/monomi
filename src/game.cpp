@@ -29,15 +29,15 @@ namespace monomi {
         character = characterFactory_->create(airMasterTag);
         character->position = Point2(2.0f, 2.0f);
         addActor(character);
-        character = characterFactory_->create(samuraiTag);
-        character->position = Point2(7.0f, 5.0f);
-        addActor(character);
-        character = characterFactory_->create(samuraiTag);
-        character->position = Point2(9.0f, 5.0f);
-        addActor(character);
-        character = characterFactory_->create(samuraiTag);
-        character->position = Point2(11.0f, 5.0f);
-        addActor(character);
+        // character = characterFactory_->create(samuraiTag);
+        // character->position = Point2(7.0f, 5.0f);
+        // addActor(character);
+        // character = characterFactory_->create(samuraiTag);
+        // character->position = Point2(9.0f, 5.0f);
+        // addActor(character);
+        // character = characterFactory_->create(samuraiTag);
+        // character->position = Point2(11.0f, 5.0f);
+        // addActor(character);
 
         // Create blocks.
         addActor(createBlock(0, 0));

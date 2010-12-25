@@ -11,7 +11,7 @@
 #include <iostream>
 
 namespace monomi {
-    CharacterActor::CharacterActor(Game *game, boost::shared_ptr<CharacterType const> const &type) :
+    CharacterActor::CharacterActor(Game *game, CharacterType const *type) :
         game(game),
         type(type),
         techniques(type->techniques),
@@ -19,10 +19,6 @@ namespace monomi {
         alive_(true),
         face(1),
         gravity(0.0f, -20.0f),
-        touchLeft(false),
-        touchRight(false),
-        touchDown(false),
-        touchUp(false),
         airJumpCount(0)
     { }
 
@@ -53,10 +49,10 @@ namespace monomi {
 
         updatePhysics(dt);
         applyConstraints();
-        updateTouchFlags();
+        updateContacts();
 
-        // Copy controls.
-        oldControls = controls;
+        // Copy inputs.
+        oldInputs = inputs;
     }
 
     void CharacterActor::handleCollisions()
@@ -101,9 +97,11 @@ namespace monomi {
     {
         DebugColor color = debugColors::white();
         if (alive_) {
-            if (touchDown) {
+            if (contacts.test(downContact)) {
                 color = debugColors::yellow();
-            } else if (touchLeft || touchRight) {
+            } else if (contacts.test(leftContact) ||
+                       contacts.test(rightContact))
+            {
                 color = debugColors::red();
             } else {
                 color = debugColors::lightBlue();
@@ -182,20 +180,12 @@ namespace monomi {
         }
     }
 
-    void CharacterActor::updateTouchFlags()
+    void CharacterActor::updateContacts()
     {
-        CharacterActor *character_ = this;
-
-        // Clear touch flags.
-        character_->touchLeft = false;
-        character_->touchRight = false;
-        character_->touchDown = false;
-        character_->touchUp = false;
-
-        // Set touch flags.
+        // Compute new contacts.
+        ContactBits newContacts;
         for (int j = 0; j < 2; ++j) {
-            Circle circle = j ? character_->bottomCircle() :
-                                character_->topCircle();
+            Circle circle = j ? bottomCircle() : topCircle();
             circle.radius += 0.02f;
             typedef std::vector<boost::shared_ptr<Actor> >::iterator ActorIterator;
             for (ActorIterator k = game->actors_.begin();
@@ -208,29 +198,36 @@ namespace monomi {
                         LineSegment2 separator = separate(circle, block->box);
                         Vector2 normal = separator.p2 - separator.p1;
                         normal.normalize();
-                        float velocity = dot(character_->velocity, normal);
-                        if (std::abs(velocity) <= 0.02f) {
+                        float normalVelocity = dot(velocity, normal);
+                        if (std::abs(normalVelocity) <= 0.02f) {
                             if (normal.x >= 0.98f) {
-                                character_->touchLeft = true;
+                                newContacts.set(leftContact);
                             }
                             if (normal.x <= -0.98f) {
-                                character_->touchRight = true;
+                                newContacts.set(rightContact);
                             }
                             if (normal.y >= 0.98f) {
-                                character_->touchDown = true;
+                                newContacts.set(downContact);
                             }
                             if (normal.y <= -0.98f) {
-                                character_->touchUp = true;
+                                newContacts.set(upContact);
                             }
                         }
                     }
                 }
             }
         }
+
+        // Set new contacts.
+        if (newContacts != contacts) {
+            contacts = newContacts;
+            std::cout << "CharacterActor #" << this << " changes contacts to " << contacts << std::endl;
+            contactSignal_();
+        }
     }
 
     void CharacterActor::onTransition()
     {
-        std::cout << "CharacterActor#" << this << " changes state to " << Type(typeid(*stateMachine_->state())) << std::endl;
+        std::cout << "CharacterActor #" << this << " changes state to " << Type(typeid(*stateMachine_->state())) << std::endl;
     }
 }
