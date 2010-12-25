@@ -14,8 +14,8 @@ namespace monomi {
     CharacterActor::CharacterActor(Game *game, CharacterType const *type) :
         game_(game),
         type_(type),
-        techniques(type->techniques),
-        tools(type->tools),
+        techniques_(type->techniques),
+        tools_(type->tools),
         alive_(true),
         face(1),
         gravity(0.0f, -20.0f),
@@ -25,6 +25,49 @@ namespace monomi {
     CharacterType const *CharacterActor::type() const
     {
         return type_;
+    }
+
+    bool CharacterActor::testTechnique(Technique technique) const
+    {
+        return techniques_.test(technique);
+    }
+
+    void CharacterActor::setTechnique(Technique technique, bool value)
+    {
+        techniques_.set(technique, value);
+    }
+
+    bool CharacterActor::testTool(Tool tool) const
+    {
+        return tools_.test(tool);
+    }
+
+    void CharacterActor::setTool(Tool tool, bool value)
+    {
+        tools_.set(tool, value);
+    }
+
+    bool CharacterActor::testContact(Contact contact) const
+    {
+        return contacts_.test(contact);
+    }
+
+    void CharacterActor::setContact(Contact contact, bool value)
+    {
+        contacts_.set(contact, value);
+    }
+
+    bool CharacterActor::testInput(Input input) const
+    {
+        return inputs_.test(input);
+    }
+
+    void CharacterActor::setInput(Input input, bool value)
+    {
+        if (value != inputs_.test(input)) {
+            inputs_.set(input, value);
+            inputSignal_();
+        }
     }
 
     Circle CharacterActor::bottomCircle() const
@@ -55,9 +98,6 @@ namespace monomi {
         updatePhysics(dt);
         applyConstraints();
         updateContacts();
-
-        // Copy inputs.
-        oldInputs = inputs;
     }
 
     void CharacterActor::handleCollisions()
@@ -102,10 +142,10 @@ namespace monomi {
     {
         DebugColor color = debugColors::white();
         if (alive_) {
-            if (contacts.test(downContact)) {
+            if (contacts_.test(downContact)) {
                 color = debugColors::yellow();
-            } else if (contacts.test(leftContact) ||
-                       contacts.test(rightContact))
+            } else if (contacts_.test(leftContact) ||
+                       contacts_.test(rightContact))
             {
                 color = debugColors::red();
             } else {
@@ -242,15 +282,17 @@ namespace monomi {
         }
 
         // Set new contacts.
-        if (newContacts != contacts) {
-            contacts = newContacts;
-            std::cout << "CharacterActor #" << this << " changes contacts to " << contacts << std::endl;
+        if (newContacts != contacts_) {
+            contacts_ = newContacts;
+            std::cout << "CharacterActor #" << this << " changes contacts to "
+                      << contacts_ << std::endl;
             contactSignal_();
         }
     }
 
     void CharacterActor::onTransition()
     {
-        std::cout << "CharacterActor #" << this << " changes state to " << Type(typeid(*stateMachine_->state())) << std::endl;
+        std::cout << "CharacterActor #" << this << " changes state to "
+                  << Type(typeid(*stateMachine_->state())) << std::endl;
     }
 }

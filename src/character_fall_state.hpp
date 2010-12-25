@@ -21,6 +21,7 @@ namespace monomi {
     private:
         CharacterActor *character_;
         Game *game_;
+        bool oldJumpInput_;
     };
 }
 

@@ -9,29 +9,30 @@
 namespace monomi {
     CharacterWallSlideState::CharacterWallSlideState(CharacterActor *character, Game *game) :
         character_(character),
-        game_(game)
+        game_(game),
+        oldJumpInput_(false)
     { }    
 
     void CharacterWallSlideState::enter()
     {
         character_->airJumpCount = 0;
+        oldJumpInput_ = character_->testInput(jumpInput);
     }
 
     boost::shared_ptr<State> CharacterWallSlideState::transition()
     {
-        if (character_->inputs.test(jumpInput) &&
-            !character_->oldInputs.test(jumpInput) &&
-            character_->techniques.test(wallJumpTechnique))
+        if (character_->testInput(jumpInput) && !oldJumpInput_ &&
+            character_->testTechnique(wallJumpTechnique))
         {
             return boost::shared_ptr<State>(new CharacterWallJumpState(character_, game_));
-        } else if (character_->contacts.test(downContact)) {
+        } else if (character_->testContact(downContact)) {
             return boost::shared_ptr<State>(new CharacterWalkState(character_, game_));
-        } else if (!character_->contacts.test(leftContact) &&
-                   !character_->contacts.test(rightContact) ||
-                   !character_->contacts.test(leftContact) &&
-                   character_->inputs.test(leftInput) ||
-                   !character_->contacts.test(rightContact) &&
-                   character_->inputs.test(rightInput))
+        } else if (!character_->testContact(leftContact) &&
+                   !character_->testContact(rightContact) ||
+                   !character_->testContact(leftContact) &&
+                   character_->testInput(leftInput) ||
+                   !character_->testContact(rightContact) &&
+                   character_->testInput(rightInput))
         {
             return boost::shared_ptr<State>(new CharacterFallState(character_, game_));
         } else {
@@ -41,14 +42,15 @@ namespace monomi {
 
     void CharacterWallSlideState::update(float dt)
     {
-        int slideFace = (int(character_->contacts.test(leftContact)) -
-                         int(character_->contacts.test(rightContact)));
+        int slideFace = (int(character_->testContact(leftContact)) -
+                         int(character_->testContact(rightContact)));
         if (slideFace) {
             character_->face = slideFace;
         }
-        if (!character_->inputs.test(jumpInput)) {
+        if (!character_->testInput(jumpInput)) {
             character_->velocity.y = std::min(character_->velocity.y, 3.0f);
         }
+        oldJumpInput_ = character_->testInput(jumpInput);
     }
 
     void CharacterWallSlideState::exit()

@@ -9,6 +9,7 @@
 #include "tool.hpp"
 
 #include <bitset>
+#include <boost/noncopyable.hpp>
 #include <boost/shared_ptr.hpp>
 #include <boost/signal.hpp>
 
@@ -19,7 +20,8 @@ namespace monomi {
     class StateMachine;
 
     class CharacterActor :
-        public Actor
+        public Actor,
+        private boost::noncopyable
     {
     public:
         typedef std::bitset<techniqueCount> TechniqueBits;
@@ -36,9 +38,6 @@ namespace monomi {
         typedef boost::signal<void ()> StateTransitionSignal;
         typedef StateTransitionSignal::slot_type StateTransitionSlot;
 
-        TechniqueBits techniques;
-        ToolBits tools;
-
         // Track which direction the character faces, -1 for left and +1 for
         // right.
         int face;
@@ -46,12 +45,21 @@ namespace monomi {
         Point2 position;
         Vector2 velocity;
         Vector2 gravity;
-        InputBits inputs;
-        InputBits oldInputs;
-        ContactBits contacts;
         int airJumpCount;
 
         CharacterType const *type() const;
+
+        bool testTechnique(Technique technique) const;
+        void setTechnique(Technique technique, bool value);
+
+        bool testTool(Tool tool) const;
+        void setTool(Tool tool, bool value);
+
+        bool testContact(Contact contact) const;
+        void setContact(Contact contact, bool value);
+
+        bool testInput(Input input) const;
+        void setInput(Input input, bool value);
 
         Circle bottomCircle() const;
         Circle topCircle() const;
@@ -61,15 +69,26 @@ namespace monomi {
         void handleCollisions();
         void debugDraw(DebugGraphics *debugGraphics);
 
-        boost::signals::connection connectContactSlot(ContactSlot const &slot);
-        boost::signals::connection connectInputSlot(InputSlot const &slot);
-        boost::signals::connection connectStateTransitionSlot(StateTransitionSlot const &slot);
+        boost::signals::connection
+        connectContactSlot(ContactSlot const &slot);
+
+        boost::signals::connection
+        connectInputSlot(InputSlot const &slot);
+
+        boost::signals::connection
+        connectStateTransitionSlot(StateTransitionSlot const &slot);
 
     private:
         friend class CharacterFactory;
 
         Game *game_;
         CharacterType const *type_;
+
+        TechniqueBits techniques_;
+        ToolBits tools_;
+        ContactBits contacts_;
+        InputBits inputs_;
+
         bool alive_;
         boost::shared_ptr<StateMachine> stateMachine_;
         ContactSignal contactSignal_;

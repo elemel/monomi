@@ -13,8 +13,8 @@ namespace monomi {
 
     void CharacterWallJumpState::enter()
     {
-        int jumpFace = (int(character_->contacts.test(leftContact)) -
-                        int(character_->contacts.test(rightContact)));
+        int jumpFace = (int(character_->testContact(leftContact)) -
+                        int(character_->testContact(rightContact)));
         if (jumpFace) {
             character_->face = jumpFace;
         }

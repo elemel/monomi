@@ -13,27 +13,29 @@ namespace monomi {
     CharacterFallState::CharacterFallState(CharacterActor *character,
                                            Game *game) :
         character_(character),
-        game_(game)
+        game_(game),
+        oldJumpInput_(false)
     { }    
 
     void CharacterFallState::enter()
-    { }
+    {
+        oldJumpInput_ = character_->testInput(jumpInput);
+    }
 
     boost::shared_ptr<State> CharacterFallState::transition()
     {
-        if (character_->inputs.test(jumpInput) &&
-            !character_->oldInputs.test(jumpInput) &&
-            !character_->contacts.test(leftContact) &&
-            !character_->contacts.test(rightContact) &&
-            character_->tools.test(ironFanTool) && character_->airJumpCount)
+        if (character_->testInput(jumpInput) && !oldJumpInput_ &&
+            !character_->testContact(leftContact) &&
+            !character_->testContact(rightContact) &&
+            character_->testTool(ironFanTool) && character_->airJumpCount)
         {
             return boost::shared_ptr<State>(new CharacterAirJumpState(character_, game_));
-        } else if (character_->contacts.test(downContact)) {
+        } else if (character_->testContact(downContact)) {
             return boost::shared_ptr<State>(new CharacterWalkState(character_, game_));
-        } else if ((character_->contacts.test(leftContact) ||
-                    character_->contacts.test(rightContact)) &&
-                   character_->techniques.test(wallSlideTechnique) &&
-                   character_->tools.test(tigerClawTool))
+        } else if ((character_->testContact(leftContact) ||
+                    character_->testContact(rightContact)) &&
+                   character_->testTechnique(wallSlideTechnique) &&
+                   character_->testTool(tigerClawTool))
         {
             return boost::shared_ptr<State>(new CharacterWallSlideState(character_, game_));
         } else {
@@ -43,8 +45,8 @@ namespace monomi {
 
     void CharacterFallState::update(float dt)
     {
-        int driftFace = (int(character_->inputs.test(rightInput)) -
-                         int(character_->inputs.test(leftInput)));
+        int driftFace = (int(character_->testInput(rightInput)) -
+                         int(character_->testInput(leftInput)));
         if (driftFace) {
             character_->face = driftFace;
         }
@@ -56,9 +58,10 @@ namespace monomi {
                                                std::max(std::abs(character_->velocity.x),
                                                         character_->type()->maxDriftVelocity)));
         }
-        if (!character_->inputs.test(jumpInput)) {
+        if (!character_->testInput(jumpInput)) {
             character_->velocity.y = std::min(character_->velocity.y, 3.0f);
         }
+        oldJumpInput_ = character_->testInput(jumpInput);
     }
 
     void CharacterFallState::exit()

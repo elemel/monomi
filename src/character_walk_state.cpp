@@ -10,25 +10,27 @@
 namespace monomi {
     CharacterWalkState::CharacterWalkState(CharacterActor *character, Game *game) :
         character_(character),
-        game_(game)
+        game_(game),
+        oldJumpInput_(false)
     { }    
 
     void CharacterWalkState::enter()
     {
-        if (character_->techniques.test(tripleJumpTechnique)) {
+        if (character_->testTechnique(tripleJumpTechnique)) {
             character_->airJumpCount = 2;
-        } else if (character_->techniques.test(doubleJumpTechnique)) {
+        } else if (character_->testTechnique(doubleJumpTechnique)) {
             character_->airJumpCount = 1;
         } else {
             character_->airJumpCount = 0;
         }
+        oldJumpInput_ = character_->testInput(jumpInput);
     }
 
     boost::shared_ptr<State> CharacterWalkState::transition()
     {
-        if (character_->inputs.test(jumpInput) && !character_->oldInputs.test(jumpInput)) {
+        if (character_->testInput(jumpInput) && !oldJumpInput_) {
             return boost::shared_ptr<State>(new CharacterJumpState(character_, game_));
-        } else if (!character_->contacts.test(downContact)) {
+        } else if (!character_->testContact(downContact)) {
             return boost::shared_ptr<State>(new CharacterFallState(character_, game_));
         } else {
             return boost::shared_ptr<State>();
@@ -37,8 +39,8 @@ namespace monomi {
 
     void CharacterWalkState::update(float dt)
     {
-        int moveFace = (int(character_->inputs.test(rightInput)) -
-                        int(character_->inputs.test(leftInput)));
+        int moveFace = (int(character_->testInput(rightInput)) -
+                        int(character_->testInput(leftInput)));
         if (moveFace) {
             character_->face = moveFace;
         }
@@ -52,6 +54,7 @@ namespace monomi {
                                       std::max(std::abs(character_->velocity.x) -
                                                character_->type()->walkAcceleration * dt, 0.0f));
         }
+        oldJumpInput_ = character_->testInput(jumpInput);
     }
 
     void CharacterWalkState::exit()
