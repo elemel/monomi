@@ -23,6 +23,7 @@ namespace monomi {
     {
         if (character_->controls.test(jumpControl) &&
             !character_->oldControls.test(jumpControl) &&
+            !character_->touchLeft && !character_->touchRight &&
             character_->tools.test(ironFanTool) && character_->airJumpCount)
         {
             return boost::shared_ptr<State>(new CharacterAirJumpState(character_, game_));
