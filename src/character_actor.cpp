@@ -120,6 +120,24 @@ namespace monomi {
         debugGraphics->drawLineSegment(s, color);
     }
 
+    boost::signals::connection
+    CharacterActor::connectContactSlot(ContactSlot const &slot)
+    {
+        return contactSignal_.connect(slot);
+    }
+
+    boost::signals::connection
+    CharacterActor::connectInputSlot(InputSlot const &slot)
+    {
+        return inputSignal_.connect(slot);
+    }
+
+    boost::signals::connection
+    CharacterActor::connectStateTransitionSlot(StateTransitionSlot const &slot)
+    {
+        return stateMachine_->connectTransitionSlot(slot);
+    }
+
     void CharacterActor::updatePhysics(float dt)
     {
         CharacterActor *character_ = this;

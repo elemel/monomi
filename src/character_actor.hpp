@@ -30,6 +30,12 @@ namespace monomi {
         typedef boost::signal<void ()> ContactSignal;
         typedef ContactSignal::slot_type ContactSlot;
 
+        typedef boost::signal<void ()> InputSignal;
+        typedef InputSignal::slot_type InputSlot;
+
+        typedef boost::signal<void ()> StateTransitionSignal;
+        typedef StateTransitionSignal::slot_type StateTransitionSlot;
+
         TechniqueBits techniques;
         ToolBits tools;
 
@@ -55,6 +61,10 @@ namespace monomi {
         void handleCollisions();
         void debugDraw(DebugGraphics *debugGraphics);
 
+        boost::signals::connection connectContactSlot(ContactSlot const &slot);
+        boost::signals::connection connectInputSlot(InputSlot const &slot);
+        boost::signals::connection connectStateTransitionSlot(StateTransitionSlot const &slot);
+
     private:
         friend class CharacterFactory;
 
@@ -63,6 +73,7 @@ namespace monomi {
         bool alive_;
         boost::shared_ptr<StateMachine> stateMachine_;
         ContactSignal contactSignal_;
+        InputSignal inputSignal_;
 
         CharacterActor(Game *game, CharacterType const *type);
 
