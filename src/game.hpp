@@ -7,18 +7,16 @@
 namespace monomi {
     class Actor;
     class CharacterFactory;
-    class Random;
 
     // The hub of the game logic.
     class Game {
     public:
-        float time_;
-        boost::shared_ptr<Random> random_;
-        std::vector<boost::shared_ptr<Actor> > actors_;
-
-        boost::shared_ptr<CharacterFactory> characterFactory_;
-
         Game();
+
+        float time() const;
+
+        std::vector<boost::shared_ptr<Actor> > &actors();
+        std::vector<boost::shared_ptr<Actor> > const &actors() const;
 
         // Add an actor to the game. The actor will actually be added during
         // the next update.
@@ -28,7 +26,10 @@ namespace monomi {
         void update(float dt);
 
     private:
+        float time_;
+        boost::shared_ptr<CharacterFactory> characterFactory_;
         std::vector<boost::shared_ptr<Actor> > newActors_;
+        std::vector<boost::shared_ptr<Actor> > actors_;
 
         void addNewActors();
         void removeDeadActors();

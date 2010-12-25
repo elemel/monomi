@@ -63,12 +63,12 @@ namespace monomi {
     void CharacterActor::handleCollisions()
     {
         boost::shared_ptr<CharacterActor> playerCharacter =
-            boost::dynamic_pointer_cast<CharacterActor>(game_->actors_.front());
+            boost::dynamic_pointer_cast<CharacterActor>(game_->actors().front());
         if (playerCharacter.get() == this) {
             typedef std::vector<boost::shared_ptr<Actor> >::iterator
                 ActorIterator;
-            for (ActorIterator i = game_->actors_.begin() + 1;
-                 i != game_->actors_.end(); ++i)
+            for (ActorIterator i = game_->actors().begin() + 1;
+                 i != game_->actors().end(); ++i)
             {
                 if (boost::shared_ptr<CharacterActor> otherCharacter =
                     boost::dynamic_pointer_cast<CharacterActor>(*i))
@@ -161,8 +161,8 @@ namespace monomi {
                 float maxSquaredLength = -1.0f;
                 LineSegment2 maxSeparator;
                 typedef std::vector<boost::shared_ptr<Actor> >::iterator ActorIterator;
-                for (ActorIterator k = game_->actors_.begin();
-                     k != game_->actors_.end(); ++k)
+                for (ActorIterator k = game_->actors().begin();
+                     k != game_->actors().end(); ++k)
                 {
                     if (boost::shared_ptr<BlockActor> block =
                         boost::dynamic_pointer_cast<BlockActor>(*k))
@@ -211,8 +211,8 @@ namespace monomi {
             Circle circle = j ? bottomCircle() : topCircle();
             circle.radius += 0.02f;
             typedef std::vector<boost::shared_ptr<Actor> >::iterator ActorIterator;
-            for (ActorIterator k = game_->actors_.begin();
-                 k != game_->actors_.end(); ++k)
+            for (ActorIterator k = game_->actors().begin();
+                 k != game_->actors().end(); ++k)
             {
                 if (boost::shared_ptr<BlockActor> block =
                     boost::dynamic_pointer_cast<BlockActor>(*k))

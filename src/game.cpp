@@ -5,7 +5,6 @@
 #include "character_factory.hpp"
 #include "character_tag.hpp"
 #include "character_type.hpp"
-#include "random.hpp"
 
 namespace monomi {
     namespace {
@@ -19,8 +18,7 @@ namespace monomi {
     }
 
     Game::Game() :
-        time_(0.0f),
-        random_(new Random(std::time(0)))
+        time_(0.0f)
     {
         characterFactory_.reset(new CharacterFactory(this));
 
@@ -72,6 +70,21 @@ namespace monomi {
         addActor(createBlock(16, 0));
         addActor(createBlock(17, 0));
         addActor(createBlock(18, 0));
+    }
+
+    float Game::time() const
+    {
+        return time_;
+    }
+
+    std::vector<boost::shared_ptr<Actor> > &Game::actors()
+    {
+        return actors_;
+    }
+
+    std::vector<boost::shared_ptr<Actor> > const &Game::actors() const
+    {
+        return actors_;
     }
 
     void Game::addActor(boost::shared_ptr<Actor> const &actor)

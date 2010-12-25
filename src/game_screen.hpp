@@ -3,6 +3,7 @@
 
 #include "camera.hpp"
 #include "geometry.hpp"
+#include "random.hpp"
 #include "screen.hpp"
 
 #include <SDL.h>
@@ -25,6 +26,7 @@ namespace monomi {
         bool quit_;
         float time_;
         float dt_;
+        Random random_;
         Camera camera_;
         boost::shared_ptr<DebugGraphics> debugGraphics_;
         boost::shared_ptr<Game> game_;

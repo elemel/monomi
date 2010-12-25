@@ -15,6 +15,7 @@ namespace monomi {
         quit_(false),
         time_(0.0f),
         dt_(1.0f / 60.0f),
+        random_(std::time(0)),
         debugGraphics_(new DebugGraphics),
         game_(new Game)
     {
@@ -58,7 +59,7 @@ namespace monomi {
     void GameScreen::onKeyDown(SDL_Event const &event)
     {
         boost::shared_ptr<CharacterActor> actor =
-            boost::dynamic_pointer_cast<CharacterActor>(game_->actors_.front());
+            boost::dynamic_pointer_cast<CharacterActor>(game_->actors().front());
         switch (event.key.keysym.sym) {
         case SDLK_ESCAPE:
             quit_ = true;
@@ -89,7 +90,7 @@ namespace monomi {
     void GameScreen::onKeyUp(SDL_Event const &event)
     {
         boost::shared_ptr<CharacterActor> actor =
-            boost::dynamic_pointer_cast<CharacterActor>(game_->actors_.front());
+            boost::dynamic_pointer_cast<CharacterActor>(game_->actors().front());
         switch (event.key.keysym.sym) {
         case SDLK_LEFT:
             actor->inputs.reset(leftInput);
@@ -125,20 +126,20 @@ namespace monomi {
 
     void GameScreen::performAI(float dt)
     {
-        if (!game_->actors_.empty()) {
+        if (!game_->actors().empty()) {
             typedef std::vector<boost::shared_ptr<Actor> >::iterator Iterator;
-            for (Iterator i = game_->actors_.begin() + 1;
-                 i != game_->actors_.end(); ++i)
+            for (Iterator i = game_->actors().begin() + 1;
+                 i != game_->actors().end(); ++i)
             {
                 if (boost::shared_ptr<CharacterActor> actor = boost::dynamic_pointer_cast<CharacterActor>(*i)) {
-                    if (game_->random_->generate() <= dt) {
-                        int face = int(game_->random_->generate() * 3.0f) - 1;
+                    if (random_.generate() <= dt) {
+                        int face = int(random_.generate() * 3.0f) - 1;
                         actor->inputs.set(leftInput, (face == -1));
                         actor->inputs.set(rightInput, (face == 1));
                     }
-                    if (game_->random_->generate() <= dt) {
+                    if (random_.generate() <= dt) {
                         actor->inputs.set(jumpInput,
-                                          (game_->random_->generate() <= 0.5f));
+                                          (random_.generate() <= 0.5f));
                     }
                 }
             }
@@ -153,8 +154,8 @@ namespace monomi {
                              float(videoSurface->h));
         glMatrixMode(GL_PROJECTION);
         glLoadIdentity();
-        if (!game_->actors_.empty()) {
-            camera_.position = boost::dynamic_pointer_cast<CharacterActor>(game_->actors_.front())->position;
+        if (!game_->actors().empty()) {
+            camera_.position = boost::dynamic_pointer_cast<CharacterActor>(game_->actors().front())->position;
         }
         glOrtho(camera_.position.x - camera_.scale * aspectRatio,
                 camera_.position.x + camera_.scale * aspectRatio,
@@ -168,8 +169,8 @@ namespace monomi {
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT |
                 GL_STENCIL_BUFFER_BIT);
         typedef std::vector<boost::shared_ptr<Actor> >::iterator ActorIterator;
-        for (ActorIterator i = game_->actors_.begin();
-             i != game_->actors_.end(); ++i)
+        for (ActorIterator i = game_->actors().begin();
+             i != game_->actors().end(); ++i)
         {
             (*i)->debugDraw(debugGraphics_.get());
         }

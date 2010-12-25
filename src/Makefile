@@ -102,16 +102,16 @@ debug_color.o: debug_color.hpp
 debug_graphics.o: debug_graphics.hpp debug_color.hpp geometry.hpp
 game.o: game.hpp block_actor.hpp actor.hpp geometry.hpp character_actor.hpp
 game.o: contact.hpp input.hpp technique.hpp tool.hpp character_factory.hpp
-game.o: character_tag.hpp character_type.hpp random.hpp
-game_screen.o: game_screen.hpp camera.hpp geometry.hpp screen.hpp
+game.o: character_tag.hpp character_type.hpp
+game_screen.o: game_screen.hpp camera.hpp geometry.hpp random.hpp screen.hpp
 game_screen.o: block_actor.hpp actor.hpp character_actor.hpp contact.hpp
 game_screen.o: input.hpp technique.hpp tool.hpp debug_graphics.hpp
-game_screen.o: debug_color.hpp game.hpp random.hpp
+game_screen.o: debug_color.hpp game.hpp
 geometry.o: geometry.hpp
 main.o: title_screen.hpp screen.hpp
 random.o: random.hpp
 screen.o: screen.hpp
 state_machine.o: state_machine.hpp state.hpp type.hpp
 title_screen.o: title_screen.hpp screen.hpp game_screen.hpp camera.hpp
-title_screen.o: geometry.hpp
+title_screen.o: geometry.hpp random.hpp
 type.o: type.hpp
