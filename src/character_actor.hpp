@@ -1,7 +1,8 @@
-#ifndef MONOMI_CHARACTER_HPP
-#define MONOMI_CHARACTER_HPP
+#ifndef MONOMI_CHARACTER_ACTOR_HPP
+#define MONOMI_CHARACTER_ACTOR_HPP
 
 #include "actor.hpp"
+#include "contact.hpp"
 #include "geometry.hpp"
 #include "input.hpp"
 #include "technique.hpp"
@@ -16,15 +17,6 @@ namespace monomi {
     class DebugGraphics;
     class Game;
     class StateMachine;
-
-    enum Contact {
-        downContact,
-        upContact,
-        leftContact,
-        rightContact,
-
-        contactCount
-    };
 
     class CharacterActor :
         public Actor
@@ -81,4 +73,4 @@ namespace monomi {
     };
 }
 
-#endif // MONOMI_CHARACTER_HPP
+#endif // MONOMI_CHARACTER_ACTOR_HPP
