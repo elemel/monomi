@@ -3,13 +3,13 @@
 
 #include <vector>
 #include <boost/shared_ptr.hpp>
-#include <boost/weak_ptr.hpp>
 
 namespace monomi {
     class Actor;
     class CharacterFactory;
     class Random;
 
+    // The hub of the game logic.
     class Game {
     public:
         float time_;
@@ -20,8 +20,11 @@ namespace monomi {
 
         Game();
 
+        // Add an actor to the game. The actor will actually be added during
+        // the next update.
         void addActor(boost::shared_ptr<Actor> const &actor);
 
+        // Update the game state.
         void update(float dt);
 
     private:
