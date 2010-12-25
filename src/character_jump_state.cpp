@@ -13,7 +13,7 @@ namespace monomi {
 
     void CharacterJumpState::enter()
     {
-        character_->velocity.y = character_->type->jumpVelocity;
+        character_->velocity.y = character_->type()->jumpVelocity;
     }
 
     boost::shared_ptr<State> CharacterJumpState::transition()

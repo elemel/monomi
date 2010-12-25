@@ -18,8 +18,8 @@ namespace monomi {
         if (jumpFace) {
             character_->face = jumpFace;
         }
-        character_->velocity.x = float(jumpFace) * character_->type->wallJumpVelocity.x;
-        character_->velocity.y = character_->type->wallJumpVelocity.y;
+        character_->velocity.x = float(jumpFace) * character_->type()->wallJumpVelocity.x;
+        character_->velocity.y = character_->type()->wallJumpVelocity.y;
     }
 
     boost::shared_ptr<State> CharacterWallJumpState::transition()

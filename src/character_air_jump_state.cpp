@@ -14,7 +14,7 @@ namespace monomi {
     void CharacterAirJumpState::enter()
     {
         --character_->airJumpCount;
-        character_->velocity.y = character_->type->airJumpVelocity;
+        character_->velocity.y = character_->type()->airJumpVelocity;
     }
 
     boost::shared_ptr<State> CharacterAirJumpState::transition()

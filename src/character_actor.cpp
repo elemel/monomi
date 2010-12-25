@@ -12,8 +12,8 @@
 
 namespace monomi {
     CharacterActor::CharacterActor(Game *game, CharacterType const *type) :
-        game(game),
-        type(type),
+        game_(game),
+        type_(type),
         techniques(type->techniques),
         tools(type->tools),
         alive_(true),
@@ -22,18 +22,23 @@ namespace monomi {
         airJumpCount(0)
     { }
 
+    CharacterType const *CharacterActor::type() const
+    {
+        return type_;
+    }
+
     Circle CharacterActor::bottomCircle() const
     {
         return Circle(position -
-                      Vector2(0.0f, 0.5f * (type->height - type->width)),
-                      0.5f * type->width);
+                      Vector2(0.0f, 0.5f * (type_->height - type_->width)),
+                      0.5f * type_->width);
     }
 
     Circle CharacterActor::topCircle() const
     {
         return Circle(position +
-                      Vector2(0.0f, 0.5f * (type->height - type->width)),
-                      0.5f * type->width);
+                      Vector2(0.0f, 0.5f * (type_->height - type_->width)),
+                      0.5f * type_->width);
     }
 
     bool CharacterActor::alive() const
@@ -58,12 +63,12 @@ namespace monomi {
     void CharacterActor::handleCollisions()
     {
         boost::shared_ptr<CharacterActor> playerCharacter =
-            boost::dynamic_pointer_cast<CharacterActor>(game->actors_.front());
+            boost::dynamic_pointer_cast<CharacterActor>(game_->actors_.front());
         if (playerCharacter.get() == this) {
             typedef std::vector<boost::shared_ptr<Actor> >::iterator
                 ActorIterator;
-            for (ActorIterator i = game->actors_.begin() + 1;
-                 i != game->actors_.end(); ++i)
+            for (ActorIterator i = game_->actors_.begin() + 1;
+                 i != game_->actors_.end(); ++i)
             {
                 if (boost::shared_ptr<CharacterActor> otherCharacter =
                     boost::dynamic_pointer_cast<CharacterActor>(*i))
@@ -119,10 +124,10 @@ namespace monomi {
     {
         CharacterActor *character_ = this;
         character_->velocity += dt * character_->gravity;
-        if (character_->velocity.squaredLength() >= character_->type->maxVelocity * character_->type->maxVelocity)
+        if (character_->velocity.squaredLength() >= character_->type_->maxVelocity * character_->type_->maxVelocity)
         {
             character_->velocity.normalize();
-            character_->velocity *= character_->type->maxVelocity;
+            character_->velocity *= character_->type_->maxVelocity;
         }
         character_->position += dt * character_->velocity;
     }
@@ -138,8 +143,8 @@ namespace monomi {
                 float maxSquaredLength = -1.0f;
                 LineSegment2 maxSeparator;
                 typedef std::vector<boost::shared_ptr<Actor> >::iterator ActorIterator;
-                for (ActorIterator k = game->actors_.begin();
-                     k != game->actors_.end(); ++k)
+                for (ActorIterator k = game_->actors_.begin();
+                     k != game_->actors_.end(); ++k)
                 {
                     if (boost::shared_ptr<BlockActor> block =
                         boost::dynamic_pointer_cast<BlockActor>(*k))
@@ -188,8 +193,8 @@ namespace monomi {
             Circle circle = j ? bottomCircle() : topCircle();
             circle.radius += 0.02f;
             typedef std::vector<boost::shared_ptr<Actor> >::iterator ActorIterator;
-            for (ActorIterator k = game->actors_.begin();
-                 k != game->actors_.end(); ++k)
+            for (ActorIterator k = game_->actors_.begin();
+                 k != game_->actors_.end(); ++k)
             {
                 if (boost::shared_ptr<BlockActor> block =
                     boost::dynamic_pointer_cast<BlockActor>(*k))

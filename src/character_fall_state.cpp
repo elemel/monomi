@@ -50,11 +50,11 @@ namespace monomi {
         }
         if (driftFace) {
             float driftVelocity = (character_->velocity.x + float(driftFace) *
-                                   character_->type->driftAcceleration * dt);
+                                   character_->type()->driftAcceleration * dt);
             character_->velocity.x = (sign(driftVelocity) *
                                       std::min(std::abs(driftVelocity),
                                                std::max(std::abs(character_->velocity.x),
-                                                        character_->type->maxDriftVelocity)));
+                                                        character_->type()->maxDriftVelocity)));
         }
         if (!character_->inputs.test(jumpInput)) {
             character_->velocity.y = std::min(character_->velocity.y, 3.0f);

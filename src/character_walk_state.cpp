@@ -43,14 +43,14 @@ namespace monomi {
             character_->face = moveFace;
         }
         if (moveFace) {
-            character_->velocity.x += (float(moveFace) * character_->type->walkAcceleration * dt);
+            character_->velocity.x += (float(moveFace) * character_->type()->walkAcceleration * dt);
             character_->velocity.x = (sign(character_->velocity.x) *
                                       std::min(std::abs(character_->velocity.x),
-                                               character_->type->maxWalkVelocity));
+                                               character_->type()->maxWalkVelocity));
         } else {
             character_->velocity.x = (sign(character_->velocity.x) *
                                       std::max(std::abs(character_->velocity.x) -
-                                               character_->type->walkAcceleration * dt, 0.0f));
+                                               character_->type()->walkAcceleration * dt, 0.0f));
         }
     }
 

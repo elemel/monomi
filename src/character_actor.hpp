@@ -30,12 +30,8 @@ namespace monomi {
         typedef boost::signal<void ()> ContactSignal;
         typedef ContactSignal::slot_type ContactSlot;
 
-        Game *game;
-        CharacterType const *type;
         TechniqueBits techniques;
         ToolBits tools;
-
-        bool alive_;
 
         // Track which direction the character faces, -1 for left and +1 for
         // right.
@@ -49,7 +45,7 @@ namespace monomi {
         ContactBits contacts;
         int airJumpCount;
 
-        explicit CharacterActor(Game *game, CharacterType const *type);
+        CharacterType const *type() const;
 
         Circle bottomCircle() const;
         Circle topCircle() const;
@@ -62,8 +58,13 @@ namespace monomi {
     private:
         friend class CharacterFactory;
 
+        Game *game_;
+        CharacterType const *type_;
+        bool alive_;
         boost::shared_ptr<StateMachine> stateMachine_;
         ContactSignal contactSignal_;
+
+        CharacterActor(Game *game, CharacterType const *type);
 
         void updatePhysics(float dt);
         void applyConstraints();
