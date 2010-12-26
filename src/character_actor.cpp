@@ -180,20 +180,19 @@ namespace monomi {
 
     void CharacterActor::updatePhysics(float dt)
     {
-        CharacterActor *character_ = this;
-        character_->velocity += dt * character_->gravity;
-        if (character_->velocity.squaredLength() >= character_->type_->maxVelocity * character_->type_->maxVelocity)
+        velocity += dt * gravity;
+        if (velocity.squaredLength() >=
+            type_->maxVelocity * type_->maxVelocity)
         {
-            character_->velocity.normalize();
-            character_->velocity *= character_->type_->maxVelocity;
+            velocity.normalize();
+            velocity *= type_->maxVelocity;
         }
-        character_->position += dt * character_->velocity;
+        position += dt * velocity;
     }
 
     void CharacterActor::applyConstraints()
     {
-        CharacterActor *character_ = this;
-        if (character_->alive_) {
+        if (alive_) {
             // Make multiple iterations, separating only the deepest
             // penetration found during each iteration.
             for (int j = 0; j < 3; ++j) {
@@ -207,18 +206,18 @@ namespace monomi {
                     if (boost::shared_ptr<BlockActor> block =
                         boost::dynamic_pointer_cast<BlockActor>(*k))
                     {
-                        if (intersects(character_->bottomCircle(), block->box)) {
+                        if (intersects(bottomCircle(), block->box)) {
                             LineSegment2 separator =
-                                separate(character_->bottomCircle(), block->box);
+                                separate(bottomCircle(), block->box);
                             if (separator.squaredLength() >= maxSquaredLength)
                             {
                                 maxSquaredLength = separator.squaredLength();
                                 maxSeparator = separator;
                             }
                         }
-                        if (intersects(character_->topCircle(), block->box)) {
+                        if (intersects(topCircle(), block->box)) {
                             LineSegment2 separator =
-                                separate(character_->topCircle(), block->box);
+                                separate(topCircle(), block->box);
                             if (separator.squaredLength() >= maxSquaredLength)
                             {
                                 maxSquaredLength = separator.squaredLength();
@@ -233,11 +232,10 @@ namespace monomi {
                     // Separate the penetrating shapes, and cancel any
                     // negative velocity along the penetration normal.
                     Vector2 normal = maxSeparator.p2 - maxSeparator.p1;
-                    character_->position += normal;
+                    position += normal;
                     normal.normalize();
-                    character_->velocity -= (normal *
-                                             std::min(dot(character_->velocity, normal),
-                                                      0.0f));
+                    velocity -= (normal *
+                                 std::min(dot(velocity, normal), 0.0f));
                 }
             }
         }
