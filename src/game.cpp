@@ -77,17 +77,17 @@ namespace monomi {
         return time_;
     }
 
-    std::vector<boost::shared_ptr<Actor> > &Game::actors()
+    Game::ActorVector &Game::actors()
     {
         return actors_;
     }
 
-    std::vector<boost::shared_ptr<Actor> > const &Game::actors() const
+    Game::ActorVector const &Game::actors() const
     {
         return actors_;
     }
 
-    void Game::addActor(boost::shared_ptr<Actor> const &actor)
+    void Game::addActor(ActorPtr const &actor)
     {
         newActors_.push_back(actor);
     }
@@ -95,11 +95,14 @@ namespace monomi {
     void Game::update(float dt)
     {
         addNewActors();
-        typedef std::vector<boost::shared_ptr<Actor> >::iterator Iterator;
-        for (Iterator i = actors_.begin(); i != actors_.end(); ++i) {
+        for (ActorVector::iterator i = actors_.begin(); i != actors_.end();
+             ++i)
+        {
             (*i)->update(dt);
         }
-        for (Iterator i = actors_.begin(); i != actors_.end(); ++i) {
+        for (ActorVector::iterator i = actors_.begin(); i != actors_.end();
+             ++i)
+        {
             (*i)->handleCollisions();
         }
         removeDeadActors();
@@ -109,7 +112,7 @@ namespace monomi {
     {
         std::reverse(newActors_.begin(), newActors_.end());
         while (!newActors_.empty()) {
-            boost::shared_ptr<Actor> actor = newActors_.back();
+            ActorPtr actor = newActors_.back();
             newActors_.pop_back();
             actors_.push_back(actor);
         }
@@ -117,9 +120,10 @@ namespace monomi {
 
     void Game::removeDeadActors()
     {
-        typedef std::vector<boost::shared_ptr<Actor> >::iterator Iterator;
-        Iterator i = actors_.begin();
-        for (Iterator j = actors_.begin(); j != actors_.end(); ++j) {
+        ActorVector::iterator i = actors_.begin();
+        for (ActorVector::iterator j = actors_.begin(); j != actors_.end();
+             ++j)
+        {
             if ((*j)->alive()) {
                 *i++ = *j;
             }

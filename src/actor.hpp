@@ -1,7 +1,7 @@
 #ifndef MONOMI_ACTOR_HPP
 #define MONOMI_ACTOR_HPP
 
-#include <boost/shared_ptr.hpp>
+#include "actor_fwd.hpp"
 
 namespace monomi {
     class DebugGraphics;

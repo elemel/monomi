@@ -4,6 +4,7 @@
 #include "character_type.hpp"
 #include "debug_graphics.hpp"
 #include "game.hpp"
+#include "state.hpp"
 #include "state_machine.hpp"
 #include "type.hpp"
 

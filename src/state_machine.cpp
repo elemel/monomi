@@ -7,23 +7,18 @@
 #include <iostream>
 
 namespace monomi {
-    StateMachine::StateMachine(boost::shared_ptr<State> const &state) :
+    StateMachine::StateMachine(StatePtr const &state) :
         state_(state)
     {
         assert(state);
     }
 
-    boost::shared_ptr<State> StateMachine::state()
+    StatePtr StateMachine::state() const
     {
         return state_;
     }
 
-    boost::shared_ptr<State const> StateMachine::state() const
-    {
-        return state_;
-    }
-
-    void StateMachine::state(boost::shared_ptr<State> const &state)
+    void StateMachine::state(StatePtr const &state)
     {
         assert(state);
         state_ = state;
@@ -31,7 +26,7 @@ namespace monomi {
 
     void StateMachine::update(float dt)
     {
-        if (boost::shared_ptr<State> newState = state_->transition()) {
+        if (StatePtr newState = state_->transition()) {
             state_->exit();
             state_ = newState;
             transitionSignal_();

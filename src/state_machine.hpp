@@ -1,15 +1,13 @@
 #ifndef MONOMI_STATE_MACHINE_HPP
 #define MONOMI_STATE_MACHINE_HPP
 
-#include "state.hpp"
+#include "state_fwd.hpp"
 
 #include <boost/noncopyable.hpp>
 #include <boost/shared_ptr.hpp>
 #include <boost/signals2.hpp>
 
 namespace monomi {
-    class State;
-
     // State machine that always has a single current state.
     //
     // See: State
@@ -22,16 +20,13 @@ namespace monomi {
 
         // Construct a state machine with the specified state, which must not
         // be null.
-        explicit StateMachine(boost::shared_ptr<State> const &state);
+        explicit StateMachine(StatePtr const &state);
 
         // Return the current state.
-        boost::shared_ptr<State> state();
-
-        // Return the current state.
-        boost::shared_ptr<State const> state() const;
+        StatePtr state() const;
 
         // Set the state. The specified state must not be null.
-        void state(boost::shared_ptr<State> const &state);
+        void state(StatePtr const &state);
 
         // Update the state machine. During the update, the current state may
         // transition to another. Also updates the current state.
@@ -43,7 +38,7 @@ namespace monomi {
         connectTransitionSlot(TransitionSlot const &slot);
 
     private:
-        boost::shared_ptr<State> state_;
+        StatePtr state_;
         TransitionSignal transitionSignal_;
     };
 }

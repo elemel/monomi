@@ -1,26 +1,29 @@
 #ifndef MONOMI_GAME_HPP
 #define MONOMI_GAME_HPP
 
+#include "actor_fwd.hpp"
+
 #include <vector>
 #include <boost/shared_ptr.hpp>
 
 namespace monomi {
-    class Actor;
     class CharacterFactory;
 
     // The hub of the game logic.
     class Game {
     public:
+        typedef std::vector<ActorPtr> ActorVector;
+
         Game();
 
         float time() const;
 
-        std::vector<boost::shared_ptr<Actor> > &actors();
-        std::vector<boost::shared_ptr<Actor> > const &actors() const;
+        ActorVector &actors();
+        ActorVector const &actors() const;
 
         // Add an actor to the game. The actor will actually be added during
         // the next update.
-        void addActor(boost::shared_ptr<Actor> const &actor);
+        void addActor(ActorPtr const &actor);
 
         // Update the game state.
         void update(float dt);
@@ -28,8 +31,8 @@ namespace monomi {
     private:
         float time_;
         boost::shared_ptr<CharacterFactory> characterFactory_;
-        std::vector<boost::shared_ptr<Actor> > newActors_;
-        std::vector<boost::shared_ptr<Actor> > actors_;
+        ActorVector newActors_;
+        ActorVector actors_;
 
         void addNewActors();
         void removeDeadActors();
