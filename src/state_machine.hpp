@@ -5,7 +5,7 @@
 
 #include <boost/noncopyable.hpp>
 #include <boost/shared_ptr.hpp>
-#include <boost/signal.hpp>
+#include <boost/signals2.hpp>
 
 namespace monomi {
     class State;
@@ -17,7 +17,7 @@ namespace monomi {
         private boost::noncopyable
     {
     public:
-        typedef boost::signal<void ()> TransitionSignal;
+        typedef boost::signals2::signal<void ()> TransitionSignal;
         typedef TransitionSignal::slot_type TransitionSlot;
 
         // Construct a state machine with the specified state, which must not
@@ -39,7 +39,7 @@ namespace monomi {
 
         // Connect a transition slot. The slot will be invoked during each
         // state transition.
-        boost::signals::connection
+        boost::signals2::connection
         connectTransitionSlot(TransitionSlot const &slot);
 
     private:

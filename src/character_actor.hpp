@@ -11,7 +11,7 @@
 #include <bitset>
 #include <boost/noncopyable.hpp>
 #include <boost/shared_ptr.hpp>
-#include <boost/signal.hpp>
+#include <boost/signals2.hpp>
 
 namespace monomi {
     class CharacterType;
@@ -29,13 +29,13 @@ namespace monomi {
         typedef std::bitset<inputCount> InputBits;
         typedef std::bitset<contactCount> ContactBits;
 
-        typedef boost::signal<void ()> ContactSignal;
+        typedef boost::signals2::signal<void ()> ContactSignal;
         typedef ContactSignal::slot_type ContactSlot;
 
-        typedef boost::signal<void ()> InputSignal;
+        typedef boost::signals2::signal<void ()> InputSignal;
         typedef InputSignal::slot_type InputSlot;
 
-        typedef boost::signal<void ()> StateTransitionSignal;
+        typedef boost::signals2::signal<void ()> StateTransitionSignal;
         typedef StateTransitionSignal::slot_type StateTransitionSlot;
 
         // Track which direction the character faces, -1 for left and +1 for
@@ -69,13 +69,13 @@ namespace monomi {
         void handleCollisions();
         void debugDraw(DebugGraphics *debugGraphics);
 
-        boost::signals::connection
+        boost::signals2::connection
         connectContactSlot(ContactSlot const &slot);
 
-        boost::signals::connection
+        boost::signals2::connection
         connectInputSlot(InputSlot const &slot);
 
-        boost::signals::connection
+        boost::signals2::connection
         connectStateTransitionSlot(StateTransitionSlot const &slot);
 
     private:

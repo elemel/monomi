@@ -40,7 +40,7 @@ namespace monomi {
         state_->update(dt);
     }
 
-    boost::signals::connection
+    boost::signals2::connection
     StateMachine::connectTransitionSlot(TransitionSlot const &slot)
     {
         return transitionSignal_.connect(slot);

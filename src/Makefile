@@ -17,7 +17,7 @@ ifndef platform
 endif
 ifeq ($(platform), mac)
 	CPPFLAGS += -I/usr/local/include/SDL -I/opt/local/include
-	LDFLAGS += -framework OpenGL -L/usr/local/lib -lSDL -L/opt/local/lib -lboost_signals-mt
+	LDFLAGS += -framework OpenGL -L/usr/local/lib -lSDL -L/opt/local/lib
 else
 	$(error Invalid platform "$(platform)", only "mac" is supported for now)
 endif
