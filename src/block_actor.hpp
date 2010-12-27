@@ -15,6 +15,7 @@ namespace monomi {
     public:
         Box2 box;
 
+        Priority priority() const;
         bool alive() const;
         void update(float dt);
         void handleCollisions();

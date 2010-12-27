@@ -3,6 +3,11 @@
 #include "debug_graphics.hpp"
 
 namespace monomi {
+    Priority BlockActor::priority() const
+    {
+        return priorityCount;
+    }
+
     bool BlockActor::alive() const
     {
         return true;

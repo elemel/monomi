@@ -6,6 +6,8 @@
 #include "character_tag.hpp"
 #include "character_type.hpp"
 
+#include <algorithm>
+
 namespace monomi {
     namespace {
         boost::shared_ptr<BlockActor> createBlock(int x, int y)
@@ -27,15 +29,15 @@ namespace monomi {
         character = characterFactory_->create(airMasterTag);
         character->position = Point2(2.0f, 2.0f);
         addActor(character);
-        // character = characterFactory_->create(samuraiTag);
-        // character->position = Point2(7.0f, 5.0f);
-        // addActor(character);
-        // character = characterFactory_->create(samuraiTag);
-        // character->position = Point2(9.0f, 5.0f);
-        // addActor(character);
-        // character = characterFactory_->create(samuraiTag);
-        // character->position = Point2(11.0f, 5.0f);
-        // addActor(character);
+        character = characterFactory_->create(samuraiTag);
+        character->position = Point2(7.0f, 5.0f);
+        addActor(character);
+        character = characterFactory_->create(samuraiTag);
+        character->position = Point2(9.0f, 5.0f);
+        addActor(character);
+        character = characterFactory_->create(samuraiTag);
+        character->position = Point2(11.0f, 5.0f);
+        addActor(character);
 
         // Create blocks.
         addActor(createBlock(0, 0));
@@ -95,8 +97,8 @@ namespace monomi {
     void Game::update(float dt)
     {
         addNewActors();
-        for (ActorVector::iterator i = actors_.begin(); i != actors_.end();
-             ++i)
+        for (ActorVector::iterator i = actors_.begin();
+             i != actors_.end() && (*i)->priority() != priorityCount; ++i)
         {
             (*i)->update(dt);
         }
@@ -108,13 +110,23 @@ namespace monomi {
         removeDeadActors();
     }
 
+    namespace {
+        bool lessActorPriority(ActorPtr const &left, ActorPtr const &right)
+        {
+            return left->priority() < right->priority();
+        }
+    }
+
     void Game::addNewActors()
     {
-        std::reverse(newActors_.begin(), newActors_.end());
-        while (!newActors_.empty()) {
-            ActorPtr actor = newActors_.back();
-            newActors_.pop_back();
-            actors_.push_back(actor);
+        if (!newActors_.empty()) {
+            std::reverse(newActors_.begin(), newActors_.end());
+            while (!newActors_.empty()) {
+                ActorPtr actor = newActors_.back();
+                newActors_.pop_back();
+                actors_.push_back(actor);
+            }
+            std::sort(actors_.begin(), actors_.end(), &lessActorPriority);
         }
     }
 
