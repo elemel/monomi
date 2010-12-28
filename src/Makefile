@@ -26,6 +26,7 @@ objects := \
 	actor.o \
 	block_actor.o \
 	camera.o \
+	category_pattern.o \
 	character_actor.o \
 	character_air_jump_state.o \
 	character_factory.o \
@@ -42,7 +43,6 @@ objects := \
 	geometry.o \
 	grid.o \
 	main.o \
-	pattern.o \
 	random.o \
 	screen.o \
 	state_machine.o \
@@ -61,6 +61,7 @@ actor.o: actor.hpp actor_fwd.hpp priority.hpp
 block_actor.o: block_actor.hpp actor.hpp actor_fwd.hpp priority.hpp
 block_actor.o: geometry.hpp debug_graphics.hpp debug_color.hpp
 camera.o: camera.hpp geometry.hpp
+category_pattern.o: category_pattern.hpp category.hpp
 character_actor.o: character_actor.hpp actor.hpp actor_fwd.hpp priority.hpp
 character_actor.o: contact.hpp geometry.hpp input.hpp technique.hpp tool.hpp
 character_actor.o: block_actor.hpp character_type.hpp debug_graphics.hpp
@@ -116,6 +117,7 @@ game_screen.o: block_actor.hpp actor.hpp actor_fwd.hpp priority.hpp
 game_screen.o: character_actor.hpp contact.hpp input.hpp technique.hpp
 game_screen.o: tool.hpp debug_graphics.hpp debug_color.hpp game.hpp
 geometry.o: geometry.hpp
+grid.o: grid.hpp geometry.hpp
 main.o: title_screen.hpp screen.hpp
 random.o: random.hpp
 screen.o: screen.hpp
