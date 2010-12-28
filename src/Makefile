@@ -40,7 +40,9 @@ objects := \
 	game.o \
 	game_screen.o \
 	geometry.o \
+	grid.o \
 	main.o \
+	pattern.o \
 	random.o \
 	screen.o \
 	state_machine.o \
