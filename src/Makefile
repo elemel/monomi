@@ -36,6 +36,7 @@ objects := \
 	character_wall_jump_state.o \
 	character_walk_state.o \
 	character_wall_slide_state.o \
+	collision_detector.o \
 	debug_color.o \
 	debug_graphics.o \
 	game.o \
@@ -107,6 +108,9 @@ character_wall_slide_state.o: geometry.hpp input.hpp technique.hpp tool.hpp
 character_wall_slide_state.o: character_fall_state.hpp character_type.hpp
 character_wall_slide_state.o: character_walk_state.hpp
 character_wall_slide_state.o: character_wall_jump_state.hpp
+circle_collision_shape.o: circle_collision_shape.hpp collision_shape.hpp
+circle_collision_shape.o: actor_fwd.hpp
+collision_detector.o: collision_detector.hpp
 debug_color.o: debug_color.hpp
 debug_graphics.o: debug_graphics.hpp debug_color.hpp geometry.hpp
 game.o: game.hpp actor_fwd.hpp block_actor.hpp actor.hpp priority.hpp
