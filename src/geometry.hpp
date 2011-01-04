@@ -79,6 +79,7 @@ namespace monomi {
 
         float length() const;
         float squaredLength() const;
+        Box2 boundingBox() const;
     };
 
     class Box2 {
@@ -117,6 +118,7 @@ namespace monomi {
 
         float perimeter() const;
         float area() const;
+        Box2 boundingBox() const;
 
         bool contains(const Point2 &p) const;
     };

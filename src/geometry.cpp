@@ -218,6 +218,15 @@ namespace monomi {
         return squaredDistance(p1, p2);
     }
 
+    Box2 LineSegment2::boundingBox() const
+    {
+        float x1 = std::min(p1.x, p2.x);
+        float y1 = std::min(p1.y, p2.y);
+        float x2 = std::max(p1.x, p2.x);
+        float y2 = std::max(p1.y, p2.y);
+        return Box2(Point2(x1, y1), Point2(x2, y2));
+    }
+
     Box2::Box2()
     { }
 
@@ -331,38 +340,14 @@ namespace monomi {
         return pi * radius * radius;
     }
 
+    Box2 Circle::boundingBox() const
+    {
+        return Box2(center - Vector2(radius), center + Vector2(radius));
+    }
+
     bool Circle::contains(const Point2 &p) const
     {
         return squaredDistance(center, p) <= radius * radius;
-    }
-
-    Box2 boundingBox(const LineSegment2 &s)
-    {
-        float x1 = std::min(s.p1.x, s.p2.x);
-        float y1 = std::min(s.p1.y, s.p2.y);
-        float x2 = std::max(s.p1.x, s.p2.x);
-        float y2 = std::max(s.p1.y, s.p2.y);
-        return Box2(Point2(x1, y1), Point2(x2, y2));
-    }
-
-    Box2 boundingBox(const Box2 &b)
-    {
-        return b;
-    }
-
-    Box2 boundingBox(const Circle &c)
-    {
-        return Box2(c.center - Vector2(c.radius),
-                    c.center + Vector2(c.radius));
-    }
-
-    Box2 boundingBox(const Box2 &b1, const Box2 &b2)
-    {
-        float x1 = std::min(b1.p1.x, b2.p1.x);
-        float y1 = std::min(b1.p1.y, b2.p1.y);
-        float x2 = std::max(b1.p2.x, b2.p2.x);
-        float y2 = std::max(b1.p2.y, b2.p2.y);
-        return Box2(Point2(x1, y1), Point2(x2, y2));
     }
 
     bool intersects(const Box2 &b1, const Box2 &b2)
