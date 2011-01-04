@@ -221,6 +221,11 @@ namespace monomi {
     Box2::Box2()
     { }
 
+    Box2::Box2(const Point2 &p) :
+        p1(p),
+        p2(p)
+    { }
+
     Box2::Box2(const Point2 &p1, const Point2 &p2) :
         p1(p1),
         p2(p2)
@@ -264,7 +269,7 @@ namespace monomi {
         p2.y = std::numeric_limits<float>::min();
     }
 
-    void Box2::grow(const Point2 &p)
+    void Box2::merge(const Point2 &p)
     {
         p1.x = std::min(p1.x, p.x);
         p1.y = std::min(p1.y, p.y);
@@ -272,7 +277,7 @@ namespace monomi {
         p2.y = std::max(p2.y, p.y);
     }
 
-    void Box2::grow(const Box2 &b)
+    void Box2::merge(const Box2 &b)
     {
         p1.x = std::min(p1.x, b.p1.x);
         p1.y = std::min(p1.y, b.p1.y);
@@ -280,18 +285,31 @@ namespace monomi {
         p2.y = std::max(p2.y, b.p2.y);
     }
 
+    void Box2::intersect(const Box2 &b)
+    {
+        p1.x = std::max(p1.x, b.p1.x);
+        p1.y = std::max(p1.y, b.p1.y);
+        p2.x = std::min(p2.x, b.p2.x);
+        p2.y = std::min(p2.y, b.p2.y);
+    }
+
     bool Box2::contains(const Point2 &p) const
     {
         return p1.x <= p.x && p.x <= p2.x && p1.y <= p.y && p.y <= p2.y;
     }
 
-    Box2 intersection(const Box2 &b1, const Box2 &b2)
+    Box2 merge(const Box2 &b1, const Box2 &b2)
     {
-        float x1 = std::max(b1.p1.x, b2.p1.x);
-        float y1 = std::max(b1.p1.y, b2.p1.y);
-        float x2 = std::min(b1.p2.x, b2.p2.x);
-        float y2 = std::min(b1.p2.y, b2.p2.y);
-        return Box2(Point2(x1, y1), Point2(x2, y2));
+        Box2 result(b1);
+        result.merge(b2);
+        return result;
+    }
+
+    Box2 intersect(const Box2 &b1, const Box2 &b2)
+    {
+        Box2 result(b1);
+        result.intersect(b2);
+        return result;
     }
 
     Circle::Circle() :
@@ -398,7 +416,7 @@ namespace monomi {
 
     LineSegment2 separate(const Box2 &b1, const Box2 &b2)
     {
-        Box2 i = intersection(b1, b2);
+        Box2 i = intersect(b1, b2);
         if (i.dx() <= i.dy()) {
             float y = i.center().y;
             if (b2.p2.x - b1.p1.x <= b1.p2.x - b2.p1.x) {

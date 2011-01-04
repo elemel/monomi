@@ -86,6 +86,7 @@ namespace monomi {
         Point2 p1, p2;
 
         Box2();
+        Box2(const Point2 &p);
         Box2(const Point2 &p1, const Point2 &p2);
 
         Point2 center() const;
@@ -96,13 +97,15 @@ namespace monomi {
         float area() const;
 
         void clear();
-        void grow(const Point2 &p);
-        void grow(const Box2 &b);
+        void merge(const Point2 &p);
+        void merge(const Box2 &b);
+        void intersect(const Box2 &b);
 
         bool contains(const Point2 &p) const;
     };
 
-    Box2 intersection(const Box2 &b1, const Box2 &b2);
+    Box2 merge(const Box2 &b1, const Box2 &b2);
+    Box2 intersect(const Box2 &b1, const Box2 &b2);
 
     class Circle {
     public:
