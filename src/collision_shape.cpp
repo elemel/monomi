@@ -3,18 +3,13 @@
 #include "collision_body.hpp"
 
 namespace monomi {
-    CollisionShape::CollisionShape() :
-        body_(0)
+    CollisionShape::CollisionShape(Shape const &shape) :
+        shape_(shape)
     { }
 
     CollisionShape::BodyPtr CollisionShape::body() const
     {
-        return body_ ? body_->shared_from_this() : BodyPtr();
-    }
-
-    ActorPtr CollisionShape::actor() const
-    {
-        return body_ ? body_->actor() : ActorPtr();
+        return body_.lock();
     }
 
     CollisionShape::Shape const &CollisionShape::shape() const
@@ -30,8 +25,8 @@ namespace monomi {
 
     void CollisionShape::makeDirty()
     {
-        if (body_) {
-            body_->makeDirty();
+        if (CollisionBodyPtr body = body_.lock()) {
+            body->makeDirty();
         }
     }
 }

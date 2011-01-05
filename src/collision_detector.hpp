@@ -1,25 +1,25 @@
 #ifndef MONOMI_COLLISION_DETECTOR_HPP
 #define MONOMI_COLLISION_DETECTOR_HPP
 
+#include "collision_detector_fwd.hpp"
+
+#include "collision_body_fwd.hpp"
+#include "collision_shape_fwd.hpp"
+
 #include <vector>
-#include <boost/shared_ptr.hpp>
+#include <boost/enable_shared_from_this.hpp>
 
 namespace monomi {
-    class CollisionBody;
-    class CollisionShape;
-
-    class CollisionDetector {
+    class CollisionDetector :
+        public boost::enable_shared_from_this<CollisionDetector>
+    {
     public:
-        typedef boost::shared_ptr<CollisionBody> BodyPtr;
-        typedef std::vector<BodyPtr> BodyVector;
-        typedef boost::shared_ptr<CollisionShape> ShapePtr;
-        typedef std::pair<ShapePtr, ShapePtr> Collision;
+        typedef std::vector<CollisionBodyPtr> BodyVector;
+        typedef std::pair<CollisionShapePtr, CollisionShapePtr> Collision;
         typedef std::vector<Collision> CollisionVector;
 
-        ~CollisionDetector();
-
-        void addBody(BodyPtr const &body);
-        void removeBody(BodyPtr const &body);
+        void addBody(CollisionBodyPtr const &body);
+        void removeBody(CollisionBodyPtr const &body);
         BodyVector const &bodies() const;
 
         CollisionVector const &collisions() const;
@@ -38,8 +38,8 @@ namespace monomi {
         void detectCollisions();
         void detectBodyCollision(CollisionBody const *body1,
                                  CollisionBody const *body2);
-        void detectShapeCollision(ShapePtr const &shape1,
-                                  ShapePtr const &shape2);
+        void detectShapeCollision(CollisionShapePtr const &shape1,
+                                  CollisionShapePtr const &shape2);
 
         void clearDirty();
     };

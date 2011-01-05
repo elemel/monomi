@@ -6,28 +6,20 @@
 #include <algorithm>
 
 namespace monomi {
-    CollisionDetector::~CollisionDetector()
+    void CollisionDetector::addBody(CollisionBodyPtr const &body)
     {
-        for (BodyVector::iterator i = bodies_.begin(); i != bodies_.end(); ++i)
-        {
-            (*i)->detector_ = 0;
-        }
-    }
-
-    void CollisionDetector::addBody(BodyPtr const &body)
-    {
-        assert(body->detector_ == 0);
+        assert(body->detector_.lock().empty());
         assert(!body->dirty_);
-        body->detector_ = this;
+        body->detector_ = this->shared_from_this();
         bodies_.push_back(body);
         body->dirty_ = true;
         dirtyBodies_.push_back(body.get());
     }
 
-    void CollisionDetector::removeBody(BodyPtr const &body)
+    void CollisionDetector::removeBody(CollisionBodyPtr const &body)
     {
-        assert(body->detector_ == this);
-        body->detector_ = 0;
+        assert(body->detector_.lock().get() == this);
+        body->detector_.reset();
         bodies_.erase(std::find(bodies_.begin(), bodies_.end(), body));
         if (body->dirty_) {
             body->dirty_ = false;
@@ -95,8 +87,9 @@ namespace monomi {
         };
     }
 
-    void CollisionDetector::detectShapeCollision(ShapePtr const &shape1,
-                                                 ShapePtr const &shape2)
+    void
+    CollisionDetector::detectShapeCollision(CollisionShapePtr const &shape1,
+                                            CollisionShapePtr const &shape2)
     {
         if (boost::apply_visitor(IntersectsVisitor(), shape1->shape(),
             shape2->shape()))

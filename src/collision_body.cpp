@@ -6,36 +6,26 @@
 namespace monomi {
     CollisionBody::CollisionBody(ActorPtr const &actor) :
         actor_(actor),
-        detector_(0),
         dirty_(false)
     { }
-
-    CollisionBody::~CollisionBody()
-    {
-        for (ShapeVector::iterator i = shapes_.begin(); i != shapes_.end();
-             ++i)
-        {
-            (*i)->body_ = 0;
-        }
-    }
 
     ActorPtr CollisionBody::actor() const
     {
         return actor_.lock();
     }
 
-    void CollisionBody::addShape(ShapePtr const &shape)
+    void CollisionBody::addShape(CollisionShapePtr const &shape)
     {
-        assert(shape->body_ == 0);
-        shape->body_ = this;
+        assert(shape->body_.lock().empty());
+        shape->body_ = this->shared_from_this();
         shapes_.push_back(shape);
         makeDirty();
     }
 
-    void CollisionBody::removeShape(ShapePtr const &shape)
+    void CollisionBody::removeShape(CollisionShapePtr const &shape)
     {
-        assert(shape->body_ == this);
-        shape->body_ = 0;
+        assert(shape->body_.lock().get() == this);
+        shape->body_.reset();
         shapes_.erase(std::find(shapes_.begin(), shapes_.end(), shape));
         makeDirty();
     }
@@ -58,9 +48,11 @@ namespace monomi {
 
     void CollisionBody::makeDirty()
     {
-        if (detector_ && !dirty_) {
+        if (!dirty_) {
             dirty_ = true;
-            detector_->dirtyBodies_.push_back(this);
+            if (CollisionDetectorPtr detector = detector_.lock()) {
+                detector->dirtyBodies_.push_back(this);
+            }
         }
     }
 }
