@@ -1,10 +1,19 @@
 #include "collision_detector.hpp"
 
 #include "collision_body.hpp"
+#include "collision_shape.hpp"
 
 #include <algorithm>
 
 namespace monomi {
+    CollisionDetector::~CollisionDetector()
+    {
+        for (BodyVector::iterator i = bodies_.begin(); i != bodies_.end(); ++i)
+        {
+            (*i)->detector_ = 0;
+        }
+    }
+
     void CollisionDetector::addBody(BodyPtr const &body)
     {
         assert(body->detector_ == 0);
@@ -74,9 +83,27 @@ namespace monomi {
         }
     }
 
+    namespace {
+        struct IntersectsVisitor {
+            typedef bool result_type;
+
+            template <typename T, typename U>
+            bool operator()(T const &s1, U const &s2) const
+            {
+                return intersects(s1, s2);
+            }
+        };
+    }
+
     void CollisionDetector::detectShapeCollision(ShapePtr const &shape1,
                                                  ShapePtr const &shape2)
-    { }
+    {
+        if (boost::apply_visitor(IntersectsVisitor(), shape1->shape(),
+            shape2->shape()))
+        {
+            collisions_.push_back(Collision(shape1, shape2));
+        }
+    }
 
     void CollisionDetector::clearDirty()
     {

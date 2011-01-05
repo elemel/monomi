@@ -5,18 +5,22 @@
 #include "geometry.hpp"
 
 #include <vector>
+#include <boost/enable_shared_from_this.hpp>
 #include <boost/shared_ptr.hpp>
 
 namespace monomi {
     class CollisionDetector;
     class CollisionShape;
 
-    class CollisionBody {
+    class CollisionBody :
+        public boost::enable_shared_from_this<CollisionBody>
+    {
     public:
         typedef boost::shared_ptr<CollisionShape> ShapePtr;
         typedef std::vector<ShapePtr> ShapeVector;
  
         explicit CollisionBody(ActorPtr const &actor);
+        ~CollisionBody();
 
         ActorPtr actor() const;
 

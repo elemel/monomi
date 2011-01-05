@@ -7,9 +7,14 @@ namespace monomi {
         body_(0)
     { }
 
-    CollisionBody *CollisionShape::body() const
+    CollisionShape::BodyPtr CollisionShape::body() const
     {
-        return body_;
+        return body_ ? body_->shared_from_this() : BodyPtr();
+    }
+
+    ActorPtr CollisionShape::actor() const
+    {
+        return body_ ? body_->actor() : ActorPtr();
     }
 
     CollisionShape::Shape const &CollisionShape::shape() const

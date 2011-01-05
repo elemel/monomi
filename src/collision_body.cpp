@@ -1,5 +1,7 @@
 #include "collision_body.hpp"
+
 #include "collision_detector.hpp"
+#include "collision_shape.hpp"
 
 namespace monomi {
     CollisionBody::CollisionBody(ActorPtr const &actor) :
@@ -8,6 +10,15 @@ namespace monomi {
         dirty_(false)
     { }
 
+    CollisionBody::~CollisionBody()
+    {
+        for (ShapeVector::iterator i = shapes_.begin(); i != shapes_.end();
+             ++i)
+        {
+            (*i)->body_ = 0;
+        }
+    }
+
     ActorPtr CollisionBody::actor() const
     {
         return actor_.lock();
@@ -15,12 +26,18 @@ namespace monomi {
 
     void CollisionBody::addShape(ShapePtr const &shape)
     {
-        assert(shape->body_.lock() == 0);
+        assert(shape->body_ == 0);
+        shape->body_ = this;
+        shapes_.push_back(shape);
+        makeDirty();
     }
 
     void CollisionBody::removeShape(ShapePtr const &shape)
     {
-        assert(shape->body_.lock() == this);
+        assert(shape->body_ == this);
+        shape->body_ = 0;
+        shapes_.erase(std::find(shapes_.begin(), shapes_.end(), shape));
+        makeDirty();
     }
 
     CollisionBody::ShapeVector const &CollisionBody::shapes() const

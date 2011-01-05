@@ -16,6 +16,8 @@ namespace monomi {
         typedef std::pair<ShapePtr, ShapePtr> Collision;
         typedef std::vector<Collision> CollisionVector;
 
+        ~CollisionDetector();
+
         void addBody(BodyPtr const &body);
         void removeBody(BodyPtr const &body);
         BodyVector const &bodies() const;
