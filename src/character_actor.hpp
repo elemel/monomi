@@ -68,7 +68,7 @@ namespace monomi {
         bool alive() const;
         void update(float dt);
         void handleCollisions();
-        void debugDraw(DebugGraphics *debugGraphics);
+        void debugDraw(DebugGraphicsPtr const &debugGraphics);
 
         boost::signals2::connection
         connectContactSlot(ContactSlot const &slot);

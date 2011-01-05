@@ -2,6 +2,7 @@
 #define MONOMI_GAME_SCREEN_HPP
 
 #include "camera.hpp"
+#include "debug_graphics_fwd.hpp"
 #include "geometry.hpp"
 #include "random.hpp"
 #include "screen.hpp"
@@ -10,7 +11,6 @@
 #include <vector>
 
 namespace monomi {
-    class DebugGraphics;
     class Game;
 
     class GameScreen :
@@ -28,7 +28,7 @@ namespace monomi {
         float dt_;
         Random random_;
         Camera camera_;
-        boost::shared_ptr<DebugGraphics> debugGraphics_;
+        DebugGraphicsPtr debugGraphics_;
         boost::shared_ptr<Game> game_;
 
         void pumpEvents();

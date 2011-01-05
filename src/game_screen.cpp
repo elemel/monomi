@@ -172,7 +172,7 @@ namespace monomi {
         for (ActorIterator i = game_->actors().begin();
              i != game_->actors().end(); ++i)
         {
-            (*i)->debugDraw(debugGraphics_.get());
+            (*i)->debugDraw(debugGraphics_);
         }
         SDL_GL_SwapBuffers();
     }

@@ -1,6 +1,8 @@
 #ifndef MONOMI_DEBUG_GRAPHICS_HPP
 #define MONOMI_DEBUG_GRAPHICS_HPP
 
+#include "debug_graphics_fwd.hpp"
+
 #include "debug_color.hpp"
 #include "geometry.hpp"
 
