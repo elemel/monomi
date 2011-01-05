@@ -19,7 +19,7 @@ namespace monomi {
         bool alive() const;
         void update(float dt);
         void handleCollisions();
-        void debugDraw(DebugGraphicsPtr const &debugGraphics);
+        void debugDraw(DebugGraphicsPtr const &debugGraphics) const;
     };
 }
 

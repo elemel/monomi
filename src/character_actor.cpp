@@ -144,7 +144,7 @@ namespace monomi {
         }
     }
 
-    void CharacterActor::debugDraw(DebugGraphicsPtr const &debugGraphics)
+    void CharacterActor::debugDraw(DebugGraphicsPtr const &debugGraphics) const
     {
         DebugColor color = debugColors::white();
         if (alive_) {

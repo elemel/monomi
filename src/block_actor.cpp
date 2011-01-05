@@ -19,7 +19,7 @@ namespace monomi {
     void BlockActor::handleCollisions()
     { }
 
-    void BlockActor::debugDraw(DebugGraphicsPtr const &debugGraphics)
+    void BlockActor::debugDraw(DebugGraphicsPtr const &debugGraphics) const
     {
         debugGraphics->drawBox(box);
     }
