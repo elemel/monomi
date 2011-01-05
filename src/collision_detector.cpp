@@ -2,6 +2,7 @@
 
 #include "collision_body.hpp"
 #include "collision_shape.hpp"
+#include "debug_graphics.hpp"
 
 #include <algorithm>
 
@@ -44,6 +45,36 @@ namespace monomi {
         collisions_.clear();
         detectCollisions();
         clearDirty();
+    }
+
+    namespace {
+        struct DebugDrawVisitor {
+            typedef void result_type;
+
+            DebugGraphicsPtr debugGraphics;
+
+            template <typename T>
+            void operator()(T const &shape) const
+            {
+                debugGraphics->draw(shape);
+            }
+        };
+    }
+
+    void CollisionDetector::debugDraw(DebugGraphicsPtr const &debugGraphics) const
+    {
+        DebugDrawVisitor visitor;
+        visitor.debugGraphics = debugGraphics;
+        for (BodyVector::const_iterator i = bodies_.begin();
+             i != bodies_.end(); ++i)
+        {
+            CollisionBody::ShapeVector const &shapes = (*i)->shapes();
+            for (CollisionBody::ShapeVector::const_iterator j =
+                 shapes.begin(); j != shapes.end(); ++j)
+            {
+                boost::apply_visitor(visitor, (*j)->shape());
+            }
+        }
     }
 
     void CollisionDetector::detectCollisions()

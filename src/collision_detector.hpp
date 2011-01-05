@@ -5,6 +5,7 @@
 
 #include "collision_body_fwd.hpp"
 #include "collision_shape_fwd.hpp"
+#include "debug_graphics_fwd.hpp"
 
 #include <vector>
 #include <boost/enable_shared_from_this.hpp>
@@ -25,6 +26,8 @@ namespace monomi {
         CollisionVector const &collisions() const;
 
         void update(float dt);
+
+        void debugDraw(DebugGraphicsPtr const &debugGraphics) const;
 
     private:
         friend class CollisionBody;

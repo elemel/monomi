@@ -158,12 +158,12 @@ namespace monomi {
                 color = debugColors::lightBlue();
             }
         }
-        debugGraphics->drawCircle(bottomCircle(), color);
-        debugGraphics->drawCircle(topCircle(), color);
+        debugGraphics->draw(bottomCircle(), color);
+        debugGraphics->draw(topCircle(), color);
         Circle c = topCircle();
         LineSegment2 s(c.center,
                        c.center + Vector2(float(face) * c.radius, 0.0f));
-        debugGraphics->drawLineSegment(s, color);
+        debugGraphics->draw(s, color);
     }
 
     boost::signals2::connection

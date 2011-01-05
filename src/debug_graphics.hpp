@@ -16,12 +16,12 @@ namespace monomi {
     public:
         explicit DebugGraphics(int circleVertexCount = 16);
 
-        void drawLineSegment(const LineSegment2 &lineSegment,
-                             const DebugColor &color = debugColors::gray());
-        void drawBox(const Box2 &box,
-                     const DebugColor &color = debugColors::gray());
-        void drawCircle(const Circle &circle,
-                        const DebugColor &color = debugColors::gray());
+        void draw(const LineSegment2 &lineSegment,
+                  const DebugColor &color = debugColors::gray());
+        void draw(const Box2 &box,
+                  const DebugColor &color = debugColors::gray());
+        void draw(const Circle &circle,
+                  const DebugColor &color = debugColors::gray());
 
     protected:
         std::vector<Vector2> circleVertices_;

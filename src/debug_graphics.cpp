@@ -13,8 +13,8 @@ namespace monomi {
         }
     }
 
-    void DebugGraphics::drawLineSegment(const LineSegment2 &lineSegment,
-                                        const DebugColor &color)
+    void DebugGraphics::draw(const LineSegment2 &lineSegment,
+                             const DebugColor &color)
     {
         glColor3f(color.red, color.green, color.blue);
         glBegin(GL_LINES);
@@ -23,7 +23,7 @@ namespace monomi {
         glEnd();
     }
 
-    void DebugGraphics::drawBox(const Box2 &box, const DebugColor &color)
+    void DebugGraphics::draw(const Box2 &box, const DebugColor &color)
     {
         glColor3f(color.red, color.green, color.blue);
         glBegin(GL_LINES);
@@ -38,8 +38,7 @@ namespace monomi {
         glEnd();
     }
 
-    void DebugGraphics::drawCircle(const Circle &circle,
-                                   const DebugColor &color)
+    void DebugGraphics::draw(const Circle &circle, const DebugColor &color)
     {
         glColor3f(color.red, color.green, color.blue);
         glBegin(GL_LINES);

@@ -116,11 +116,13 @@ character_wall_slide_state.o: character_type.hpp character_walk_state.hpp
 character_wall_slide_state.o: character_wall_jump_state.hpp
 collision_body.o: collision_body.hpp collision_body_fwd.hpp actor_fwd.hpp
 collision_body.o: collision_detector_fwd.hpp collision_shape_fwd.hpp
-collision_body.o: geometry.hpp collision_detector.hpp collision_shape.hpp
+collision_body.o: geometry.hpp collision_detector.hpp debug_graphics_fwd.hpp
+collision_body.o: collision_shape.hpp
 collision_detector.o: collision_detector.hpp collision_detector_fwd.hpp
 collision_detector.o: collision_body_fwd.hpp collision_shape_fwd.hpp
-collision_detector.o: collision_body.hpp actor_fwd.hpp geometry.hpp
-collision_detector.o: collision_shape.hpp
+collision_detector.o: debug_graphics_fwd.hpp collision_body.hpp actor_fwd.hpp
+collision_detector.o: geometry.hpp collision_shape.hpp debug_graphics.hpp
+collision_detector.o: debug_color.hpp
 collision_shape.o: collision_shape.hpp collision_shape_fwd.hpp actor_fwd.hpp
 collision_shape.o: collision_body_fwd.hpp geometry.hpp collision_body.hpp
 collision_shape.o: collision_detector_fwd.hpp

@@ -21,6 +21,6 @@ namespace monomi {
 
     void BlockActor::debugDraw(DebugGraphicsPtr const &debugGraphics) const
     {
-        debugGraphics->drawBox(box);
+        debugGraphics->draw(box);
     }
 }
