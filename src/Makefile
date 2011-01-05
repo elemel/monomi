@@ -44,7 +44,6 @@ objects := \
 	game.o \
 	game_screen.o \
 	geometry.o \
-	grid.o \
 	main.o \
 	random.o \
 	screen.o \
@@ -130,7 +129,6 @@ game_screen.o: block_actor.hpp actor.hpp actor_fwd.hpp priority.hpp
 game_screen.o: character_actor.hpp contact.hpp input.hpp technique.hpp
 game_screen.o: tool.hpp debug_graphics.hpp debug_color.hpp game.hpp
 geometry.o: geometry.hpp
-grid.o: grid.hpp geometry.hpp
 main.o: title_screen.hpp screen.hpp
 random.o: random.hpp
 screen.o: screen.hpp
