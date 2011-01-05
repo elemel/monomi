@@ -1,20 +1,31 @@
 #ifndef MONOMI_COLLISION_SHAPE_HPP
 #define MONOMI_COLLISION_SHAPE_HPP
 
-#include "actor_fwd.hpp"
+#include "geometry.hpp"
 
-#include <boost/shared_ptr.hpp>
+#include <boost/variant.hpp>
 
 namespace monomi {
-    class Box2;
+    class CollisionBody;
 
     class CollisionShape {
     public:
-        virtual ~CollisionShape()
-        { }
+        typedef boost::variant<Box2, Circle> Shape;
 
-        virtual ActorPtr actor() const = 0;
-        virtual Box2 boundingBox() const = 0;
+        CollisionShape();
+
+        CollisionBody *body() const;
+
+        Shape const &shape() const;
+        void shape(Shape const &shape);
+
+    private:
+        friend class CollisionBody;
+
+        CollisionBody *body_;
+        Shape shape_;
+
+        void makeDirty();
     };
 }
 

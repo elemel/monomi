@@ -36,7 +36,9 @@ objects := \
 	character_wall_jump_state.o \
 	character_walk_state.o \
 	character_wall_slide_state.o \
+	collision_body.o \
 	collision_detector.o \
+	collision_shape.o \
 	debug_color.o \
 	debug_graphics.o \
 	game.o \
