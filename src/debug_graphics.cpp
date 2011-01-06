@@ -44,8 +44,8 @@ namespace monomi {
         glBegin(GL_LINES);
         for (std::size_t i = 0; i < circleVertices_.size(); ++i) {
             std::size_t j = (i + 1) % circleVertices_.size();
-            Point2 p1 = circle.center + circle.radius * circleVertices_[i];
-            Point2 p2 = circle.center + circle.radius * circleVertices_[j];
+            Vector2 p1 = circle.center + circle.radius * circleVertices_[i];
+            Vector2 p2 = circle.center + circle.radius * circleVertices_[j];
             glVertex2f(p1.x, p1.y);
             glVertex2f(p2.x, p2.y);
         }

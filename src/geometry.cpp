@@ -30,11 +30,6 @@ namespace monomi {
         y(y)
     { }
 
-    Vector2::Vector2(const Point2 &p) :
-        x(p.x),
-        y(p.y)
-    { }
-
     float Vector2::length() const {
         return std::sqrt(squaredLength());
     }
@@ -136,66 +131,12 @@ namespace monomi {
         return v2;
     }
 
-    Point2::Point2() :
-        x(0.0f),
-        y(0.0f)
-    { }
-
-    Point2::Point2(float x, float y) :
-        x(x),
-        y(y)
-    { }
-
-    Point2::Point2(const Vector2 &v) :
-        x(v.x),
-        y(v.y)
-    { }
-
-    Point2 &Point2::operator+=(const Vector2 &v)
-    {
-        x += v.x;
-        y += v.y;
-        return *this;
-    }
-
-    Point2 &Point2::operator-=(const Vector2 &v)
-    {
-        x -= v.x;
-        y -= v.y;
-        return *this;
-    }
-
-    Point2 operator+(const Point2 &p, const Vector2 &v)
-    {
-        return Point2(p) += v;
-    }
-
-    Point2 operator+(const Vector2 &v, const Point2 &p)
-    {
-        return Point2(p) += v;
-    }
-
-    Point2 operator-(const Point2 &p, const Vector2 &v)
-    {
-        return Point2(p) -= v;
-    }
-
-    Vector2 operator-(const Point2 &p1, const Point2 &p2)
-    {
-        return Vector2(p1.x - p2.x, p1.y - p2.y);
-    }
-
-    std::ostream &operator<<(std::ostream &out, const Point2 &p)
-    {
-        return out << "(" << p.x << ", " << p.y << ")";
-    }
-
-    float distance(const Point2 &p1, const Point2 &p2)
+    float distance(const Vector2 &p1, const Vector2 &p2)
     {
         return (p2 - p1).length();
     }
 
-    float squaredDistance(const Point2 &p1, const Point2 &p2)
+    float squaredDistance(const Vector2 &p1, const Vector2 &p2)
     {
         return (p2 - p1).squaredLength();
     }
@@ -203,7 +144,7 @@ namespace monomi {
     LineSegment2::LineSegment2()
     { }
 
-    LineSegment2::LineSegment2(const Point2 &p1, const Point2 &p2) :
+    LineSegment2::LineSegment2(const Vector2 &p1, const Vector2 &p2) :
         p1(p1),
         p2(p2)
     { }
@@ -224,25 +165,25 @@ namespace monomi {
         float y1 = std::min(p1.y, p2.y);
         float x2 = std::max(p1.x, p2.x);
         float y2 = std::max(p1.y, p2.y);
-        return Box2(Point2(x1, y1), Point2(x2, y2));
+        return Box2(Vector2(x1, y1), Vector2(x2, y2));
     }
 
     Box2::Box2()
     { }
 
-    Box2::Box2(const Point2 &p) :
+    Box2::Box2(const Vector2 &p) :
         p1(p),
         p2(p)
     { }
 
-    Box2::Box2(const Point2 &p1, const Point2 &p2) :
+    Box2::Box2(const Vector2 &p1, const Vector2 &p2) :
         p1(p1),
         p2(p2)
     { }
 
-    Point2 Box2::center() const
+    Vector2 Box2::center() const
     {
-        return Point2(0.5f * (p1.x + p2.x), 0.5f * (p1.y + p2.y));
+        return Vector2(0.5f * (p1.x + p2.x), 0.5f * (p1.y + p2.y));
     }
 
     bool Box2::empty() const
@@ -278,7 +219,7 @@ namespace monomi {
         p2.y = std::numeric_limits<float>::min();
     }
 
-    void Box2::merge(const Point2 &p)
+    void Box2::merge(const Vector2 &p)
     {
         p1.x = std::min(p1.x, p.x);
         p1.y = std::min(p1.y, p.y);
@@ -302,7 +243,7 @@ namespace monomi {
         p2.y = std::min(p2.y, b.p2.y);
     }
 
-    bool Box2::contains(const Point2 &p) const
+    bool Box2::contains(const Vector2 &p) const
     {
         return p1.x <= p.x && p.x <= p2.x && p1.y <= p.y && p.y <= p2.y;
     }
@@ -325,7 +266,7 @@ namespace monomi {
         radius(0.0f)
     { }
 
-    Circle::Circle(const Point2 &center, float radius) :
+    Circle::Circle(const Vector2 &center, float radius) :
         center(center),
         radius(radius)
     { }
@@ -345,7 +286,7 @@ namespace monomi {
         return Box2(center - Vector2(radius), center + Vector2(radius));
     }
 
-    bool Circle::contains(const Point2 &p) const
+    bool Circle::contains(const Vector2 &p) const
     {
         return squaredDistance(center, p) <= radius * radius;
     }
@@ -371,8 +312,8 @@ namespace monomi {
             return b.p1.x <= c.center.x + c.radius &&
                    c.center.x - c.radius <= b.p2.x;
         } else {
-            return c.contains(b.p1) || c.contains(Point2(b.p2.x, b.p1.y)) ||
-                   c.contains(b.p2) || c.contains(Point2(b.p1.x, b.p2.y));
+            return c.contains(b.p1) || c.contains(Vector2(b.p2.x, b.p1.y)) ||
+                   c.contains(b.p2) || c.contains(Vector2(b.p1.x, b.p2.y));
         }
     }
 
@@ -381,7 +322,7 @@ namespace monomi {
         return intersects(b, c);
     }
 
-    LineSegment2 separate(const Point2 &p, const Circle &c)
+    LineSegment2 separate(const Vector2 &p, const Circle &c)
     {
         Vector2 direction = c.center - p;
         if (direction.x == 0.0f && direction.y == 0.0f) {
@@ -392,7 +333,7 @@ namespace monomi {
         return LineSegment2(p, c.center - c.radius * direction);
     }
 
-    LineSegment2 separate(const Circle &c, const Point2 &p)
+    LineSegment2 separate(const Circle &c, const Vector2 &p)
     {
         LineSegment2 s = separate(p, c);
         std::swap(s.p1, s.p2);
@@ -405,16 +346,16 @@ namespace monomi {
         if (i.dx() <= i.dy()) {
             float y = i.center().y;
             if (b2.p2.x - b1.p1.x <= b1.p2.x - b2.p1.x) {
-                return LineSegment2(Point2(b1.p1.x, y), Point2(b2.p2.x, y));
+                return LineSegment2(Vector2(b1.p1.x, y), Vector2(b2.p2.x, y));
             } else {
-                return LineSegment2(Point2(b1.p2.x, y), Point2(b2.p1.x, y));
+                return LineSegment2(Vector2(b1.p2.x, y), Vector2(b2.p1.x, y));
             }
         } else {
             float x = i.center().x;
             if (b2.p2.y - b1.p1.y <= b1.p2.x - b2.p1.x) {
-                return LineSegment2(Point2(x, b1.p1.y), Point2(x, b2.p2.y));
+                return LineSegment2(Vector2(x, b1.p1.y), Vector2(x, b2.p2.y));
             } else {
-                return LineSegment2(Point2(x, b1.p2.y), Point2(x, b2.p1.y));
+                return LineSegment2(Vector2(x, b1.p2.y), Vector2(x, b2.p1.y));
             }
         }
     }
@@ -437,27 +378,27 @@ namespace monomi {
             if (c.center.y <= b.p1.y) {
                 return separate(b.p1, c);
             } else if (b.p2.y <= c.center.y) {
-                return separate(Point2(b.p1.x, b.p2.y), c);
+                return separate(Vector2(b.p1.x, b.p2.y), c);
             } else {
-                return LineSegment2(Point2(b.p1.x, c.center.y),
-                                    Point2(c.center.x + c.radius, c.center.y));
+                return LineSegment2(Vector2(b.p1.x, c.center.y),
+                                    Vector2(c.center.x + c.radius, c.center.y));
             }
         } else if (b.p2.x <= c.center.x) {
             if (c.center.y <= b.p1.y) {
-                return separate(Point2(b.p2.x, b.p1.y), c);
+                return separate(Vector2(b.p2.x, b.p1.y), c);
             } else if (b.p2.y <= c.center.y) {
                 return separate(b.p2, c);
             } else {
-                return LineSegment2(Point2(b.p2.x, c.center.y),
-                                    Point2(c.center.x - c.radius, c.center.y));
+                return LineSegment2(Vector2(b.p2.x, c.center.y),
+                                    Vector2(c.center.x - c.radius, c.center.y));
             }
         } else {
             if (c.center.y <= b.p1.y) {
-                return LineSegment2(Point2(c.center.x, b.p1.y),
-                                    Point2(c.center.x, c.center.y + c.radius));
+                return LineSegment2(Vector2(c.center.x, b.p1.y),
+                                    Vector2(c.center.x, c.center.y + c.radius));
             } else if (b.p1.y <= c.center.y) {
-                return LineSegment2(Point2(c.center.x, b.p2.y),
-                                    Point2(c.center.x, c.center.y - c.radius));
+                return LineSegment2(Vector2(c.center.x, b.p2.y),
+                                    Vector2(c.center.x, c.center.y - c.radius));
             } else {
                 return LineSegment2();
             }

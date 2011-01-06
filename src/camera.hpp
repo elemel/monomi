@@ -8,7 +8,7 @@ namespace monomi {
     public:
         Camera();
 
-        Point2 position;
+        Vector2 position;
         float scale;
     };
 }

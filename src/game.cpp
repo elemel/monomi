@@ -13,8 +13,8 @@ namespace monomi {
         boost::shared_ptr<BlockActor> createBlock(int x, int y)
         {
             boost::shared_ptr<BlockActor> block(new BlockActor);
-            block->box.p1 = Point2(float(x), float(y));
-            block->box.p2 = Point2(float(x + 1), float(y + 1));
+            block->box.p1 = Vector2(float(x), float(y));
+            block->box.p2 = Vector2(float(x + 1), float(y + 1));
             return block;
         }
     }
@@ -27,16 +27,16 @@ namespace monomi {
         // Create characters.
         boost::shared_ptr<CharacterActor> character;
         character = characterFactory_->create(airMasterTag);
-        character->position = Point2(2.0f, 2.0f);
+        character->position = Vector2(2.0f, 2.0f);
         addActor(character);
         character = characterFactory_->create(samuraiTag);
-        character->position = Point2(7.0f, 5.0f);
+        character->position = Vector2(7.0f, 5.0f);
         addActor(character);
         character = characterFactory_->create(samuraiTag);
-        character->position = Point2(9.0f, 5.0f);
+        character->position = Vector2(9.0f, 5.0f);
         addActor(character);
         character = characterFactory_->create(samuraiTag);
-        character->position = Point2(11.0f, 5.0f);
+        character->position = Vector2(11.0f, 5.0f);
         addActor(character);
 
         // Create blocks.

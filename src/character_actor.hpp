@@ -42,7 +42,7 @@ namespace monomi {
         // right.
         int face;
 
-        Point2 position;
+        Vector2 position;
         Vector2 velocity;
         Vector2 gravity;
         int airJumpCount;
