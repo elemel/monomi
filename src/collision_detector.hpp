@@ -27,7 +27,7 @@ namespace monomi {
 
         void update(float dt);
 
-        void debugDraw(DebugGraphicsPtr const &debugGraphics) const;
+        void debugDraw(DebugGraphicsPtr const &graphics) const;
 
     private:
         friend class CollisionBody;

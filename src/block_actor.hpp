@@ -7,8 +7,6 @@
 #include <boost/shared_ptr.hpp>
 
 namespace monomi {
-    class DebugGraphics;
-
     class BlockActor :
         public Actor
     {
@@ -19,7 +17,7 @@ namespace monomi {
         bool alive() const;
         void update(float dt);
         void handleCollisions();
-        void debugDraw(DebugGraphicsPtr const &debugGraphics) const;
+        void debugDraw(DebugGraphicsPtr const &graphics) const;
     };
 }
 

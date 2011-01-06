@@ -19,7 +19,7 @@ namespace monomi {
         virtual bool alive() const = 0;
         virtual void update(float dt) = 0;
         virtual void handleCollisions() = 0;
-        virtual void debugDraw(DebugGraphicsPtr const &debugGraphics) const = 0;
+        virtual void debugDraw(DebugGraphicsPtr const &graphics) const = 0;
     };
 }
 

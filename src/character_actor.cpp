@@ -144,7 +144,7 @@ namespace monomi {
         }
     }
 
-    void CharacterActor::debugDraw(DebugGraphicsPtr const &debugGraphics) const
+    void CharacterActor::debugDraw(DebugGraphicsPtr const &graphics) const
     {
         DebugColor color = debugColors::white();
         if (alive_) {
@@ -158,12 +158,12 @@ namespace monomi {
                 color = debugColors::lightBlue();
             }
         }
-        debugGraphics->draw(bottomCircle(), color);
-        debugGraphics->draw(topCircle(), color);
+        graphics->draw(bottomCircle(), color);
+        graphics->draw(topCircle(), color);
         Circle c = topCircle();
         LineSegment2 s(c.center,
                        c.center + Vector2(float(face) * c.radius, 0.0f));
-        debugGraphics->draw(s, color);
+        graphics->draw(s, color);
     }
 
     boost::signals2::connection

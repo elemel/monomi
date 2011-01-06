@@ -48,23 +48,28 @@ namespace monomi {
     }
 
     namespace {
-        struct DebugDrawVisitor {
+        class DebugDrawVisitor {
+        public:
             typedef void result_type;
 
-            DebugGraphicsPtr debugGraphics;
+            explicit DebugDrawVisitor(DebugGraphicsPtr const &graphics) :
+                graphics_(graphics)
+            { }
 
             template <typename T>
             void operator()(T const &shape) const
             {
-                debugGraphics->draw(shape);
+                graphics_->draw(shape);
             }
+
+        private:
+            DebugGraphicsPtr graphics_;
         };
     }
 
-    void CollisionDetector::debugDraw(DebugGraphicsPtr const &debugGraphics) const
+    void CollisionDetector::debugDraw(DebugGraphicsPtr const &graphics) const
     {
-        DebugDrawVisitor visitor;
-        visitor.debugGraphics = debugGraphics;
+        DebugDrawVisitor visitor(graphics);
         for (BodyVector::const_iterator i = bodies_.begin();
              i != bodies_.end(); ++i)
         {
