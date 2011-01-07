@@ -1,6 +1,7 @@
 #ifndef MONOMI_GEOMETRY_HPP
 #define MONOMI_GEOMETRY_HPP
 
+#include <complex>
 #include <iostream>
 
 namespace monomi {
@@ -28,6 +29,7 @@ namespace monomi {
         Vector2 &operator/=(float f);
 
         float normalize();
+        void rotate(std::complex<float> const &c);
     };
 
     Vector2 operator+(const Vector2 &v1, const Vector2 &v2);
@@ -43,22 +45,11 @@ namespace monomi {
     Vector2 cross(const Vector2 &v);
     Vector2 normalize(const Vector2 &v);
 
-    class Box2;
-
     float distance(const Vector2 &p1, const Vector2 &p2);
     float squaredDistance(const Vector2 &p1, const Vector2 &p2);
 
-    class LineSegment2 {
-    public:
-        Vector2 p1, p2;
-
-        LineSegment2();
-        LineSegment2(const Vector2 &p1, const Vector2 &p2);
-
-        float length() const;
-        float squaredLength() const;
-        Box2 boundingBox() const;
-    };
+    Vector2 rotate(Vector2 const &v, std::complex<float> const &c);
+    Vector2 rotate(std::complex<float> const &c, Vector2 const &v);
 
     class Box2 {
     public:
@@ -85,6 +76,18 @@ namespace monomi {
 
     Box2 merge(const Box2 &b1, const Box2 &b2);
     Box2 intersect(const Box2 &b1, const Box2 &b2);
+
+    class LineSegment2 {
+    public:
+        Vector2 p1, p2;
+
+        LineSegment2();
+        LineSegment2(const Vector2 &p1, const Vector2 &p2);
+
+        float length() const;
+        float squaredLength() const;
+        Box2 boundingBox() const;
+    };
 
     class Circle {
     public:

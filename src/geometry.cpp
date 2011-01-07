@@ -79,6 +79,13 @@ namespace monomi {
         return f;
     }
 
+    void Vector2::rotate(std::complex<float> const &c)
+    {
+        std::complex<float> product = std::complex<float>(x, y) * c;
+        x = std::real(product);
+        y = std::imag(product);
+    }
+
     Vector2 operator+(const Vector2 &v1, const Vector2 &v2)
     {
         return Vector2(v1) += v2;
@@ -141,31 +148,17 @@ namespace monomi {
         return (p2 - p1).squaredLength();
     }
 
-    LineSegment2::LineSegment2()
-    { }
-
-    LineSegment2::LineSegment2(const Vector2 &p1, const Vector2 &p2) :
-        p1(p1),
-        p2(p2)
-    { }
-
-    float LineSegment2::length() const
+    Vector2 rotate(Vector2 const &v, std::complex<float> const &c)
     {
-        return distance(p1, p2);
+        Vector2 result(v);
+        result.rotate(c);
+        return result;
     }
 
-    float LineSegment2::squaredLength() const
+    Vector2 rotate(std::complex<float> const &c, Vector2 const &v)
     {
-        return squaredDistance(p1, p2);
-    }
-
-    Box2 LineSegment2::boundingBox() const
-    {
-        float x1 = std::min(p1.x, p2.x);
-        float y1 = std::min(p1.y, p2.y);
-        float x2 = std::max(p1.x, p2.x);
-        float y2 = std::max(p1.y, p2.y);
-        return Box2(Vector2(x1, y1), Vector2(x2, y2));
+        std::complex<float> product = c * std::complex<float>(v.x, v.y);
+        return Vector2(std::real(product), std::imag(product));
     }
 
     Box2::Box2()
@@ -260,6 +253,33 @@ namespace monomi {
         Box2 result(b1);
         result.intersect(b2);
         return result;
+    }
+
+    LineSegment2::LineSegment2()
+    { }
+
+    LineSegment2::LineSegment2(const Vector2 &p1, const Vector2 &p2) :
+        p1(p1),
+        p2(p2)
+    { }
+
+    float LineSegment2::length() const
+    {
+        return distance(p1, p2);
+    }
+
+    float LineSegment2::squaredLength() const
+    {
+        return squaredDistance(p1, p2);
+    }
+
+    Box2 LineSegment2::boundingBox() const
+    {
+        float x1 = std::min(p1.x, p2.x);
+        float y1 = std::min(p1.y, p2.y);
+        float x2 = std::max(p1.x, p2.x);
+        float y2 = std::max(p1.y, p2.y);
+        return Box2(Vector2(x1, y1), Vector2(x2, y2));
     }
 
     Circle::Circle() :

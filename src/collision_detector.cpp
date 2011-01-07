@@ -7,6 +7,34 @@
 #include <algorithm>
 
 namespace monomi {
+    class CollisionDetector::DebugDrawVisitor {
+    public:
+        typedef void result_type;
+
+        DebugGraphicsPtr graphics;
+
+        explicit DebugDrawVisitor(DebugGraphicsPtr const &graphics) :
+            graphics(graphics)
+        { }
+
+        template <typename T>
+        void operator()(T const &shape) const
+        {
+            graphics->draw(shape);
+        }
+    };
+
+    class CollisionDetector::IntersectsVisitor {
+    public:
+        typedef bool result_type;
+
+        template <typename T, typename U>
+        bool operator()(T const &s1, U const &s2) const
+        {
+            return intersects(s1, s2);
+        }
+    };
+
     void CollisionDetector::addBody(CollisionBodyPtr const &body)
     {
         assert(body->detector_.lock().empty());
@@ -14,7 +42,7 @@ namespace monomi {
         body->detector_ = this->shared_from_this();
         bodies_.push_back(body);
         body->dirty_ = true;
-        dirtyBodies_.push_back(body.get());
+        dirtyBodies_.push_back(body);
     }
 
     void CollisionDetector::removeBody(CollisionBodyPtr const &body)
@@ -25,7 +53,7 @@ namespace monomi {
         if (body->dirty_) {
             body->dirty_ = false;
             dirtyBodies_.erase(std::find(dirtyBodies_.begin(),
-                                         dirtyBodies_.end(), body.get()));
+                                         dirtyBodies_.end(), body));
         }
     }
 
@@ -42,29 +70,8 @@ namespace monomi {
 
     void CollisionDetector::update(float dt)
     {
-        collisions_.clear();
-        detectCollisions();
-        clearDirty();
-    }
-
-    namespace {
-        class DebugDrawVisitor {
-        public:
-            typedef void result_type;
-
-            explicit DebugDrawVisitor(DebugGraphicsPtr const &graphics) :
-                graphics_(graphics)
-            { }
-
-            template <typename T>
-            void operator()(T const &shape) const
-            {
-                graphics_->draw(shape);
-            }
-
-        private:
-            DebugGraphicsPtr graphics_;
-        };
+        updateCollisions();
+        clearDirtyBodies();
     }
 
     void CollisionDetector::debugDraw(DebugGraphicsPtr const &graphics) const
@@ -77,26 +84,36 @@ namespace monomi {
             for (CollisionBody::ShapeVector::const_iterator j =
                  shapes.begin(); j != shapes.end(); ++j)
             {
-                boost::apply_visitor(visitor, (*j)->shape());
+                boost::apply_visitor(visitor, (*j)->worldShape_);
             }
         }
     }
 
-    void CollisionDetector::detectCollisions()
+    void CollisionDetector::updateDirtyBodies()
     {
-        for (BodyRawVector::iterator i = dirtyBodies_.begin();
+        for (BodyVector::iterator i = dirtyBodies_.begin();
+             i != dirtyBodies_.end(); ++i)
+        {
+            (*i)->update();
+        }
+    }
+
+    void CollisionDetector::updateCollisions()
+    {
+        collisions_.clear();
+        for (BodyVector::iterator i = dirtyBodies_.begin();
              i != dirtyBodies_.end(); ++i)
         {
             for (BodyVector::iterator j = bodies_.begin(); j != bodies_.end();
                  ++j)
             {
-                detectBodyCollision(*i, j->get());
+                detectBodyCollision(*i, *j);
             }
         }
     }
 
-    void CollisionDetector::detectBodyCollision(CollisionBody const *body1,
-                                                CollisionBody const *body2)
+    void CollisionDetector::detectBodyCollision(CollisionBodyPtr const body1,
+                                                CollisionBodyPtr const body2)
     {
         if (!body2->dirty_ || body1 < body2) {
             CollisionBody::ShapeVector const &shapes1 = body1->shapes();
@@ -111,32 +128,20 @@ namespace monomi {
         }
     }
 
-    namespace {
-        struct IntersectsVisitor {
-            typedef bool result_type;
-
-            template <typename T, typename U>
-            bool operator()(T const &s1, U const &s2) const
-            {
-                return intersects(s1, s2);
-            }
-        };
-    }
-
     void
     CollisionDetector::detectShapeCollision(CollisionShapePtr const &shape1,
                                             CollisionShapePtr const &shape2)
     {
-        if (boost::apply_visitor(IntersectsVisitor(), shape1->shape(),
-            shape2->shape()))
+        if (boost::apply_visitor(IntersectsVisitor(), shape1->worldShape_,
+            shape2->worldShape_))
         {
             collisions_.push_back(Collision(shape1, shape2));
         }
     }
 
-    void CollisionDetector::clearDirty()
+    void CollisionDetector::clearDirtyBodies()
     {
-        for (BodyRawVector::iterator i = dirtyBodies_.begin();
+        for (BodyVector::iterator i = dirtyBodies_.begin();
              i != dirtyBodies_.end(); ++i)
         {
             (*i)->dirty_ = false;

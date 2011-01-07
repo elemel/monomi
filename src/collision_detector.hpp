@@ -32,19 +32,21 @@ namespace monomi {
     private:
         friend class CollisionBody;
 
-        typedef std::vector<CollisionBody *> BodyRawVector;
+        class DebugDrawVisitor;
+        class IntersectsVisitor;
 
         BodyVector bodies_;
-        BodyRawVector dirtyBodies_;
+        BodyVector dirtyBodies_;
         CollisionVector collisions_;
 
-        void detectCollisions();
-        void detectBodyCollision(CollisionBody const *body1,
-                                 CollisionBody const *body2);
+        void updateDirtyBodies();
+        void updateCollisions();
+        void detectBodyCollision(CollisionBodyPtr const body1,
+                                 CollisionBodyPtr const body2);
         void detectShapeCollision(CollisionShapePtr const &shape1,
                                   CollisionShapePtr const &shape2);
 
-        void clearDirty();
+        void clearDirtyBodies();
     };
 }
 

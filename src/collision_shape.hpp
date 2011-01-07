@@ -25,11 +25,13 @@ namespace monomi {
 
     private:
         friend class CollisionBody;
+        friend class CollisionDetector;
 
         CollisionBodyWeakPtr body_;
         Shape shape_;
+        Shape worldShape_;
 
-        void makeDirty();
+        void dirty();
     };
 }
 

@@ -8,6 +8,7 @@
 #include "collision_shape_fwd.hpp"
 #include "geometry.hpp"
 
+#include <complex>
 #include <vector>
 #include <boost/enable_shared_from_this.hpp>
 
@@ -29,17 +30,26 @@ namespace monomi {
         Vector2 const &translation() const;
         void translation(Vector2 const &translation);
 
+        float rotation() const;
+        void rotation(float rotation);
+
     private:
         friend class CollisionDetector;
         friend class CollisionShape;
 
+        class TransformVisitor;
+
         ActorWeakPtr actor_;
         CollisionDetectorWeakPtr detector_;
-        Vector2 translation_;
         bool dirty_;
         ShapeVector shapes_;
 
-        void makeDirty();
+        Vector2 translation_;
+        float rotation_;
+        std::complex<float> rotationComplex_;
+
+        void dirty();
+        void update();
     };
 }
 

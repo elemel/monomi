@@ -20,13 +20,13 @@ namespace monomi {
     void CollisionShape::shape(Shape const &shape)
     {
         shape_ = shape;
-        makeDirty();
+        dirty();
     }
 
-    void CollisionShape::makeDirty()
+    void CollisionShape::dirty()
     {
         if (CollisionBodyPtr body = body_.lock()) {
-            body->makeDirty();
+            body->dirty();
         }
     }
 }
