@@ -85,11 +85,6 @@ namespace monomi {
                       0.5f * type_->width);
     }
 
-    Priority CharacterActor::priority() const
-    {
-        return dynamicPriority;
-    }
-
     bool CharacterActor::alive() const
     {
         return true;

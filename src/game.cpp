@@ -97,8 +97,8 @@ namespace monomi {
     void Game::update(float dt)
     {
         addNewActors();
-        for (ActorVector::iterator i = actors_.begin();
-             i != actors_.end() && (*i)->priority() != priorityCount; ++i)
+        for (ActorVector::iterator i = actors_.begin(); i != actors_.end();
+             ++i)
         {
             (*i)->update(dt);
         }
@@ -110,13 +110,6 @@ namespace monomi {
         removeDeadActors();
     }
 
-    namespace {
-        bool lessActorPriority(ActorPtr const &left, ActorPtr const &right)
-        {
-            return left->priority() < right->priority();
-        }
-    }
-
     void Game::addNewActors()
     {
         if (!newActors_.empty()) {
@@ -126,7 +119,6 @@ namespace monomi {
                 newActors_.pop_back();
                 actors_.push_back(actor);
             }
-            std::sort(actors_.begin(), actors_.end(), &lessActorPriority);
         }
     }
 

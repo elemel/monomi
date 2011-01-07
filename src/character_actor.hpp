@@ -64,7 +64,6 @@ namespace monomi {
         Circle bottomCircle() const;
         Circle topCircle() const;
 
-        Priority priority() const;
         bool alive() const;
         void update(float dt);
         void handleCollisions();

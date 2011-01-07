@@ -3,8 +3,6 @@
 
 #include "actor_fwd.hpp"
 
-#include "priority.hpp"
-
 namespace monomi {
     class DebugGraphics;
 
@@ -14,7 +12,6 @@ namespace monomi {
     public:
         virtual ~Actor();
 
-        virtual Priority priority() const = 0;
         virtual bool alive() const = 0;
         virtual void update(float dt) = 0;
         virtual void handleCollisions() = 0;
