@@ -1,25 +1,29 @@
-# Build.
-ifndef build
-	build := debug
-endif
-ifeq ($(build), debug)
+# External dependencies.
+BOOST_INCLUDE_DIR := ext/boost/include
+BOOST_LIB_DIR := ext/boost/lib
+BOX2D_INCLUDE_DIR := ext/box2d/include
+BOX2D_LIB_DIR := ext/box2d/lib
+SDL_INCLUDE_DIR := ext/sdl/include
+SDL_LIB_DIR := ext/sdl/lib
+
+# Build variant.
+VARIANT := debug
+ifeq ($(VARIANT), debug)
 	CXXFLAGS += -g -DDEBUG
-else ifeq ($(build), release)
+else ifeq ($(VARIANT), release)
 	CXXFLAGS += -O3 -DNDEBUG
 else
-	$(error Invalid build "$(build)", please specify "debug" or "release")
+	$(error Invalid build variant "$(VARIANT)", please specify "debug" or "release")
 endif
 
-# Platform.
-ifndef platform
-	# TODO: Autodetect.
-	platform := mac
-endif
-ifeq ($(platform), mac)
-	CPPFLAGS += -Iext/sdl/include -I/opt/local/include
-	LDFLAGS += -framework OpenGL -Lext/sdl/lib -lSDL
+# Build platform.
+# TODO: Autodetect.
+PLATFORM := mac
+ifeq ($(PLATFORM), mac)
+	CPPFLAGS += -I$(BOOST_INCLUDE_DIR) -I$(SDL_INCLUDE_DIR)
+	LDFLAGS += -L$(SDL_LIB_DIR) -lSDL -framework OpenGL
 else
-	$(error Invalid platform "$(platform)", only "mac" is supported for now)
+	$(error Invalid build platform "$(PLATFORM)", only "mac" is supported for now)
 endif
 
 objects := \
@@ -28,6 +32,7 @@ objects := \
 	stringer.o
 
 monomi: $(objects)
+	echo $(foo)
 	g++ -o monomi $(objects) $(LDFLAGS)
 
 clean:
