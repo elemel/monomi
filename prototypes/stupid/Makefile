@@ -1,29 +1,29 @@
 # Build.
 ifndef build
-    build := debug
+	build := debug
 endif
 ifeq ($(build), debug)
-    CXXFLAGS += -g -DDEBUG
+	CXXFLAGS += -g -DDEBUG
 else ifeq ($(build), release)
-    CXXFLAGS += -O3 -DNDEBUG
+	CXXFLAGS += -O3 -DNDEBUG
 else
-    $(error Invalid build "$(build)", please specify "debug" or "release")
+	$(error Invalid build "$(build)", please specify "debug" or "release")
 endif
 
 # Platform.
 ifndef platform
-    # TODO: Autodetect.
-    platform := mac
+	# TODO: Autodetect.
+	platform := mac
 endif
 ifeq ($(platform), mac)
-    CPPFLAGS += -I/usr/local/include/SDL -I/opt/local/include
-    LDFLAGS += -framework OpenGL -L/usr/local/lib -lSDL
+	CPPFLAGS += -Iext/sdl/include -I/opt/local/include
+	LDFLAGS += -framework OpenGL -Lext/sdl/lib -lSDL
 else
-    $(error Invalid platform "$(platform)", only "mac" is supported for now)
+	$(error Invalid platform "$(platform)", only "mac" is supported for now)
 endif
 
 objects := \
-    game_loop.o \
+	game_loop.o \
 	main.o \
 	stringer.o
 
