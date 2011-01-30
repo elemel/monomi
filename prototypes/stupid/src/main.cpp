@@ -15,9 +15,18 @@ int main(int argc, char *argv[])
         if (SDL_Init(SDL_INIT_VIDEO | SDL_INIT_NOPARACHUTE) == -1) {
             throw std::runtime_error(Stringer() << "Failed to initialize SDL: " << SDL_GetError());
         }
+
+        if (SDL_GL_SetAttribute(SDL_GL_DOUBLEBUFFER, 1) == -1) {
+            std::cerr << "WARNING: Failed to enable double buffering: "
+                      << SDL_GetError() << std::endl;
+        }
         SDL_Surface *videoSurface = SDL_SetVideoMode(0, 0, 0, SDL_OPENGL | SDL_FULLSCREEN);
         if (videoSurface == 0) {
             throw std::runtime_error(Stringer() << "Failed to set SDL video mode: " << SDL_GetError());
+        }
+        if (SDL_GL_SetSwapInterval(1) == -1) {
+            std::cerr << "WARNING: Failed to enable vertical sync: "
+                      << SDL_GetError() << std::endl;
         }
 
         GameLoop gameLoop;

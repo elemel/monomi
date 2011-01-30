@@ -10,6 +10,7 @@ namespace monomi {
 
         void drawCircle(float center[2], float radius);
         void drawPolygon(float *vertices, int vertexCount);
+        void drawLine(float p1[2], float p2[2]);
 
     private:
         std::vector<float> circleVertices_;

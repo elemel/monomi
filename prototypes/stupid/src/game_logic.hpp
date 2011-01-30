@@ -6,10 +6,13 @@
 #include <Box2D/Dynamics/b2World.h>
 
 namespace monomi {
+    class DebugGraphics;
+
     class GameLogic : private boost::noncopyable {
     public:
         GameLogic();
         void update(float dt);
+        void debugDraw(DebugGraphics *graphics);
 
     private:
         float time_;

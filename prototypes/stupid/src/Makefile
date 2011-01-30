@@ -31,7 +31,9 @@ objects := \
 	game_logic.o \
 	game_loop.o \
 	main.o \
+	physics_debug_graphics_adapter.o \
 	stringer.o
+	
 
 monomi: $(objects)
 	g++ -o monomi $(objects) $(LDFLAGS)
@@ -41,6 +43,10 @@ clean:
 
 # DO NOT DELETE
 
-game_loop.o: game_loop.hpp
+debug_graphics.o: debug_graphics.hpp
+game_logic.o: game_logic.hpp physics_debug_graphics_adapter.hpp
+game_loop.o: game_loop.hpp debug_graphics.hpp game_logic.hpp
 main.o: game_loop.hpp stringer.hpp
+physics_debug_graphics_adapter.o: physics_debug_graphics_adapter.hpp
+physics_debug_graphics_adapter.o: debug_graphics.hpp
 stringer.o: stringer.hpp
