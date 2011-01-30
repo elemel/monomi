@@ -20,19 +20,20 @@ endif
 # TODO: Autodetect.
 PLATFORM := mac
 ifeq ($(PLATFORM), mac)
-	CPPFLAGS += -I$(BOOST_INCLUDE_DIR) -I$(SDL_INCLUDE_DIR)
-	LDFLAGS += -L$(SDL_LIB_DIR) -lSDL -framework OpenGL
+	CPPFLAGS += -I$(BOOST_INCLUDE_DIR) -I$(BOX2D_INCLUDE_DIR) -I$(SDL_INCLUDE_DIR)
+	LDFLAGS += -L$(BOX2D_LIB_DIR) -lBox2D -L$(SDL_LIB_DIR) -lSDL -framework OpenGL
 else
 	$(error Invalid build platform "$(PLATFORM)", only "mac" is supported for now)
 endif
 
 objects := \
+	debug_graphics.o \
+	game_logic.o \
 	game_loop.o \
 	main.o \
 	stringer.o
 
 monomi: $(objects)
-	echo $(foo)
 	g++ -o monomi $(objects) $(LDFLAGS)
 
 clean:
