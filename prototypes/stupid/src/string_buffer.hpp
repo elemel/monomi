@@ -1,15 +1,15 @@
-#ifndef MONOMI_STRINGER_HPP
-#define MONOMI_STRINGER_HPP
+#ifndef MONOMI_STRING_BUFFER_HPP
+#define MONOMI_STRING_BUFFER_HPP
 
 #include <sstream>
 
 namespace monomi {
-    class Stringer {
+    class StringBuffer {
     public:
-        explicit Stringer(std::string const &str = std::string());
+        explicit StringBuffer(std::string const &str = std::string());
 
         template <typename T>
-        Stringer &operator<<(T const &value)
+        StringBuffer &operator<<(T const &value)
         {
             dirty_ = true;
             out_ << value;
@@ -24,12 +24,12 @@ namespace monomi {
         mutable bool dirty_;
     };
     
-    class CStringer {
+    class CStringBuffer {
     public:
-        explicit CStringer(std::string const &str = std::string());
+        explicit CStringBuffer(std::string const &str = std::string());
 
         template <typename T>
-        CStringer &operator<<(T const &value)
+        CStringBuffer &operator<<(T const &value)
         {
             dirty_ = true;
             out_ << value;
@@ -45,4 +45,4 @@ namespace monomi {
     };
 }
 
-#endif // MONOMI_STRINGER_HPP
+#endif // MONOMI_STRING_BUFFER_HPP

@@ -1,5 +1,5 @@
 #include "game_loop.hpp"
-#include "stringer.hpp"
+#include "string_buffer.hpp"
 
 #include <SDL.h>
 
@@ -13,7 +13,7 @@ int main(int argc, char *argv[])
 {
     try {
         if (SDL_Init(SDL_INIT_VIDEO | SDL_INIT_NOPARACHUTE) == -1) {
-            throw std::runtime_error(Stringer() << "Failed to initialize SDL: " << SDL_GetError());
+            throw std::runtime_error(StringBuffer() << "Failed to initialize SDL: " << SDL_GetError());
         }
 
         if (SDL_GL_SetAttribute(SDL_GL_DOUBLEBUFFER, 1) == -1) {
@@ -22,7 +22,7 @@ int main(int argc, char *argv[])
         }
         SDL_Surface *videoSurface = SDL_SetVideoMode(0, 0, 0, SDL_OPENGL | SDL_FULLSCREEN);
         if (videoSurface == 0) {
-            throw std::runtime_error(Stringer() << "Failed to set SDL video mode: " << SDL_GetError());
+            throw std::runtime_error(StringBuffer() << "Failed to set SDL video mode: " << SDL_GetError());
         }
         if (SDL_GL_SetSwapInterval(1) == -1) {
             std::cerr << "WARNING: Failed to enable vertical sync: "

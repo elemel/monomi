@@ -32,7 +32,7 @@ objects := \
 	game_loop.o \
 	main.o \
 	physics_debug_graphics_adapter.o \
-	stringer.o
+	string_buffer.o
 	
 
 monomi: $(objects)
@@ -46,7 +46,7 @@ clean:
 debug_graphics.o: debug_graphics.hpp
 game_logic.o: game_logic.hpp physics_debug_graphics_adapter.hpp
 game_loop.o: game_loop.hpp debug_graphics.hpp game_logic.hpp
-main.o: game_loop.hpp stringer.hpp
+main.o: game_loop.hpp string_buffer.hpp
 physics_debug_graphics_adapter.o: physics_debug_graphics_adapter.hpp
 physics_debug_graphics_adapter.o: debug_graphics.hpp
-stringer.o: stringer.hpp
+string_buffer.o: string_buffer.hpp

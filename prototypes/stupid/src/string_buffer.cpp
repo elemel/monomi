@@ -1,12 +1,12 @@
-#include "stringer.hpp"
+#include "string_buffer.hpp"
 
 namespace monomi {
-    Stringer::Stringer(std::string const &str) :
+    StringBuffer::StringBuffer(std::string const &str) :
         out_(str),
         dirty_(true)
     { }
 
-    Stringer::operator std::string const &() const
+    StringBuffer::operator std::string const &() const
     {
         if (dirty_) {
             str_ = out_.str();
@@ -15,12 +15,12 @@ namespace monomi {
         return str_;
     }
 
-    CStringer::CStringer(std::string const &str) :
+    CStringBuffer::CStringBuffer(std::string const &str) :
         out_(str),
         dirty_(true)
     { }
 
-    CStringer::operator char const *() const
+    CStringBuffer::operator char const *() const
     {
         if (dirty_) {
             str_ = out_.str();
