@@ -1,4 +1,5 @@
 #include "game_loop.hpp"
+#include "level_loader.hpp"
 #include "string_buffer.hpp"
 
 #include <SDL.h>
@@ -28,6 +29,9 @@ int main(int argc, char *argv[])
             std::cerr << "WARNING: Failed to enable vertical sync: "
                       << SDL_GetError() << std::endl;
         }
+
+        LevelLoader loader;
+        loader.load(argc == 2 ? argv[1] : "");
 
         GameLoop gameLoop;
         gameLoop.run();

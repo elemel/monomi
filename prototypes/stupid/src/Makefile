@@ -3,6 +3,7 @@ BOOST_INCLUDE_DIR := ext/boost/include
 BOOST_LIB_DIR := ext/boost/lib
 BOX2D_INCLUDE_DIR := ext/box2d/include
 BOX2D_LIB_DIR := ext/box2d/lib
+RAPIDXML_INCLUDE_DIR := ext/rapidxml/include
 SDL_INCLUDE_DIR := ext/sdl/include
 SDL_LIB_DIR := ext/sdl/lib
 
@@ -20,7 +21,7 @@ endif
 # TODO: Autodetect.
 PLATFORM := mac
 ifeq ($(PLATFORM), mac)
-	CPPFLAGS += -I$(BOOST_INCLUDE_DIR) -I$(BOX2D_INCLUDE_DIR) -I$(SDL_INCLUDE_DIR)
+	CPPFLAGS += -I$(BOOST_INCLUDE_DIR) -I$(BOX2D_INCLUDE_DIR) -I$(RAPIDXML_INCLUDE_DIR) -I$(SDL_INCLUDE_DIR)
 	LDFLAGS += -L$(BOX2D_LIB_DIR) -lBox2D -L$(SDL_LIB_DIR) -lSDL -framework OpenGL
 else
 	$(error Invalid build platform "$(PLATFORM)", only "mac" is supported for now)
@@ -30,6 +31,7 @@ objects := \
 	debug_graphics.o \
 	game_logic.o \
 	game_loop.o \
+	level_loader.o \
 	main.o \
 	physics_debug_graphics_adapter.o \
 	string_buffer.o
