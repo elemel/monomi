@@ -48,7 +48,8 @@ clean:
 debug_graphics.o: debug_graphics.hpp
 game_logic.o: game_logic.hpp physics_debug_graphics_adapter.hpp
 game_loop.o: game_loop.hpp debug_graphics.hpp game_logic.hpp
-main.o: game_loop.hpp string_buffer.hpp
+level_loader.o: level_loader.hpp string_buffer.hpp
+main.o: game_loop.hpp level_loader.hpp string_buffer.hpp
 physics_debug_graphics_adapter.o: physics_debug_graphics_adapter.hpp
 physics_debug_graphics_adapter.o: debug_graphics.hpp
 string_buffer.o: string_buffer.hpp

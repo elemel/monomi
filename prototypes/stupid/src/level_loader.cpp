@@ -58,7 +58,7 @@ namespace monomi {
         }
         text.back() = 0;
 
-        rapidxml::xml_document<> doc;    // character type defaults to char
+        rapidxml::xml_document<> doc;
         doc.parse<0>(&text[0]);
 
         traverse(doc.first_node());
