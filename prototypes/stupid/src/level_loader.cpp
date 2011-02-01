@@ -9,7 +9,8 @@
 
 namespace monomi {
     namespace {
-        void traverse(rapidxml::xml_node<> *node, int depth = 0) {
+        void traverse(rapidxml::xml_node<> *node, int depth = 0)
+        {
             switch (node->type()) {
             case rapidxml::node_element:
                 for (int i = 0; i < depth; ++i) {
