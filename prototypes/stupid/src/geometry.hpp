@@ -499,6 +499,8 @@ namespace monomi {
         Polygon2();
         explicit Polygon2(Box2 const &b);
 
+        bool empty() const;
+        int size() const;
         bool clockwise() const;
 
         void reverse();
@@ -507,6 +509,17 @@ namespace monomi {
 
     inline Polygon2::Polygon2()
     { }
+
+
+    inline bool Polygon2::empty() const
+    {
+        return vertices.empty();
+    }
+
+    inline int Polygon2::size() const
+    {
+        return vertices.size();
+    }
 
     inline bool Polygon2::clockwise() const
     {
@@ -529,6 +542,8 @@ namespace monomi {
 
     inline bool intersects(Vector2 const &p1, Vector2 const &p2)
     {
+        (void) p1;
+        (void) p2;
         return false;
     }
 

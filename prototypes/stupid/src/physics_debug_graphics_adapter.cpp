@@ -14,6 +14,7 @@ namespace monomi {
     void PhysicsDebugGraphicsAdapter::DrawPolygon(b2Vec2 const *vertices,
         int32 vertexCount, b2Color const &color)
     {
+        (void) color;
         vertices_.resize(2 * vertexCount);
         for (int32 i = 0; i < vertexCount; ++i) {
             b2Vec2 vertex = b2Mul(transform_, vertices[i]);
@@ -32,6 +33,7 @@ namespace monomi {
     void PhysicsDebugGraphicsAdapter::DrawCircle(b2Vec2 const &center,
         float32 radius, b2Color const &color)
     {
+        (void) color;
         b2Vec2 transformedCenter = b2Mul(transform_, center);
         float centerArray[] = { transformedCenter.x, transformedCenter.y };
         graphics_->drawCircle(centerArray, radius);
@@ -40,12 +42,14 @@ namespace monomi {
     void PhysicsDebugGraphicsAdapter::DrawSolidCircle(b2Vec2 const &center,
         float32 radius, b2Vec2 const &axis, b2Color const &color)
     {
+        (void) axis;
         DrawCircle(center, radius, color);
     }
 
     void PhysicsDebugGraphicsAdapter::DrawSegment(b2Vec2 const &p1,
         b2Vec2 const &p2, b2Color const &color)
     {
+        (void) color;
         b2Vec2 transformedP1 = b2Mul(transform_, p1);
         b2Vec2 transformedP2 = b2Mul(transform_, p2);
         float p1Array[] = { transformedP1.x, transformedP1.y };

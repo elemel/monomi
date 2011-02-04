@@ -17,7 +17,7 @@ namespace monomi {
     void DebugGraphics::drawCircle(float center[2], float radius)
     {
         glBegin(GL_LINE_LOOP);
-        for (int i = 0; 2 * i < circleVertices_.size(); ++i) {
+        for (std::size_t i = 0; 2 * i < circleVertices_.size(); ++i) {
             glVertex2f(center[0] + radius * circleVertices_[2 * i],
                        center[1] + radius * circleVertices_[2 * i + 1]);
         }

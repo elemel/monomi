@@ -137,6 +137,9 @@ namespace monomi {
         case rapidxml::node_data:
         case rapidxml::node_cdata:
             break;
+
+        default:
+            break;
         }
     }
 }

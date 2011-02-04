@@ -37,7 +37,7 @@ namespace monomi {
     void SvgTransformParser::debugPrintTransform()
     {
         std::cerr << "DEBUG: Tokenized SVG transform: " << type_ << "(";
-        for (int j = 0; j < args_.size(); ++j) {
+        for (std::size_t j = 0; j < args_.size(); ++j) {
             if (j) {
                 std::cerr << ", ";
             }

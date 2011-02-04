@@ -39,7 +39,7 @@ namespace monomi {
 
         b2FixtureDef fixtureDef;
         fixtureDef.shape = &circleShape;
-        b2Fixture *fixture = body->CreateFixture(&fixtureDef);
+        body->CreateFixture(&fixtureDef);
     }
 
     void GameLogic::createPolygonBody(Polygon2 const &polygon)
@@ -59,6 +59,6 @@ namespace monomi {
 
         b2FixtureDef fixtureDef;
         fixtureDef.shape = &polygonShape;
-        b2Fixture *fixture = body->CreateFixture(&fixtureDef);
+        body->CreateFixture(&fixtureDef);
     }
 }

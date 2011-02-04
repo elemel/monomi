@@ -16,7 +16,9 @@ namespace monomi {
              ++i)
         {
             token_ = *i;
-            if (token_.size() == 1 && isalpha(token_[0])) {
+            if (token_.size() == 1 &&
+                strchr("MmLlHhVvCcSsQqTtAaZz", token_[0]) != 0)
+            {
                 if (command_) {
                     parseCommand(result);
                 }
@@ -25,6 +27,9 @@ namespace monomi {
             } else {
                 args_.push_back(atof(token_.c_str()));
             }
+        }
+        if (command_) {
+            parseCommand(result);
         }
         return result;
     }
@@ -62,7 +67,7 @@ namespace monomi {
         if (args_.empty() || args_.size() % 2 != 0) {
             throw std::runtime_error(StringBuffer() << "Invalid argument count for SVG path command \"" << command_ << "\".");            
         }
-        for (int i = 0; i + 1 < args_.size(); i += 2) {
+        for (std::size_t i = 0; i + 1 < args_.size(); i += 2) {
             Vector2 vertex(args_[i], args_[i + 1]);
             polygon.vertices.push_back(vertex);
         }
@@ -73,7 +78,7 @@ namespace monomi {
         if (args_.empty() || args_.size() % 2 != 0) {
             throw std::runtime_error(StringBuffer() << "Invalid argument count for SVG path command \"" << command_ << "\".");            
         }
-        for (int i = 0; i + 1 < args_.size(); i += 2) {
+        for (std::size_t i = 0; i + 1 < args_.size(); i += 2) {
             Vector2 vertex(args_[i], args_[i + 1]);
             if (!polygon.vertices.empty()) {
                 vertex += polygon.vertices.back();
@@ -87,7 +92,7 @@ namespace monomi {
         if (args_.empty() || args_.size() % 2 != 0) {
             throw std::runtime_error(StringBuffer() << "Invalid argument count for SVG path command \"" << command_ << "\".");            
         }
-        for (int i = 0; i + 1 < args_.size(); i += 2) {
+        for (std::size_t i = 0; i + 1 < args_.size(); i += 2) {
             Vector2 vertex(args_[i], args_[i + 1]);
             polygon.vertices.push_back(vertex);
         }
@@ -98,7 +103,7 @@ namespace monomi {
         if (args_.empty() || args_.size() % 2 != 0) {
             throw std::runtime_error(StringBuffer() << "Invalid argument count for SVG path command \"" << command_ << "\".");            
         }
-        for (int i = 0; i + 1 < args_.size(); i += 2) {
+        for (std::size_t i = 0; i + 1 < args_.size(); i += 2) {
             Vector2 vertex(args_[i], args_[i + 1]);
             if (!polygon.vertices.empty()) {
                 vertex += polygon.vertices.back();
