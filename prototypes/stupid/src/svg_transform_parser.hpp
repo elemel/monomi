@@ -16,6 +16,12 @@ namespace monomi {
         typedef boost::char_separator<char> Separator;
         typedef boost::tokenizer<Separator> Tokenizer;
 
+        enum State {
+            beforeTypeState,
+            afterTypeState,
+            inArgsState
+        };
+
         Separator separator_;
         std::string token_;
         std::string type_;

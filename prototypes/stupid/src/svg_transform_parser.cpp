@@ -3,15 +3,16 @@
 
 namespace monomi {
     SvgTransformParser::SvgTransformParser() :
-        separator_(" ,", "()")
+        separator_(" \t\r\n,", "()")
     { }
 
     Matrix3 SvgTransformParser::parse(std::string const &str)
     {
         Matrix3 result;
         Tokenizer tokenizer(str, separator_);
-        enum { beforeTypeState, afterTypeState, inArgsState } state = beforeTypeState;
-        for (Tokenizer::iterator i = tokenizer.begin(); i != tokenizer.end(); ++i)
+        State state = beforeTypeState;
+        for (Tokenizer::iterator i = tokenizer.begin(); i != tokenizer.end();
+             ++i)
         {
             token_ = *i;
             if (token_ == "(") {

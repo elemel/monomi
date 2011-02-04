@@ -499,11 +499,26 @@ namespace monomi {
         Polygon2();
         explicit Polygon2(Box2 const &b);
 
+        bool clockwise() const;
+
+        void reverse();
         void transform(Matrix3 const &m);
     };
 
     inline Polygon2::Polygon2()
     { }
+
+    inline bool Polygon2::clockwise() const
+    {
+        return (vertices.size() >= 3 &&
+                cross(vertices[1] - vertices[0],
+                      vertices[2] - vertices[1]) <= 0.0f);
+    }
+
+    inline void Polygon2::reverse()
+    {
+        std::reverse(vertices.begin(), vertices.end());
+    }
 
     inline Polygon2 transform(Polygon2 const &p, Matrix3 const &m)
     {

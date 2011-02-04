@@ -3,6 +3,8 @@
 
 #include "color.hpp"
 #include "geometry.hpp"
+#include "svg_path_parser.hpp"
+#include "svg_transform_parser.hpp"
 
 #include <string>
 #include <vector>
@@ -24,6 +26,9 @@ namespace monomi {
         void parse(std::string const &path, std::vector<Element> &elements);
 
     private:
+        SvgPathParser pathParser_;
+        SvgTransformParser transformParser_;
+
         void parseNode(rapidxml::xml_node<> *node,
                        Matrix3 const &parentMatrix,
                        std::vector<Element> &elements);

@@ -21,16 +21,18 @@ namespace {
             if (Box2 const *box = boost::get<Box2>(&i->shape)) {
                 Polygon2 polygon(*box);
                 Polygon2 transformedPolygon = transform(polygon, matrix * i->matrix);
-                std::reverse(transformedPolygon.vertices.begin(),
-                             transformedPolygon.vertices.end());
+                if (transformedPolygon.clockwise()) {
+                    transformedPolygon.reverse();
+                }
                 gameLogic->createPolygonBody(transformedPolygon);
             } else if (Circle2 const *circle = boost::get<Circle2>(&i->shape)) {
                 Circle2 transformedCircle = transform(*circle, matrix * i->matrix);
                 gameLogic->createCircleBody(transformedCircle);
             } else if (Polygon2 const *polygon = boost::get<Polygon2>(&i->shape)) {
                 Polygon2 transformedPolygon = transform(*polygon, matrix * i->matrix);
-                std::reverse(transformedPolygon.vertices.begin(),
-                             transformedPolygon.vertices.end());
+                if (transformedPolygon.clockwise()) {
+                    transformedPolygon.reverse();
+                }
                 gameLogic->createPolygonBody(transformedPolygon);
             }
         }

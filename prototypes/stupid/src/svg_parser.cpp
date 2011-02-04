@@ -1,7 +1,6 @@
 #include "svg_parser.hpp"
 
 #include "string_buffer.hpp"
-#include "svg_transform_parser.hpp"
 
 #include <fstream>
 #include <iostream>
@@ -10,12 +9,20 @@
 
 namespace monomi {
     namespace {
+        char const *stripPrefix(char const *name) {
+            if (char const *strippedName = strchr(name, ':')) {
+                return strippedName + 1;
+            } else {
+                return name;
+            }
+        }
+
         char const *findAttribute(rapidxml::xml_node<> *node, char const *name)
         {
             for (rapidxml::xml_attribute<> *attr = node->first_attribute();
                  attr; attr = attr->next_attribute())
             {
-                if (strcmp(attr->name(), name) == 0) {
+                if (strcmp(stripPrefix(attr->name()), name) == 0) {
                     return attr->value();
                 }
             }
@@ -33,7 +40,8 @@ namespace monomi {
         }
     }
 
-    void SvgParser::parse(std::string const &path, std::vector<Element> &elements)
+    void SvgParser::parse(std::string const &path,
+                          std::vector<Element> &elements)
     {
         std::ifstream file(path.c_str());
         if (file.fail()) {
@@ -68,17 +76,17 @@ namespace monomi {
             {
                 Matrix3 matrix;
                 if (char const *transform = findAttribute(node, "transform")) {
-                    matrix = SvgTransformParser().parse(transform);
+                    matrix = transformParser_.parse(transform);
                 }
                 matrix = parentMatrix * matrix;
 
                 if (strcmp(node->name(), "path") == 0) {
-                    if (char const *type = findAttribute(node, "sodipodi:type")) {
+                    if (char const *type = findAttribute(node, "type")) {
                         if (strcmp(type, "arc") == 0) {
-                            float cx = parseAttribute(node, "sodipodi:cx", 0.0f);
-                            float cy = parseAttribute(node, "sodipodi:cy", 0.0f);
-                            float rx = parseAttribute(node, "sodipodi:rx", 1.0f);
-                            float ry = parseAttribute(node, "sodipodi:ry", 1.0f);
+                            float cx = parseAttribute(node, "cx", 0.0f);
+                            float cy = parseAttribute(node, "cy", 0.0f);
+                            float rx = parseAttribute(node, "rx", 1.0f);
+                            float ry = parseAttribute(node, "ry", 1.0f);
 
                             Vector2 center(cx, cy);
                             float radius = 0.5f * (rx + ry);
@@ -87,6 +95,16 @@ namespace monomi {
                             Element element;
                             element.matrix = matrix;
                             element.shape = circle;
+
+                            elements.push_back(element);
+                        }
+                    } else {
+                        if (char const *d = findAttribute(node, "d")) {
+                            Polygon2 polygon = pathParser_.parse(d);
+
+                            Element element;
+                            element.matrix = matrix;
+                            element.shape = polygon;
 
                             elements.push_back(element);
                         }

@@ -34,7 +34,7 @@
      inkscape:window-height="752"
      inkscape:window-x="0"
      inkscape:window-y="0"
-     inkscape:window-maximized="0" />
+     inkscape:window-maximized="1" />
   <metadata
      id="metadata7">
     <rdf:RDF>
@@ -43,7 +43,7 @@
         <dc:format>image/svg+xml</dc:format>
         <dc:type
            rdf:resource="http://purl.org/dc/dcmitype/StillImage" />
-        <dc:title></dc:title>
+        <dc:title />
       </cc:Work>
     </rdf:RDF>
   </metadata>
@@ -84,5 +84,10 @@ alfa beta</desc>
        rx="0"
        ry="0"
        transform="matrix(0.95030962,0.31130633,-0.31130633,0.95030962,0,0)" />
+    <path
+       style="fill:none;stroke:#000000;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
+       d="M 140,735.21933 L 228.57142,840.93361 L 397.14285,786.6479 L 205.71428,558.07647 L 131.42857,586.6479 z"
+       id="path3081"
+       inkscape:connector-curvature="0" />
   </g>
 </svg>
