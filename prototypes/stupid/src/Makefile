@@ -18,6 +18,7 @@ else
 endif
 
 # Build platform.
+#
 # TODO: Autodetect.
 PLATFORM := mac
 ifeq ($(PLATFORM), mac)
@@ -52,11 +53,12 @@ game_logic.o: game_logic.hpp geometry.hpp physics_debug_graphics_adapter.hpp
 game_loop.o: game_loop.hpp debug_graphics.hpp game_logic.hpp geometry.hpp
 geometry.o: geometry.hpp
 main.o: game_logic.hpp geometry.hpp game_loop.hpp string_buffer.hpp
-main.o: svg_parser.hpp color.hpp
+main.o: svg_parser.hpp color.hpp svg_path_parser.hpp svg_transform_parser.hpp
 physics_debug_graphics_adapter.o: physics_debug_graphics_adapter.hpp
 physics_debug_graphics_adapter.o: debug_graphics.hpp
 string_buffer.o: string_buffer.hpp
-svg_parser.o: svg_parser.hpp color.hpp geometry.hpp string_buffer.hpp
-svg_parser.o: svg_transform_parser.hpp
+svg_parser.o: svg_parser.hpp color.hpp geometry.hpp svg_path_parser.hpp
+svg_parser.o: svg_transform_parser.hpp string_buffer.hpp
+svg_path_parser.o: svg_path_parser.hpp geometry.hpp string_buffer.hpp
 svg_transform_parser.o: string_buffer.hpp svg_transform_parser.hpp
 svg_transform_parser.o: geometry.hpp
