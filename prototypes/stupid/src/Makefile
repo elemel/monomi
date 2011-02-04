@@ -10,7 +10,7 @@ SDL_LIB_DIR := ext/sdl/lib
 # Build variant.
 VARIANT := debug
 ifeq ($(VARIANT), debug)
-	CXXFLAGS += -g -DDEBUG -W -Wall -Werror
+	CXXFLAGS += -g -DDEBUG -W -Wall -Wextra -Werror
 else ifeq ($(VARIANT), release)
 	CXXFLAGS += -O3 -DNDEBUG
 else
