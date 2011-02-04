@@ -1,6 +1,8 @@
 #ifndef MONOMI_GAME_LOGIC_HPP
 #define MONOMI_GAME_LOGIC_HPP
 
+#include "geometry.hpp"
+
 #include <boost/noncopyable.hpp>
 #include <boost/shared_ptr.hpp>
 #include <Box2D/Dynamics/b2World.h>
@@ -14,7 +16,12 @@ namespace monomi {
         void update(float dt);
         void debugDraw(DebugGraphics *graphics);
 
+        void createCircleBody(Circle2 const &circle);
+        void createPolygonBody(Polygon2 const &polygon);
+
     private:
+        friend class LevelLoader;
+
         float time_;
         boost::shared_ptr<b2World> world_;
     };

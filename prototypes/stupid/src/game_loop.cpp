@@ -9,11 +9,11 @@
 #include <iostream>
 
 namespace monomi {
-    GameLoop::GameLoop() :
+    GameLoop::GameLoop(boost::shared_ptr<GameLogic> gameLogic) :
         quit_(false),
         time_(0.0f),
         dt_(1.0f / 60.0f),
-        gameLogic_(new GameLogic),
+        gameLogic_(gameLogic),
         debugGraphics_(new DebugGraphics)
     { }
 

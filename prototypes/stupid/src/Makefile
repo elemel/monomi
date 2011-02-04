@@ -31,11 +31,12 @@ objects := \
 	debug_graphics.o \
 	game_logic.o \
 	game_loop.o \
-	level_loader.o \
+	geometry.o \
 	main.o \
 	physics_debug_graphics_adapter.o \
-	string_buffer.o
-	
+	string_buffer.o \
+	svg_parser.o \
+	svg_transform_parser.o
 
 monomi: $(objects)
 	g++ -o monomi $(objects) $(LDFLAGS)
@@ -46,10 +47,15 @@ clean:
 # DO NOT DELETE
 
 debug_graphics.o: debug_graphics.hpp
-game_logic.o: game_logic.hpp physics_debug_graphics_adapter.hpp
-game_loop.o: game_loop.hpp debug_graphics.hpp game_logic.hpp
-level_loader.o: level_loader.hpp string_buffer.hpp
-main.o: game_loop.hpp level_loader.hpp string_buffer.hpp
+game_logic.o: game_logic.hpp geometry.hpp physics_debug_graphics_adapter.hpp
+game_loop.o: game_loop.hpp debug_graphics.hpp game_logic.hpp geometry.hpp
+geometry.o: geometry.hpp
+main.o: game_logic.hpp geometry.hpp game_loop.hpp string_buffer.hpp
+main.o: svg_parser.hpp color.hpp
 physics_debug_graphics_adapter.o: physics_debug_graphics_adapter.hpp
 physics_debug_graphics_adapter.o: debug_graphics.hpp
 string_buffer.o: string_buffer.hpp
+svg_parser.o: svg_parser.hpp color.hpp geometry.hpp string_buffer.hpp
+svg_parser.o: svg_transform_parser.hpp
+svg_transform_parser.o: string_buffer.hpp svg_transform_parser.hpp
+svg_transform_parser.o: geometry.hpp

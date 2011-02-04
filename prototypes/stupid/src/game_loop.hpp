@@ -9,7 +9,7 @@ namespace monomi {
 
     class GameLoop {
     public:
-        GameLoop();
+        GameLoop(boost::shared_ptr<GameLogic> gameLogic);
 
         void run();
 
