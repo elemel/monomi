@@ -13,6 +13,7 @@ namespace monomi {
     class GameLogic : private boost::noncopyable {
     public:
         GameLogic();
+
         void update(float dt);
         void debugDraw(DebugGraphics *graphics);
 
@@ -20,8 +21,6 @@ namespace monomi {
         void createPolygonBody(Polygon2 const &polygon);
 
     private:
-        friend class LevelLoader;
-
         float time_;
         boost::shared_ptr<b2World> world_;
     };
