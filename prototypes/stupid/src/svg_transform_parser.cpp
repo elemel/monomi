@@ -1,5 +1,6 @@
-#include "string_buffer.hpp"
 #include "svg_transform_parser.hpp"
+
+#include "string_buffer.hpp"
 
 namespace monomi {
     SvgTransformParser::SvgTransformParser() :

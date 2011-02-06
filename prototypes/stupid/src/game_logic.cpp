@@ -12,7 +12,10 @@ namespace monomi {
     GameLogic::GameLogic() :
         time_(0.0f),
         world_(new b2World(b2Vec2(0.0f, -10.0f), true))
-    { }
+    {
+        b2BodyDef bodyDef;
+        worldBody_ = world_->CreateBody(&bodyDef);
+    }
 
     void GameLogic::update(float dt)
     {
@@ -28,21 +31,7 @@ namespace monomi {
         world_->SetDebugDraw(0);
     }
 
-    void GameLogic::createCircleBody(Circle2 const &circle)
-    {
-        b2BodyDef bodyDef;
-        bodyDef.position.Set(circle.center.x, circle.center.y);
-        b2Body *body = world_->CreateBody(&bodyDef);
-
-        b2CircleShape circleShape;
-        circleShape.m_radius = circle.radius;
-
-        b2FixtureDef fixtureDef;
-        fixtureDef.shape = &circleShape;
-        body->CreateFixture(&fixtureDef);
-    }
-
-    void GameLogic::createPolygonBody(Polygon2 const &polygon)
+    void GameLogic::createPlatform(Polygon2 const &polygon)
     {
         int vertexCount = std::min(int(b2_maxPolygonVertices),
                                    int(polygon.vertices.size()));
@@ -51,14 +40,67 @@ namespace monomi {
             vertices[i].Set(polygon.vertices[i].x, polygon.vertices[i].y);
         }
 
-        b2BodyDef bodyDef;
-        b2Body *body = world_->CreateBody(&bodyDef);
+        b2PolygonShape polygonShape;
+        polygonShape.Set(vertices, vertexCount);
+
+        b2FixtureDef fixtureDef;
+        fixtureDef.shape = &polygonShape;
+        worldBody_->CreateFixture(&fixtureDef);
+    }
+
+    void GameLogic::createShadow(Polygon2 const &polygon)
+    {
+        int vertexCount = std::min(int(b2_maxPolygonVertices),
+                                   int(polygon.vertices.size()));
+        b2Vec2 vertices[b2_maxPolygonVertices];
+        for (int i = 0; i < vertexCount; ++i) {
+            vertices[i].Set(polygon.vertices[i].x, polygon.vertices[i].y);
+        }
 
         b2PolygonShape polygonShape;
         polygonShape.Set(vertices, vertexCount);
 
         b2FixtureDef fixtureDef;
         fixtureDef.shape = &polygonShape;
-        body->CreateFixture(&fixtureDef);
+        worldBody_->CreateFixture(&fixtureDef);
+    }
+
+    void GameLogic::createWater(Polygon2 const &polygon)
+    {
+        int vertexCount = std::min(int(b2_maxPolygonVertices),
+                                   int(polygon.vertices.size()));
+        b2Vec2 vertices[b2_maxPolygonVertices];
+        for (int i = 0; i < vertexCount; ++i) {
+            vertices[i].Set(polygon.vertices[i].x, polygon.vertices[i].y);
+        }
+
+        b2PolygonShape polygonShape;
+        polygonShape.Set(vertices, vertexCount);
+
+        b2FixtureDef fixtureDef;
+        fixtureDef.shape = &polygonShape;
+        worldBody_->CreateFixture(&fixtureDef);
+    }
+
+    void GameLogic::createStart(Circle2 const &circle)
+    {
+        b2CircleShape circleShape;
+        circleShape.m_p.Set(circle.center.x, circle.center.y);
+        circleShape.m_radius = circle.radius;
+
+        b2FixtureDef fixtureDef;
+        fixtureDef.shape = &circleShape;
+        worldBody_->CreateFixture(&fixtureDef);
+    }
+
+    void GameLogic::createGoal(Circle2 const &circle)
+    {
+        b2CircleShape circleShape;
+        circleShape.m_p.Set(circle.center.x, circle.center.y);
+        circleShape.m_radius = circle.radius;
+
+        b2FixtureDef fixtureDef;
+        fixtureDef.shape = &circleShape;
+        worldBody_->CreateFixture(&fixtureDef);
     }
 }

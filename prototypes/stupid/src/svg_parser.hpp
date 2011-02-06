@@ -4,6 +4,7 @@
 #include "color.hpp"
 #include "geometry.hpp"
 #include "svg_path_parser.hpp"
+#include "svg_style_parser.hpp"
 #include "svg_transform_parser.hpp"
 
 #include <string>
@@ -23,15 +24,22 @@ namespace monomi {
             Color3 color;
         };
 
-        void parse(std::string const &path, std::vector<Element> &elements);
+        typedef std::vector<Element> ElementVector;
+
+        ElementVector const &parse(std::string const &path);
 
     private:
         SvgPathParser pathParser_;
+        SvgStyleParser styleParser_;
         SvgTransformParser transformParser_;
+        ElementVector elements_;
 
         void parseNode(rapidxml::xml_node<> *node,
-                       Matrix3 const &parentMatrix,
-                       std::vector<Element> &elements);
+                       Matrix3 const &parentMatrix);
+
+        Color3 parseFill(rapidxml::xml_node<> *node);
+        Color3 parseColor(std::string const &str);
+        int parseHexDigit(char digit);
     };
 }
 

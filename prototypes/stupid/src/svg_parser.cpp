@@ -40,9 +40,9 @@ namespace monomi {
         }
     }
 
-    void SvgParser::parse(std::string const &path,
-                          std::vector<Element> &elements)
+    SvgParser::ElementVector const &SvgParser::parse(std::string const &path)
     {
+        elements_.clear();
         std::ifstream file(path.c_str());
         if (file.fail()) {
             throw std::runtime_error(StringBuffer() <<
@@ -64,12 +64,12 @@ namespace monomi {
         rapidxml::xml_document<> doc;
         doc.parse<0>(&text[0]);
 
-        parseNode(doc.first_node(), Matrix3(), elements);
+        parseNode(doc.first_node(), Matrix3());
+        return elements_;
     }
 
     void SvgParser::parseNode(rapidxml::xml_node<> *node,
-                              Matrix3 const &parentMatrix,
-                              std::vector<Element> &elements)
+                              Matrix3 const &parentMatrix)
     {
         switch (node->type()) {
         case rapidxml::node_element:
@@ -95,8 +95,9 @@ namespace monomi {
                             Element element;
                             element.matrix = matrix;
                             element.shape = circle;
+                            element.color = parseFill(node);
 
-                            elements.push_back(element);
+                            elements_.push_back(element);
                         }
                     } else {
                         if (char const *d = findAttribute(node, "d")) {
@@ -105,8 +106,9 @@ namespace monomi {
                             Element element;
                             element.matrix = matrix;
                             element.shape = polygon;
+                            element.color = parseFill(node);
 
-                            elements.push_back(element);
+                            elements_.push_back(element);
                         }
                     }
                 } else if (strcmp(node->name(), "rect") == 0) {
@@ -122,14 +124,15 @@ namespace monomi {
                     Element element;
                     element.matrix = matrix;
                     element.shape = box;
+                    element.color = parseFill(node);
 
-                    elements.push_back(element);
+                    elements_.push_back(element);
                 }
 
                 for (rapidxml::xml_node<> *child = node->first_node(); child;
                      child = child->next_sibling())
                 {
-                    parseNode(child, matrix, elements);
+                    parseNode(child, matrix);
                 }
             }
             break;
@@ -140,6 +143,47 @@ namespace monomi {
 
         default:
             break;
+        }
+    }
+
+    Color3 SvgParser::parseFill(rapidxml::xml_node<> *node)
+    {
+        if (char const *type = findAttribute(node, "style")) {
+            SvgStyleParser::DeclarationMap const &declarations = styleParser_.parse(type);
+            SvgStyleParser::DeclarationMap::const_iterator i = declarations.find("fill");
+            if (i != declarations.end()) {
+                return parseColor(i->second);
+            }
+        }
+        return Color3();
+    }
+
+    Color3 SvgParser::parseColor(std::string const &str)
+    {
+        if (str.size() == 7 && str[0] == '#') {
+            for (std::size_t i = 1; i < str.size(); ++i) {
+                if (parseHexDigit(str[i]) == -1) {
+                    return Color3();
+                }
+            }
+            int red = 16 * parseHexDigit(str[1]) + parseHexDigit(str[2]);
+            int green = 16 * parseHexDigit(str[3]) + parseHexDigit(str[4]);
+            int blue = 16 * parseHexDigit(str[5]) + parseHexDigit(str[6]);
+            return Color3(red, green, blue);
+        }
+        return Color3();
+    }
+
+    int SvgParser::parseHexDigit(char digit)
+    {
+        if ('0' <= digit && digit <= '9') {
+            return digit - '0';
+        } else if ('A' <= digit && digit <= 'F') {
+            return 10 + digit - 'A';
+        } else if ('a' <= digit && digit <= 'f') {
+            return 10 + digit - 'a';
+        } else {
+            return -1;
         }
     }
 }

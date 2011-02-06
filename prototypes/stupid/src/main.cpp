@@ -1,3 +1,4 @@
+#include "color.hpp"
 #include "game_logic.hpp"
 #include "game_loop.hpp"
 #include "string_buffer.hpp"
@@ -12,28 +13,69 @@
 using namespace monomi;
 
 namespace {
-    void createBodies(boost::shared_ptr<GameLogic> gameLogic,
-                      std::vector<SvgParser::Element> const &elements,
-                      Matrix3 const &matrix)
+    void createCircleGameObject(boost::shared_ptr<GameLogic> gameLogic,
+                          Circle2 const &circle,
+                          ColorName colorName)
+    {
+        switch (colorName) {
+        case limeColorName:
+            gameLogic->createStart(circle);
+            break;
+
+        case redColorName:
+            gameLogic->createGoal(circle);
+            break;
+
+        default:
+            break;
+        }
+    }
+
+    void createPolygonGameObject(boost::shared_ptr<GameLogic> gameLogic,
+                          Polygon2 const &polygon,
+                          ColorName colorName)
+    {
+        switch (colorName) {
+        case blueColorName:
+            gameLogic->createWater(polygon);
+            break;
+
+        case fuchsiaColorName:
+            gameLogic->createShadow(polygon);
+            break;
+
+        case yellowColorName:
+            gameLogic->createPlatform(polygon);
+            break;
+
+        default:
+            break;
+        }
+    }
+
+    void createGameObjects(boost::shared_ptr<GameLogic> gameLogic,
+                           std::vector<SvgParser::Element> const &elements,
+                           Matrix3 const &matrix)
     {
         typedef std::vector<SvgParser::Element>::const_iterator Iterator;
         for (Iterator i = elements.begin(); i != elements.end(); ++i) {
+            ColorName colorName = i->color.name();
             if (Box2 const *box = boost::get<Box2>(&i->shape)) {
                 Polygon2 polygon(*box);
                 Polygon2 transformedPolygon = transform(polygon, matrix * i->matrix);
                 if (transformedPolygon.clockwise()) {
                     transformedPolygon.reverse();
                 }
-                gameLogic->createPolygonBody(transformedPolygon);
+                createPolygonGameObject(gameLogic, transformedPolygon, colorName);
             } else if (Circle2 const *circle = boost::get<Circle2>(&i->shape)) {
                 Circle2 transformedCircle = transform(*circle, matrix * i->matrix);
-                gameLogic->createCircleBody(transformedCircle);
+                createCircleGameObject(gameLogic, transformedCircle, colorName);
             } else if (Polygon2 const *polygon = boost::get<Polygon2>(&i->shape)) {
                 Polygon2 transformedPolygon = transform(*polygon, matrix * i->matrix);
                 if (transformedPolygon.clockwise()) {
                     transformedPolygon.reverse();
                 }
-                gameLogic->createPolygonBody(transformedPolygon);
+                createPolygonGameObject(gameLogic, transformedPolygon, colorName);
             }
         }
     }
@@ -62,11 +104,10 @@ int main(int argc, char *argv[])
         boost::shared_ptr<GameLogic> gameLogic(new GameLogic);
 
         boost::shared_ptr<SvgParser> svgParser(new SvgParser);
-        std::vector<SvgParser::Element> elements;
-        svgParser->parse(argc == 2 ? argv[1] : "", elements);
+        SvgParser::ElementVector const &elements = svgParser->parse(argc == 2 ? argv[1] : "");
         Matrix3 matrix(0.01f, 0.0f, 0.0f,
                        0.0f, -0.01f, 0.0f);
-        createBodies(gameLogic, elements, matrix);
+        createGameObjects(gameLogic, elements, matrix);
 
         GameLoop gameLoop(gameLogic);
         gameLoop.run();

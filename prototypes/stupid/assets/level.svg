@@ -53,21 +53,21 @@
      id="layer1">
     <path
        sodipodi:type="arc"
-       style="fill:none;stroke:#000000;stroke-opacity:1"
+       style="fill:#ff0000;stroke:#000000;stroke-width:1.44955802;stroke-opacity:1"
        id="path2989"
        sodipodi:cx="204.28572"
        sodipodi:cy="322.36218"
        sodipodi:rx="81.428574"
        sodipodi:ry="81.428574"
        d="M 285.71429,322.36218 A 81.428574,81.428574 0 1 1 122.85715,322.36218 A 81.428574,81.428574 0 1 1 285.71429,322.36218 z"
-       transform="translate(90.794785,-29.408266)">
+       transform="matrix(0.68986546,0,0,0.68986546,106.67368,4.9074667)">
       <desc
          id="desc3012">foo bar
 alfa beta</desc>
     </path>
     <path
        sodipodi:type="arc"
-       style="fill:none;stroke:#000000;stroke-opacity:1"
+       style="fill:#00ff00;stroke:#000000;stroke-opacity:1"
        id="path2991"
        sodipodi:cx="388.57144"
        sodipodi:cy="575.2193"
@@ -76,19 +76,25 @@ alfa beta</desc>
        d="M 454.28573,575.2193 A 65.714287,65.714287 0 1 1 322.85715,575.2193 A 65.714287,65.714287 0 1 1 454.28573,575.2193 z"
        transform="translate(-228.29448,-121.2183)" />
     <rect
-       style="fill:none;stroke:#000000;stroke-opacity:1"
+       style="fill:#ff00ff;stroke:#000000;stroke-width:1;stroke-opacity:1"
        id="rect3014"
-       width="202.85715"
-       height="154.28572"
-       x="523.67822"
-       y="91.875351"
+       width="312.20551"
+       height="237.49309"
+       x="480.582"
+       y="78.323624"
        rx="0"
        ry="0"
-       transform="matrix(0.95030962,0.31130633,-0.31130633,0.95030962,0,0)" />
+       transform="matrix(0.95028988,0.31136657,-0.31124609,0.95032935,0,0)" />
     <path
-       style="fill:none;stroke:#000000;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
-       d="M 140,735.21933 L 228.57142,840.93361 L 397.14285,786.6479 L 205.71428,558.07647 L 131.42857,586.6479 z"
+       style="fill:#ffff00;stroke:#000000;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
+       d="M -102.10902,747.1611 L 133.08696,771.85614 L 294.68861,612.31068 L -213.7414,558.86302 L -279.75094,632.92959 z"
        id="path3081"
        inkscape:connector-curvature="0" />
+    <path
+       style="fill:#0000ff;stroke:#000000;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
+       d="M 407.97669,592.90021 L 790.89829,593.23203 L 718.20043,863.17811 L 566.0528,941.2404 L 437.15169,787.54714 z"
+       id="path3089"
+       inkscape:connector-curvature="0"
+       sodipodi:nodetypes="cccccc" />
   </g>
 </svg>
