@@ -6,27 +6,35 @@
 #include <SDL.h>
 #include <SDL_opengl.h>
 
+#include <cassert>
 #include <iostream>
 
 namespace monomi {
     GameLoop::GameLoop(boost::shared_ptr<GameLogic> gameLogic) :
         quit_(false),
-        time_(0.0f),
-        dt_(1.0f / 60.0f),
         gameLogic_(gameLogic),
         debugGraphics_(new DebugGraphics)
     { }
 
     void GameLoop::run()
     {
-        time_ = 0.001f * SDL_GetTicks();
+        float dt = 1.0f / 60.0f;
+        float t1 = 0.001f * SDL_GetTicks();
         while (!quit_) {
-            float time = 0.001f * SDL_GetTicks();
-            while (time_ + dt_ <= time) {
-                time_ += dt_;
+            float t2 = 0.001f * SDL_GetTicks();
+
+            if (t2 - t1 >= 10.0f * dt) {
+                int skip = int((t2 - t1) / dt);
+                t1 += float(skip) * dt;
+                std::cerr << "WARNING: Skipped " << skip << " frame(s)." << std::endl;
+            }
+            assert(t2 - t1 <= 10.0f * dt);
+
+            while (t2 - t1 >= dt) {
+                t1 += dt;
                 handleInput();
-                updateLogic();
-                updateView();
+                updateLogic(dt);
+                updateView(dt);
             }
         }
     }
@@ -52,13 +60,15 @@ namespace monomi {
         }
     }
 
-    void GameLoop::updateLogic()
+    void GameLoop::updateLogic(float dt)
     {
-        gameLogic_->update(dt_);
+        gameLogic_->update(dt);
     }
 
-    void GameLoop::updateView()
+    void GameLoop::updateView(float dt)
     {
+        (void) dt;
+
         // Set up camera.
         SDL_Surface *videoSurface = SDL_GetVideoSurface();
         float aspectRatio = (float(videoSurface->w) /

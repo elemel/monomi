@@ -9,6 +9,19 @@
 #include <Box2D/Dynamics/b2Fixture.h>
 
 namespace monomi {
+    namespace {
+        void copy(Polygon2 const &source, b2PolygonShape &target)
+        {
+            int vertexCount = std::min(int(b2_maxPolygonVertices),
+                                       int(source.vertices.size()));
+            b2Vec2 vertices[b2_maxPolygonVertices];
+            for (int i = 0; i < vertexCount; ++i) {
+                vertices[i].Set(source.vertices[i].x, source.vertices[i].y);
+            }
+            target.Set(vertices, vertexCount);
+        }
+    }
+
     GameLogic::GameLogic() :
         time_(0.0f),
         world_(new b2World(b2Vec2(0.0f, -10.0f), true))
@@ -17,13 +30,24 @@ namespace monomi {
         worldBody_ = world_->CreateBody(&bodyDef);
     }
 
+    GameLogic::CharacterPtr GameLogic::playerCharacter() const
+    {
+        return playerCharacter_;
+    }
+
+    GameLogic::CharacterVector const &GameLogic::characters() const
+    {
+        return characters_;
+    }
+
     void GameLogic::update(float dt)
     {
         time_ += dt;
         world_->Step(dt, 10, 10);
     }
 
-    void GameLogic::debugDraw(DebugGraphics *graphics) {
+    void GameLogic::debugDraw(DebugGraphics *graphics)
+    {
         PhysicsDebugGraphicsAdapter adapter(graphics);
         adapter.SetFlags(b2DebugDraw::e_shapeBit);
         world_->SetDebugDraw(&adapter);
@@ -33,15 +57,8 @@ namespace monomi {
 
     void GameLogic::createPlatform(Polygon2 const &polygon)
     {
-        int vertexCount = std::min(int(b2_maxPolygonVertices),
-                                   int(polygon.vertices.size()));
-        b2Vec2 vertices[b2_maxPolygonVertices];
-        for (int i = 0; i < vertexCount; ++i) {
-            vertices[i].Set(polygon.vertices[i].x, polygon.vertices[i].y);
-        }
-
         b2PolygonShape polygonShape;
-        polygonShape.Set(vertices, vertexCount);
+        copy(polygon, polygonShape);
 
         b2FixtureDef fixtureDef;
         fixtureDef.shape = &polygonShape;
@@ -50,15 +67,8 @@ namespace monomi {
 
     void GameLogic::createShadow(Polygon2 const &polygon)
     {
-        int vertexCount = std::min(int(b2_maxPolygonVertices),
-                                   int(polygon.vertices.size()));
-        b2Vec2 vertices[b2_maxPolygonVertices];
-        for (int i = 0; i < vertexCount; ++i) {
-            vertices[i].Set(polygon.vertices[i].x, polygon.vertices[i].y);
-        }
-
         b2PolygonShape polygonShape;
-        polygonShape.Set(vertices, vertexCount);
+        copy(polygon, polygonShape);
 
         b2FixtureDef fixtureDef;
         fixtureDef.shape = &polygonShape;
@@ -67,15 +77,8 @@ namespace monomi {
 
     void GameLogic::createWater(Polygon2 const &polygon)
     {
-        int vertexCount = std::min(int(b2_maxPolygonVertices),
-                                   int(polygon.vertices.size()));
-        b2Vec2 vertices[b2_maxPolygonVertices];
-        for (int i = 0; i < vertexCount; ++i) {
-            vertices[i].Set(polygon.vertices[i].x, polygon.vertices[i].y);
-        }
-
         b2PolygonShape polygonShape;
-        polygonShape.Set(vertices, vertexCount);
+        copy(polygon, polygonShape);
 
         b2FixtureDef fixtureDef;
         fixtureDef.shape = &polygonShape;
@@ -90,7 +93,8 @@ namespace monomi {
 
         b2FixtureDef fixtureDef;
         fixtureDef.shape = &circleShape;
-        worldBody_->CreateFixture(&fixtureDef);
+        b2Fixture *fixture = worldBody_->CreateFixture(&fixtureDef);
+        startFixtures_.push_back(fixture);
     }
 
     void GameLogic::createGoal(Circle2 const &circle)
@@ -101,6 +105,7 @@ namespace monomi {
 
         b2FixtureDef fixtureDef;
         fixtureDef.shape = &circleShape;
-        worldBody_->CreateFixture(&fixtureDef);
+        b2Fixture *fixture = worldBody_->CreateFixture(&fixtureDef);
+        goalFixtures_.push_back(fixture);
     }
 }

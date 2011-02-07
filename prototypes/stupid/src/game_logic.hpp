@@ -13,7 +13,14 @@ namespace monomi {
 
     class GameLogic : private boost::noncopyable {
     public:
+        typedef boost::shared_ptr<CharacterActor> CharacterPtr;
+        typedef std::vector<CharacterPtr> CharacterVector;
+        typedef std::vector<b2Fixture *> FixtureVector;
+
         GameLogic();
+
+        CharacterPtr playerCharacter() const;
+        CharacterVector const &characters() const;
 
         void update(float dt);
         void debugDraw(DebugGraphics *graphics);
@@ -25,14 +32,16 @@ namespace monomi {
         void createStart(Circle2 const &circle);
         void createGoal(Circle2 const &circle);
 
-        std::vector<boost::shared_ptr<CharacterActor> > const &characters() const;
-
     private:
         float time_;
         boost::shared_ptr<b2World> world_;
         b2Body *worldBody_;
 
-        std::vector<boost::shared_ptr<CharacterActor> > characters_;
+        CharacterVector characters_;
+        CharacterPtr playerCharacter_;
+
+        FixtureVector startFixtures_;
+        FixtureVector goalFixtures_;
     };
 }
 

@@ -25,8 +25,8 @@
      inkscape:pageopacity="0.0"
      inkscape:pageshadow="2"
      inkscape:zoom="0.49497475"
-     inkscape:cx="375"
-     inkscape:cy="520"
+     inkscape:cx="294.1878"
+     inkscape:cy="439.1878"
      inkscape:document-units="px"
      inkscape:current-layer="layer1"
      showgrid="false"
@@ -52,6 +52,12 @@
      inkscape:groupmode="layer"
      id="layer1">
     <path
+       style="fill:#0000ff;stroke:#000000;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
+       d="M 177.6619,548.45351 L 615.13174,546.76502 L 542.43388,816.7111 L 392.30656,878.61095 L 261.38514,741.08013 z"
+       id="path3089"
+       inkscape:connector-curvature="0"
+       sodipodi:nodetypes="cccccc" />
+    <path
        sodipodi:type="arc"
        style="fill:#ff0000;stroke:#000000;stroke-width:1.44955802;stroke-opacity:1"
        id="path2989"
@@ -60,7 +66,7 @@
        sodipodi:rx="81.428574"
        sodipodi:ry="81.428574"
        d="M 285.71429,322.36218 A 81.428574,81.428574 0 1 1 122.85715,322.36218 A 81.428574,81.428574 0 1 1 285.71429,322.36218 z"
-       transform="matrix(0.68986546,0,0,0.68986546,106.67368,4.9074667)">
+       transform="matrix(0.68986546,0,0,0.68986546,96.572155,-63.782906)">
       <desc
          id="desc3012">foo bar
 alfa beta</desc>
@@ -74,27 +80,40 @@ alfa beta</desc>
        sodipodi:rx="65.714287"
        sodipodi:ry="65.714287"
        d="M 454.28573,575.2193 A 65.714287,65.714287 0 1 1 322.85715,575.2193 A 65.714287,65.714287 0 1 1 454.28573,575.2193 z"
-       transform="translate(-228.29448,-121.2183)" />
+       transform="translate(-238.39601,-193.90867)" />
     <rect
        style="fill:#ff00ff;stroke:#000000;stroke-width:1;stroke-opacity:1"
        id="rect3014"
        width="312.20551"
        height="237.49309"
-       x="480.582"
-       y="78.323624"
+       x="403.16302"
+       y="-21.738865"
        rx="0"
        ry="0"
        transform="matrix(0.95028988,0.31136657,-0.31124609,0.95032935,0,0)" />
     <path
        style="fill:#ffff00;stroke:#000000;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
-       d="M -102.10902,747.1611 L 133.08696,771.85614 L 294.68861,612.31068 L -213.7414,558.86302 L -279.75094,632.92959 z"
+       d="M -73.824753,724.93775 L 322.99564,850.64804 L 189.63275,509.27512 L -223.84293,490.17265 L -289.85247,564.23922 z"
        id="path3081"
-       inkscape:connector-curvature="0" />
-    <path
-       style="fill:#0000ff;stroke:#000000;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
-       d="M 407.97669,592.90021 L 790.89829,593.23203 L 718.20043,863.17811 L 566.0528,941.2404 L 437.15169,787.54714 z"
-       id="path3089"
        inkscape:connector-curvature="0"
        sodipodi:nodetypes="cccccc" />
+    <path
+       sodipodi:nodetypes="cccccc"
+       inkscape:connector-curvature="0"
+       id="path3091"
+       d="M 705.59871,868.89786 L 884.52225,642.86664 L 865.11594,448.98527 L 604.32909,493.66335 L 523.20333,850.77907 z"
+       style="fill:#ffff00;stroke:#000000;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1" />
+    <path
+       sodipodi:nodetypes="ccccc"
+       inkscape:connector-curvature="0"
+       id="path3093"
+       d="M -11.195299,692.61287 L 236.12251,923.37903 L 488.63789,967.88438 L 259.00998,716.44682 z"
+       style="fill:#ffff00;stroke:#000000;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1" />
+    <path
+       style="fill:#ffff00;stroke:#000000;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
+       d="M 331.07685,862.76988 L 484.59728,988.08743 L 753.55508,872.52624 L 776.20809,708.3656 z"
+       id="path3095"
+       inkscape:connector-curvature="0"
+       sodipodi:nodetypes="ccccc" />
   </g>
 </svg>

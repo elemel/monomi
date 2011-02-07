@@ -15,14 +15,12 @@ namespace monomi {
 
     private:
         bool quit_;
-        float time_;
-        float dt_;
         boost::shared_ptr<GameLogic> gameLogic_;
         boost::shared_ptr<DebugGraphics> debugGraphics_;
 
         void handleInput();
-        void updateLogic();
-        void updateView();
+        void updateLogic(float dt);
+        void updateView(float dt);
     };
 }
 
