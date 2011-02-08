@@ -73,68 +73,7 @@ namespace monomi {
     {
         switch (node->type()) {
         case rapidxml::node_element:
-            {
-                Matrix3 matrix;
-                if (char const *transform = findAttribute(node, "transform")) {
-                    matrix = transformParser_.parse(transform);
-                }
-                matrix = parentMatrix * matrix;
-
-                if (strcmp(node->name(), "path") == 0) {
-                    if (char const *type = findAttribute(node, "type")) {
-                        if (strcmp(type, "arc") == 0) {
-                            float cx = parseAttribute(node, "cx", 0.0f);
-                            float cy = parseAttribute(node, "cy", 0.0f);
-                            float rx = parseAttribute(node, "rx", 1.0f);
-                            float ry = parseAttribute(node, "ry", 1.0f);
-
-                            Vector2 center(cx, cy);
-                            float radius = 0.5f * (rx + ry);
-                            Circle2 circle(center, radius);
-
-                            Element element;
-                            element.matrix = matrix;
-                            element.shape = circle;
-                            element.color = parseFill(node);
-
-                            elements_.push_back(element);
-                        }
-                    } else {
-                        if (char const *d = findAttribute(node, "d")) {
-                            Polygon2 polygon = pathParser_.parse(d);
-
-                            Element element;
-                            element.matrix = matrix;
-                            element.shape = polygon;
-                            element.color = parseFill(node);
-
-                            elements_.push_back(element);
-                        }
-                    }
-                } else if (strcmp(node->name(), "rect") == 0) {
-                    float x = parseAttribute(node, "x", 0.0f);
-                    float y = parseAttribute(node, "y", 0.0f);
-                    float width = parseAttribute(node, "width", 1.0f);
-                    float height = parseAttribute(node, "height", 1.0f);
-
-                    Vector2 p1(x, y);
-                    Vector2 p2(x + width, y + height);
-                    Box2 box(p1, p2);
-
-                    Element element;
-                    element.matrix = matrix;
-                    element.shape = box;
-                    element.color = parseFill(node);
-
-                    elements_.push_back(element);
-                }
-
-                for (rapidxml::xml_node<> *child = node->first_node(); child;
-                     child = child->next_sibling())
-                {
-                    parseNode(child, matrix);
-                }
-            }
+            parseElement(node, parentMatrix);
             break;
 
         case rapidxml::node_data:
@@ -144,6 +83,89 @@ namespace monomi {
         default:
             break;
         }
+    }
+
+    void SvgParser::parseElement(rapidxml::xml_node<> *node,
+                                 Matrix3 const &parentMatrix)
+    {
+        Matrix3 matrix;
+        if (char const *transform = findAttribute(node, "transform")) {
+            matrix = transformParser_.parse(transform);
+        }
+        matrix = parentMatrix * matrix;
+
+        if (strcmp(node->name(), "path") == 0) {
+            if (char const *type = findAttribute(node, "type")) {
+                if (strcmp(type, "arc") == 0) {
+                    parseArcElement(node, matrix);
+                }
+            } else {
+                parsePathElement(node, matrix);
+            }
+        } else if (strcmp(node->name(), "rect") == 0) {
+            parseRectElement(node, matrix);
+        }
+
+        for (rapidxml::xml_node<> *child = node->first_node(); child;
+             child = child->next_sibling())
+        {
+            parseNode(child, matrix);
+        }
+    }
+
+    void SvgParser::parseArcElement(rapidxml::xml_node<> *node,
+                                    Matrix3 const &matrix)
+    {
+        float cx = parseAttribute(node, "cx", 0.0f);
+        float cy = parseAttribute(node, "cy", 0.0f);
+        float rx = parseAttribute(node, "rx", 1.0f);
+        float ry = parseAttribute(node, "ry", 1.0f);
+    
+        Vector2 center(cx, cy);
+        float radius = 0.5f * (rx + ry);
+        Circle2 circle(center, radius);
+    
+        Element element;
+        element.matrix = matrix;
+        element.shape = circle;
+        element.color = parseFill(node);
+    
+        elements_.push_back(element);
+    }
+
+    void SvgParser::parsePathElement(rapidxml::xml_node<> *node,
+                                     Matrix3 const &matrix)
+    {
+        if (char const *d = findAttribute(node, "d")) {
+            Polygon2 polygon = pathParser_.parse(d);
+        
+            Element element;
+            element.matrix = matrix;
+            element.shape = polygon;
+            element.color = parseFill(node);
+        
+            elements_.push_back(element);
+        }
+    }
+
+    void SvgParser::parseRectElement(rapidxml::xml_node<> *node,
+                                     Matrix3 const &matrix)
+    {
+        float x = parseAttribute(node, "x", 0.0f);
+        float y = parseAttribute(node, "y", 0.0f);
+        float width = parseAttribute(node, "width", 1.0f);
+        float height = parseAttribute(node, "height", 1.0f);
+
+        Vector2 p1(x, y);
+        Vector2 p2(x + width, y + height);
+        Box2 box(p1, p2);
+
+        Element element;
+        element.matrix = matrix;
+        element.shape = box;
+        element.color = parseFill(node);
+
+        elements_.push_back(element);
     }
 
     Color3 SvgParser::parseFill(rapidxml::xml_node<> *node)

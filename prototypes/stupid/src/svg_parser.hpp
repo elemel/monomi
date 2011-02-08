@@ -36,6 +36,14 @@ namespace monomi {
 
         void parseNode(rapidxml::xml_node<> *node,
                        Matrix3 const &parentMatrix);
+        void parseElement(rapidxml::xml_node<> *node,
+                          Matrix3 const &parentMatrix);
+        void parseArcElement(rapidxml::xml_node<> *node,
+                             Matrix3 const &matrix);
+        void parsePathElement(rapidxml::xml_node<> *node,
+                              Matrix3 const &matrix);
+        void parseRectElement(rapidxml::xml_node<> *node,
+                              Matrix3 const &matrix);
 
         Color3 parseFill(rapidxml::xml_node<> *node);
         Color3 parseColor(std::string const &str);
