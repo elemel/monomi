@@ -1,5 +1,6 @@
 #include "game_logic.hpp"
 
+#include "character_actor.hpp"
 #include "physics_debug_graphics_adapter.hpp"
 
 #include <iostream>
@@ -30,6 +31,11 @@ namespace monomi {
         worldBody_ = world_->CreateBody(&bodyDef);
     }
 
+    float GameLogic::time() const
+    {
+        return  time_;
+    }
+
     GameLogic::CharacterPtr GameLogic::playerCharacter() const
     {
         return playerCharacter_;
@@ -43,6 +49,9 @@ namespace monomi {
     void GameLogic::update(float dt)
     {
         time_ += dt;
+
+        createPlayerCharacter();
+
         world_->Step(dt, 10, 10);
     }
 
@@ -71,6 +80,7 @@ namespace monomi {
         copy(polygon, polygonShape);
 
         b2FixtureDef fixtureDef;
+        fixtureDef.isSensor = true;
         fixtureDef.shape = &polygonShape;
         worldBody_->CreateFixture(&fixtureDef);
     }
@@ -81,6 +91,7 @@ namespace monomi {
         copy(polygon, polygonShape);
 
         b2FixtureDef fixtureDef;
+        fixtureDef.isSensor = true;
         fixtureDef.shape = &polygonShape;
         worldBody_->CreateFixture(&fixtureDef);
     }
@@ -92,9 +103,12 @@ namespace monomi {
         circleShape.m_radius = circle.radius;
 
         b2FixtureDef fixtureDef;
+        fixtureDef.isSensor = true;
         fixtureDef.shape = &circleShape;
         b2Fixture *fixture = worldBody_->CreateFixture(&fixtureDef);
         startFixtures_.push_back(fixture);
+
+        startPositions_.push_back(circle.center);
     }
 
     void GameLogic::createGoal(Circle2 const &circle)
@@ -104,8 +118,35 @@ namespace monomi {
         circleShape.m_radius = circle.radius;
 
         b2FixtureDef fixtureDef;
+        fixtureDef.isSensor = true;
         fixtureDef.shape = &circleShape;
         b2Fixture *fixture = worldBody_->CreateFixture(&fixtureDef);
         goalFixtures_.push_back(fixture);
+    }
+
+    void GameLogic::createPlayerCharacter()
+    {
+        if (!playerCharacter_) {
+            if (!startPositions_.empty()) {
+                Vector2 startPosition = startPositions_.front();
+                playerCharacter_.reset(new CharacterActor);
+                std::cerr << "DEBUG: Created player character." << std::endl;
+
+                b2BodyDef bodyDef;
+                bodyDef.type = b2_dynamicBody;
+                bodyDef.position.Set(startPosition.x, startPosition.y);
+                b2Body *body = world_->CreateBody(&bodyDef);
+
+                b2CircleShape circleShape;
+                circleShape.m_radius = 0.5f;
+
+                b2FixtureDef fixtureDef;
+                fixtureDef.density = 1.0f;
+                fixtureDef.shape = &circleShape;
+                b2Fixture *fixture = body->CreateFixture(&fixtureDef);
+
+                (void) fixture;
+            }
+        }
     }
 }

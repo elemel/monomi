@@ -1,7 +1,6 @@
 #ifndef MONOMI_GAME_LOGIC_HPP
 #define MONOMI_GAME_LOGIC_HPP
 
-#include "character_actor.hpp"
 #include "geometry.hpp"
 
 #include <boost/noncopyable.hpp>
@@ -9,6 +8,7 @@
 #include <Box2D/Dynamics/b2World.h>
 
 namespace monomi {
+    class CharacterActor;
     class DebugGraphics;
 
     class GameLogic : private boost::noncopyable {
@@ -18,6 +18,8 @@ namespace monomi {
         typedef std::vector<b2Fixture *> FixtureVector;
 
         GameLogic();
+
+        float time() const;
 
         CharacterPtr playerCharacter() const;
         CharacterVector const &characters() const;
@@ -40,8 +42,11 @@ namespace monomi {
         CharacterVector characters_;
         CharacterPtr playerCharacter_;
 
+        std::vector<Vector2> startPositions_;
         FixtureVector startFixtures_;
         FixtureVector goalFixtures_;
+
+        void createPlayerCharacter();
     };
 }
 
