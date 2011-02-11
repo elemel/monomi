@@ -126,27 +126,35 @@ namespace monomi {
 
     void GameLogic::createPlayerCharacter()
     {
-        if (!playerCharacter_) {
-            if (!startPositions_.empty()) {
-                Vector2 startPosition = startPositions_.front();
-                playerCharacter_.reset(new CharacterActor);
-                std::cerr << "DEBUG: Created player character." << std::endl;
-
-                b2BodyDef bodyDef;
-                bodyDef.type = b2_dynamicBody;
-                bodyDef.position.Set(startPosition.x, startPosition.y);
-                b2Body *body = world_->CreateBody(&bodyDef);
-
-                b2CircleShape circleShape;
-                circleShape.m_radius = 0.5f;
-
-                b2FixtureDef fixtureDef;
-                fixtureDef.density = 1.0f;
-                fixtureDef.shape = &circleShape;
-                b2Fixture *fixture = body->CreateFixture(&fixtureDef);
-
-                (void) fixture;
-            }
+        if (!playerCharacter_&& !startPositions_.empty()) {
+            Vector2 position = startPositions_.front();
+            playerCharacter_ = createCharacter(position);
+            std::cerr << "DEBUG: Created player character." << std::endl;
         }
+    }
+
+    boost::shared_ptr<CharacterActor> GameLogic::createCharacter(Vector2 const &position)
+    {
+        boost::shared_ptr<CharacterActor> character(new CharacterActor);
+
+        b2BodyDef bodyDef;
+        bodyDef.type = b2_dynamicBody;
+        bodyDef.position.Set(position.x, position.y);
+        bodyDef.userData = character.get();
+        b2Body *body = world_->CreateBody(&bodyDef);
+
+        character->body(body);
+
+        b2CircleShape circleShape;
+        circleShape.m_radius = 0.5f;
+
+        b2FixtureDef fixtureDef;
+        fixtureDef.density = 1.0f;
+        fixtureDef.shape = &circleShape;
+        b2Fixture *fixture = body->CreateFixture(&fixtureDef);
+
+        (void) fixture;
+
+        return character;
     }
 }

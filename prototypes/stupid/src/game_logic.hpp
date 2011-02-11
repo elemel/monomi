@@ -47,6 +47,7 @@ namespace monomi {
         FixtureVector goalFixtures_;
 
         void createPlayerCharacter();
+        boost::shared_ptr<CharacterActor> createCharacter(Vector2 const &position);
     };
 }
 
