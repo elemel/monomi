@@ -29,6 +29,8 @@ else
 endif
 
 objects := \
+	character_actor.o \
+	character_states.o \
 	color.o \
 	debug_graphics.o \
 	game_logic.o \
@@ -50,16 +52,18 @@ clean:
 
 # DO NOT DELETE
 
+character_actor.o: character_actor.hpp actor.hpp state.hpp
+character_states.o: character_states.hpp state.hpp
 color.o: color.hpp
 debug_graphics.o: debug_graphics.hpp
-game_logic.o: game_logic.hpp character_actor.hpp actor.hpp geometry.hpp
+game_logic.o: game_logic.hpp geometry.hpp character_actor.hpp actor.hpp
+game_logic.o: character_states.hpp state.hpp
 game_logic.o: physics_debug_graphics_adapter.hpp
-game_loop.o: game_loop.hpp debug_graphics.hpp game_logic.hpp
-game_loop.o: character_actor.hpp actor.hpp geometry.hpp
+game_loop.o: game_loop.hpp debug_graphics.hpp game_logic.hpp geometry.hpp
 geometry.o: geometry.hpp
-main.o: color.hpp game_logic.hpp character_actor.hpp actor.hpp geometry.hpp
-main.o: game_loop.hpp string_buffer.hpp svg_parser.hpp svg_path_parser.hpp
-main.o: svg_style_parser.hpp svg_transform_parser.hpp
+main.o: color.hpp game_logic.hpp geometry.hpp game_loop.hpp string_buffer.hpp
+main.o: svg_parser.hpp svg_path_parser.hpp svg_style_parser.hpp
+main.o: svg_transform_parser.hpp
 physics_debug_graphics_adapter.o: physics_debug_graphics_adapter.hpp
 physics_debug_graphics_adapter.o: debug_graphics.hpp
 string_buffer.o: string_buffer.hpp

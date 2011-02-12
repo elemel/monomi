@@ -5,10 +5,15 @@
 
 #include <bitset>
 #include <Box2D/Dynamics/b2Body.h>
+#include <boost/shared_ptr.hpp>
 
 namespace monomi {
+    class State;
+
     class CharacterActor : public Actor {
     public:
+        typedef boost::shared_ptr<State> StatePtr;
+
         enum Control {
             actionControl,
             downControl,
@@ -22,15 +27,21 @@ namespace monomi {
 
         CharacterActor();
 
+        StatePtr state() const;
+        void state(StatePtr state);
+
         b2Body *body() const;
         void body(b2Body *body);
 
         bool testControl(Control control) const;
         void setControl(Control control, bool value);
 
+        void update(float dt);
+
     private:
         typedef std::bitset<controlCount> ControlBits;
 
+        StatePtr state_;
         b2Body *body_;
         ControlBits controls_;
     };
@@ -38,6 +49,16 @@ namespace monomi {
     inline CharacterActor::CharacterActor() :
         body_(0)
     { }
+
+    inline CharacterActor::StatePtr CharacterActor::state() const
+    {
+        return state_;
+    }
+
+    inline void CharacterActor::state(StatePtr state)
+    {
+        state_ = state;
+    }
 
     inline b2Body *CharacterActor::body() const
     {

@@ -34,6 +34,9 @@ namespace monomi {
         void createStart(Circle2 const &circle);
         void createGoal(Circle2 const &circle);
 
+        CharacterPtr createCharacter(Vector2 const &position);
+        void destroyCharacter(CharacterPtr character);
+
     private:
         float time_;
         boost::shared_ptr<b2World> world_;
@@ -47,7 +50,7 @@ namespace monomi {
         FixtureVector goalFixtures_;
 
         void createPlayerCharacter();
-        boost::shared_ptr<CharacterActor> createCharacter(Vector2 const &position);
+        void updateCharacters(float dt);
     };
 }
 

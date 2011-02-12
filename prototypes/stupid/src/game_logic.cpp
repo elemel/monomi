@@ -1,7 +1,9 @@
 #include "game_logic.hpp"
 
 #include "character_actor.hpp"
+#include "character_states.hpp"
 #include "physics_debug_graphics_adapter.hpp"
+#include "state.hpp"
 
 #include <iostream>
 #include <Box2D/Collision/Shapes/b2CircleShape.h>
@@ -49,9 +51,8 @@ namespace monomi {
     void GameLogic::update(float dt)
     {
         time_ += dt;
-
         createPlayerCharacter();
-
+        updateCharacters(dt);
         world_->Step(dt, 10, 10);
     }
 
@@ -124,18 +125,12 @@ namespace monomi {
         goalFixtures_.push_back(fixture);
     }
 
-    void GameLogic::createPlayerCharacter()
-    {
-        if (!playerCharacter_&& !startPositions_.empty()) {
-            Vector2 position = startPositions_.front();
-            playerCharacter_ = createCharacter(position);
-            std::cerr << "DEBUG: Created player character." << std::endl;
-        }
-    }
-
-    boost::shared_ptr<CharacterActor> GameLogic::createCharacter(Vector2 const &position)
+    GameLogic::CharacterPtr GameLogic::createCharacter(Vector2 const &position)
     {
         boost::shared_ptr<CharacterActor> character(new CharacterActor);
+
+        boost::shared_ptr<State> state(new CharacterFallState(*character));
+        character->state(state);
 
         b2BodyDef bodyDef;
         bodyDef.type = b2_dynamicBody;
@@ -151,10 +146,37 @@ namespace monomi {
         b2FixtureDef fixtureDef;
         fixtureDef.density = 1.0f;
         fixtureDef.shape = &circleShape;
-        b2Fixture *fixture = body->CreateFixture(&fixtureDef);
+        body->CreateFixture(&fixtureDef);
 
-        (void) fixture;
-
+        characters_.push_back(character);
+        character->state()->enter();
         return character;
+    }
+
+    void GameLogic::destroyCharacter(CharacterPtr character)
+    {
+        CharacterVector::iterator i = std::find(characters_.begin(),
+                                                characters_.end(), character);
+        assert(i != characters_.end());
+        character->state()->leave();
+        characters_.erase(i);
+    }
+
+    void GameLogic::createPlayerCharacter()
+    {
+        if (!playerCharacter_&& !startPositions_.empty()) {
+            Vector2 position = startPositions_.front();
+            playerCharacter_ = createCharacter(position);
+            std::cerr << "DEBUG: Created player character." << std::endl;
+        }
+    }
+
+    void GameLogic::updateCharacters(float dt)
+    {
+        for (CharacterVector::iterator i = characters_.begin();
+             i != characters_.end(); ++i)
+        {
+            (*i)->update(dt);
+        }
     }
 }
