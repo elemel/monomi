@@ -8,7 +8,7 @@ namespace monomi {
 
     class CharacterFallState : public State {
     public:
-        explicit CharacterFallState(CharacterActor &character);
+        explicit CharacterFallState(CharacterActor *character);
 
         void enter();
         void leave();
@@ -20,8 +20,8 @@ namespace monomi {
         CharacterActor *character_;
     };
 
-    inline CharacterFallState::CharacterFallState(CharacterActor &character) :
-        character_(&character)
+    inline CharacterFallState::CharacterFallState(CharacterActor *character) :
+        character_(character)
     { }
     
     inline void CharacterFallState::enter()

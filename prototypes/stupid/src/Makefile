@@ -39,6 +39,7 @@ objects := \
 	main.o \
 	physics_debug_graphics_adapter.o \
 	string_buffer.o \
+	support.o \
 	svg_parser.o \
 	svg_path_parser.o \
 	svg_style_parser.o \
@@ -52,21 +53,25 @@ clean:
 
 # DO NOT DELETE
 
-character_actor.o: character_actor.hpp actor.hpp state.hpp
+character_actor.o: character_actor.hpp actor.hpp collision_category.hpp
+character_actor.o: geometry.hpp support.hpp character_states.hpp state.hpp
+character_actor.o: format_enum_bits.hpp game_logic.hpp
 character_states.o: character_states.hpp state.hpp
 color.o: color.hpp
 debug_graphics.o: debug_graphics.hpp
-game_logic.o: game_logic.hpp geometry.hpp character_actor.hpp actor.hpp
-game_logic.o: character_states.hpp state.hpp
-game_logic.o: physics_debug_graphics_adapter.hpp
-game_loop.o: game_loop.hpp debug_graphics.hpp game_logic.hpp geometry.hpp
+game_logic.o: game_logic.hpp collision_category.hpp geometry.hpp
+game_logic.o: character_actor.hpp actor.hpp support.hpp character_states.hpp
+game_logic.o: state.hpp physics_debug_graphics_adapter.hpp
+game_loop.o: game_loop.hpp debug_graphics.hpp game_logic.hpp
+game_loop.o: collision_category.hpp geometry.hpp
 geometry.o: geometry.hpp
-main.o: color.hpp game_logic.hpp geometry.hpp game_loop.hpp string_buffer.hpp
-main.o: svg_parser.hpp svg_path_parser.hpp svg_style_parser.hpp
-main.o: svg_transform_parser.hpp
+main.o: color.hpp game_logic.hpp collision_category.hpp geometry.hpp
+main.o: game_loop.hpp string_buffer.hpp svg_parser.hpp svg_path_parser.hpp
+main.o: svg_style_parser.hpp svg_transform_parser.hpp
 physics_debug_graphics_adapter.o: physics_debug_graphics_adapter.hpp
 physics_debug_graphics_adapter.o: debug_graphics.hpp
 string_buffer.o: string_buffer.hpp
+support.o: support.hpp
 svg_parser.o: svg_parser.hpp color.hpp geometry.hpp svg_path_parser.hpp
 svg_parser.o: svg_style_parser.hpp svg_transform_parser.hpp string_buffer.hpp
 svg_path_parser.o: svg_path_parser.hpp geometry.hpp string_buffer.hpp

@@ -72,6 +72,7 @@ namespace monomi {
 
         b2FixtureDef fixtureDef;
         fixtureDef.shape = &polygonShape;
+        fixtureDef.filter.categoryBits = (1 << platformCollisionCategory);
         worldBody_->CreateFixture(&fixtureDef);
     }
 
@@ -83,6 +84,7 @@ namespace monomi {
         b2FixtureDef fixtureDef;
         fixtureDef.isSensor = true;
         fixtureDef.shape = &polygonShape;
+        fixtureDef.filter.categoryBits = (1 << shadowCollisionCategory);
         worldBody_->CreateFixture(&fixtureDef);
     }
 
@@ -94,6 +96,7 @@ namespace monomi {
         b2FixtureDef fixtureDef;
         fixtureDef.isSensor = true;
         fixtureDef.shape = &polygonShape;
+        fixtureDef.filter.categoryBits = (1 << waterCollisionCategory);
         worldBody_->CreateFixture(&fixtureDef);
     }
 
@@ -125,31 +128,12 @@ namespace monomi {
         goalFixtures_.push_back(fixture);
     }
 
-    GameLogic::CharacterPtr GameLogic::createCharacter(Vector2 const &position)
+    GameLogic::CharacterPtr GameLogic::createCharacter(Vector2 const &position,
+                                                       CollisionCategory category)
     {
-        boost::shared_ptr<CharacterActor> character(new CharacterActor);
-
-        boost::shared_ptr<State> state(new CharacterFallState(*character));
-        character->state(state);
-
-        b2BodyDef bodyDef;
-        bodyDef.type = b2_dynamicBody;
-        bodyDef.position.Set(position.x, position.y);
-        bodyDef.userData = character.get();
-        b2Body *body = world_->CreateBody(&bodyDef);
-
-        character->body(body);
-
-        b2CircleShape circleShape;
-        circleShape.m_radius = 0.5f;
-
-        b2FixtureDef fixtureDef;
-        fixtureDef.density = 1.0f;
-        fixtureDef.shape = &circleShape;
-        body->CreateFixture(&fixtureDef);
-
+        boost::shared_ptr<CharacterActor> character(new CharacterActor(position, category));
+        character->create(this);
         characters_.push_back(character);
-        character->state()->enter();
         return character;
     }
 
@@ -166,9 +150,41 @@ namespace monomi {
     {
         if (!playerCharacter_&& !startPositions_.empty()) {
             Vector2 position = startPositions_.front();
-            playerCharacter_ = createCharacter(position);
+            playerCharacter_ = createCharacter(position, friendCollisionCategory);
             std::cerr << "DEBUG: Created player character." << std::endl;
         }
+    }
+
+    namespace {
+        struct CharacterRayCastCallback : b2RayCastCallback {
+            uint16 maskBits_;
+            b2Fixture *fixture_;
+            b2Vec2 point_;
+            b2Vec2 normal_;
+            float32 fraction_;
+
+            explicit CharacterRayCastCallback(uint16 maskBits) :
+                maskBits_(maskBits),
+                fixture_(0),
+                point_(0.0f, 0.0f),
+                normal_(0.0f, 0.0f),
+                fraction_(1.0f)
+            { }
+
+	        float32 ReportFixture(b2Fixture *fixture, b2Vec2 const &point,
+	                              b2Vec2 const &normal, float32 fraction)
+	        {
+	            if ((fixture->GetFilterData().categoryBits & maskBits_) != 0 &&
+	                fraction < fraction_)
+	            {
+	                fixture_ = fixture;
+	                point_ = point;
+	                normal_ = normal;
+	                fraction_ = fraction;
+	            }
+	            return fraction;
+	        }
+        };
     }
 
     void GameLogic::updateCharacters(float dt)
@@ -176,6 +192,16 @@ namespace monomi {
         for (CharacterVector::iterator i = characters_.begin();
              i != characters_.end(); ++i)
         {
+            CharacterRayCastCallback callback(1 << platformCollisionCategory);
+            b2Vec2 p1 = (*i)->body()->GetPosition();
+            b2Vec2 p2 = p1 + b2Vec2(0.0f, -1.0f);
+            // world_->RayCast(&callback, p1, p2);
+            if (callback.fraction_ < 0.75f) {
+                b2Vec2 p3 = p1 + (0.75f - callback.fraction_) * b2Vec2(0.0f, 1.0f);
+                std::cout << callback.fraction_ << " " << p1.y << " " << p3.y << std::endl;
+                (*i)->body()->SetTransform(p3, 0.0f);
+                (*i)->body()->SetLinearVelocity(b2Vec2(0.0f, 0.0f));
+            }
             (*i)->update(dt);
         }
     }

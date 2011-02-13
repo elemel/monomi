@@ -1,6 +1,7 @@
 #ifndef MONOMI_GAME_LOGIC_HPP
 #define MONOMI_GAME_LOGIC_HPP
 
+#include "collision_category.hpp"
 #include "geometry.hpp"
 
 #include <boost/noncopyable.hpp>
@@ -21,6 +22,9 @@ namespace monomi {
 
         float time() const;
 
+        b2World *world() const;
+        b2Body *worldBody() const;
+
         CharacterPtr playerCharacter() const;
         CharacterVector const &characters() const;
 
@@ -34,7 +38,8 @@ namespace monomi {
         void createStart(Circle2 const &circle);
         void createGoal(Circle2 const &circle);
 
-        CharacterPtr createCharacter(Vector2 const &position);
+        CharacterPtr createCharacter(Vector2 const &position,
+                                     CollisionCategory category);
         void destroyCharacter(CharacterPtr character);
 
     private:
@@ -52,6 +57,16 @@ namespace monomi {
         void createPlayerCharacter();
         void updateCharacters(float dt);
     };
+
+    inline b2World *GameLogic::world() const
+    {
+        return world_.get();
+    }
+
+    inline b2Body *GameLogic::worldBody() const
+    {
+        return worldBody_;
+    }
 }
 
 #endif // MONOMI_GAME_LOGIC_HPP
