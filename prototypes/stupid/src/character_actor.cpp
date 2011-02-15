@@ -81,7 +81,7 @@ namespace monomi {
     {
         (void) dt;
 
-        SupportBits newSupports;
+        SupportFlagSet newSupports;
         for (b2ContactEdge *edge = body_->GetContactList(); edge != 0;
              edge = edge->next)
         {
@@ -89,16 +89,16 @@ namespace monomi {
                 b2Fixture *f1 = edge->contact->GetFixtureA();
                 b2Fixture *f2 = edge->contact->GetFixtureB();
                 if (f1 == leftSensor_ || f2 == leftSensor_) {
-                    newSupports.set(LEFT_SUPPORT);
+                    newSupports.set(LEFT_SUPPORT_FLAG);
                 }
                 if (f1 == rightSensor_ || f2 == rightSensor_) {
-                    newSupports.set(RIGHT_SUPPORT);
+                    newSupports.set(RIGHT_SUPPORT_FLAG);
                 }
                 if (f1 == downSensor_ || f2 == downSensor_) {
-                    newSupports.set(DOWN_SUPPORT);
+                    newSupports.set(DOWN_SUPPORT_FLAG);
                 }
                 if (f1 == upSensor_ || f2 == upSensor_) {
-                    newSupports.set(UP_SUPPORT);
+                    newSupports.set(UP_SUPPORT_FLAG);
                 }
             }
         }
@@ -107,7 +107,7 @@ namespace monomi {
             supports_ = newSupports;
             std::ostringstream out;
             out << "DEBUG: Character changed supports to ";
-            formatFlags<Support>(out, supports_);
+            formatFlags<SupportFlag>(out, supports_);
             out << ".";
             std::cerr << out.str() << std::endl;
         }

@@ -1,19 +1,19 @@
-#include "support.hpp"
+#include "support_flag.hpp"
 
 namespace monomi {
-    std::ostream &operator<<(std::ostream &out, Support support)
+    std::ostream &operator<<(std::ostream &out, SupportFlag support)
     {
         switch (support) {
-        case LEFT_SUPPORT:
+        case LEFT_SUPPORT_FLAG:
             return out << "left";
 
-        case RIGHT_SUPPORT:
+        case RIGHT_SUPPORT_FLAG:
             return out << "right";
 
-        case DOWN_SUPPORT:
+        case DOWN_SUPPORT_FLAG:
             return out << "down";
 
-        case UP_SUPPORT:
+        case UP_SUPPORT_FLAG:
             return out << "up";
 
         default:

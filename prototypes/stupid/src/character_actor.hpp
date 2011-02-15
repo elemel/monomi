@@ -5,7 +5,7 @@
 #include "category_flag.hpp"
 #include "control_flag.hpp"
 #include "geometry.hpp"
-#include "support.hpp"
+#include "support_flag.hpp"
 
 #include <bitset>
 #include <Box2D/Dynamics/b2Body.h>
@@ -31,7 +31,7 @@ namespace monomi {
         bool testControl(ControlFlag control) const;
         void setControl(ControlFlag control, bool value);
 
-        bool testSupport(Support support) const;
+        bool testSupport(SupportFlag support) const;
 
         void create(GameLogic *logic, Vector2 const &position);
         void destroy();
@@ -40,7 +40,7 @@ namespace monomi {
 
     private:
         typedef std::bitset<CONTROL_FLAG_COUNT> ControlFlagSet;
-        typedef std::bitset<SUPPORT_COUNT> SupportBits;
+        typedef std::bitset<SUPPORT_FLAG_COUNT> SupportFlagSet;
 
         CategoryFlag category_;
         GameLogic *logic_;
@@ -48,7 +48,7 @@ namespace monomi {
         b2Body *body_;
         b2Fixture *leftSensor_, *rightSensor_, *downSensor_, *upSensor_;
         ControlFlagSet controls_;
-        SupportBits supports_;
+        SupportFlagSet supports_;
 
         b2Fixture *createSensor(Vector2 const &center, float radius);
 
@@ -100,7 +100,7 @@ namespace monomi {
         controls_.set(control, value);
     }
 
-    inline bool CharacterActor::testSupport(Support support) const
+    inline bool CharacterActor::testSupport(SupportFlag support) const
     {
         return supports_.test(support);
     }
