@@ -3,6 +3,7 @@
 
 #include "actor.hpp"
 #include "category_flag.hpp"
+#include "control_flag.hpp"
 #include "geometry.hpp"
 #include "support.hpp"
 
@@ -12,18 +13,6 @@
 
 namespace monomi {
     class State;
-
-    enum Control {
-        UP_CONTROL,
-        LEFT_CONTROL,
-        DOWN_CONTROL,
-        RIGHT_CONTROL,
-
-        JUMP_CONTROL,
-        ACTION_CONTROL,
-
-        CONTROL_COUNT
-    };
 
     class CharacterActor : public Actor {
     public:
@@ -39,8 +28,8 @@ namespace monomi {
         b2Body *body() const;
         void body(b2Body *body);
 
-        bool testControl(Control control) const;
-        void setControl(Control control, bool value);
+        bool testControl(ControlFlag control) const;
+        void setControl(ControlFlag control, bool value);
 
         bool testSupport(Support support) const;
 
@@ -50,7 +39,7 @@ namespace monomi {
         void update(float dt);
 
     private:
-        typedef std::bitset<CONTROL_COUNT> ControlBits;
+        typedef std::bitset<CONTROL_FLAG_COUNT> ControlFlagSet;
         typedef std::bitset<SUPPORT_COUNT> SupportBits;
 
         CategoryFlag category_;
@@ -58,7 +47,7 @@ namespace monomi {
         StatePtr state_;
         b2Body *body_;
         b2Fixture *leftSensor_, *rightSensor_, *downSensor_, *upSensor_;
-        ControlBits controls_;
+        ControlFlagSet controls_;
         SupportBits supports_;
 
         b2Fixture *createSensor(Vector2 const &center, float radius);
@@ -101,12 +90,12 @@ namespace monomi {
         body_ = body;
     }
 
-    inline bool CharacterActor::testControl(Control control) const
+    inline bool CharacterActor::testControl(ControlFlag control) const
     {
         return controls_.test(control);
     }
 
-    inline void CharacterActor::setControl(Control control, bool value)
+    inline void CharacterActor::setControl(ControlFlag control, bool value)
     {
         controls_.set(control, value);
     }

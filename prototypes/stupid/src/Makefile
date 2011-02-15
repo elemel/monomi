@@ -54,16 +54,19 @@ clean:
 # DO NOT DELETE
 
 character_actor.o: character_actor.hpp actor.hpp category_flag.hpp
-character_actor.o: geometry.hpp support.hpp character_states.hpp state.hpp
-character_actor.o: format_flags.hpp game_logic.hpp
+character_actor.o: control_flag.hpp geometry.hpp support.hpp
+character_actor.o: character_states.hpp state.hpp format_flags.hpp
+character_actor.o: game_logic.hpp
 character_states.o: character_states.hpp state.hpp
 color.o: color.hpp
 debug_graphics.o: debug_graphics.hpp
 game_logic.o: game_logic.hpp category_flag.hpp geometry.hpp
-game_logic.o: character_actor.hpp actor.hpp support.hpp character_states.hpp
-game_logic.o: state.hpp physics_debug_graphics_adapter.hpp
+game_logic.o: character_actor.hpp actor.hpp control_flag.hpp support.hpp
+game_logic.o: character_states.hpp state.hpp
+game_logic.o: physics_debug_graphics_adapter.hpp
 game_loop.o: game_loop.hpp character_actor.hpp actor.hpp category_flag.hpp
-game_loop.o: geometry.hpp support.hpp debug_graphics.hpp game_logic.hpp
+game_loop.o: control_flag.hpp geometry.hpp support.hpp debug_graphics.hpp
+game_loop.o: game_logic.hpp
 geometry.o: geometry.hpp
 main.o: color.hpp game_logic.hpp category_flag.hpp geometry.hpp game_loop.hpp
 main.o: string_buffer.hpp svg_parser.hpp svg_path_parser.hpp
