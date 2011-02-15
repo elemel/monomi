@@ -128,11 +128,11 @@ namespace monomi {
         goalFixtures_.push_back(fixture);
     }
 
-    GameLogic::CharacterPtr GameLogic::createCharacter(Vector2 const &position,
-                                                       CollisionCategory category)
+    GameLogic::CharacterPtr GameLogic::createCharacter(CollisionCategory category,
+                                                       Vector2 const &position)
     {
-        boost::shared_ptr<CharacterActor> character(new CharacterActor(position, category));
-        character->create(this);
+        boost::shared_ptr<CharacterActor> character(new CharacterActor(category));
+        character->create(this, position);
         characters_.push_back(character);
         return character;
     }
@@ -150,7 +150,7 @@ namespace monomi {
     {
         if (!playerCharacter_&& !startPositions_.empty()) {
             Vector2 position = startPositions_.front();
-            playerCharacter_ = createCharacter(position, friendCollisionCategory);
+            playerCharacter_ = createCharacter(friendCollisionCategory, position);
             std::cerr << "DEBUG: Created player character." << std::endl;
         }
     }

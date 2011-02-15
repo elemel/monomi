@@ -1,7 +1,9 @@
 #include "game_loop.hpp"
 
+#include "character_actor.hpp"
 #include "debug_graphics.hpp"
 #include "game_logic.hpp"
+#include "geometry.hpp"
 
 #include <SDL.h>
 #include <SDL_opengl.h>
@@ -75,12 +77,15 @@ namespace monomi {
                              float(videoSurface->h));
         glMatrixMode(GL_PROJECTION);
         glLoadIdentity();
-        float cameraPosition[2] = { 0.0f, 0.0f };
+        Vector2 cameraPosition;
+        if (GameLogic::CharacterPtr character = gameLogic_->playerCharacter()) {
+            cameraPosition = character->position();
+        }
         float cameraScale = 10.0f;
-        glOrtho(cameraPosition[0] - cameraScale * aspectRatio,
-                cameraPosition[0] + cameraScale * aspectRatio,
-                cameraPosition[1] - cameraScale,
-                cameraPosition[1] + cameraScale,
+        glOrtho(cameraPosition.x - cameraScale * aspectRatio,
+                cameraPosition.x + cameraScale * aspectRatio,
+                cameraPosition.y - cameraScale,
+                cameraPosition.y + cameraScale,
                 -1.0f, 1.0f);
         glMatrixMode(GL_MODELVIEW);
 

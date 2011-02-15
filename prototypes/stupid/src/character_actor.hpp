@@ -29,7 +29,9 @@ namespace monomi {
     public:
         typedef boost::shared_ptr<State> StatePtr;
 
-        CharacterActor(Vector2 const &position, CollisionCategory category);
+        CharacterActor(CollisionCategory category);
+
+        Vector2 position() const;
 
         StatePtr state() const;
         void state(StatePtr state);
@@ -42,7 +44,7 @@ namespace monomi {
 
         bool testSupport(Support support) const;
 
-        void create(GameLogic *logic);
+        void create(GameLogic *logic, Vector2 const &position);
         void destroy();
 
         void update(float dt);
@@ -51,7 +53,6 @@ namespace monomi {
         typedef std::bitset<CONTROL_COUNT> ControlBits;
         typedef std::bitset<SUPPORT_COUNT> SupportBits;
 
-        Vector2 position_;
         CollisionCategory category_;
         GameLogic *logic_;
         StatePtr state_;
@@ -66,13 +67,20 @@ namespace monomi {
         void updateState(float dt);
     };
 
-    inline CharacterActor::CharacterActor(Vector2 const &position, CollisionCategory category) :
-        position_(position),
+    inline CharacterActor::CharacterActor(CollisionCategory category) :
         category_(category),
         logic_(0),
         body_(0),
         leftSensor_(0), rightSensor_(0), downSensor_(0), upSensor_(0)
     { }
+
+    inline Vector2 CharacterActor::position() const
+    {
+        assert(body_);
+        b2Vec2 const &position = body_->GetPosition();
+        return Vector2(position.x, position.y);
+
+    }
 
     inline CharacterActor::StatePtr CharacterActor::state() const
     {

@@ -14,13 +14,13 @@
 #include <Box2D/Dynamics/Contacts/b2Contact.h>
 
 namespace monomi {
-    void CharacterActor::create(GameLogic *logic)
+    void CharacterActor::create(GameLogic *logic, Vector2 const &position)
     {
         logic_ = logic;
 
         b2BodyDef bodyDef;
         bodyDef.type = b2_dynamicBody;
-        bodyDef.position.Set(position_.x, position_.y);
+        bodyDef.position.Set(position.x, position.y);
         bodyDef.userData = this;
         bodyDef.fixedRotation = true;
         body_ = logic_->world()->CreateBody(&bodyDef);

@@ -38,8 +38,8 @@ namespace monomi {
         void createStart(Circle2 const &circle);
         void createGoal(Circle2 const &circle);
 
-        CharacterPtr createCharacter(Vector2 const &position,
-                                     CollisionCategory category);
+        CharacterPtr createCharacter(CollisionCategory category,
+                                     Vector2 const &position);
         void destroyCharacter(CharacterPtr character);
 
     private:
