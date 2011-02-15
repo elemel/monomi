@@ -3,6 +3,8 @@
 
 #include <boost/shared_ptr.hpp>
 
+union SDL_Event;
+
 namespace monomi {
     class DebugGraphics;
     class GameLogic;
@@ -18,7 +20,10 @@ namespace monomi {
         boost::shared_ptr<GameLogic> gameLogic_;
         boost::shared_ptr<DebugGraphics> debugGraphics_;
 
-        void handleInput();
+        void handleEvents();
+        void handleKeyDownEvent(SDL_Event const &event);
+        void handleKeyUpEvent(SDL_Event const &event);
+
         void updateLogic(float dt);
         void updateView(float dt);
     };

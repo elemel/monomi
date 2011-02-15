@@ -12,6 +12,39 @@
 #include <iostream>
 
 namespace monomi {
+    namespace {
+        ControlFlag mapKeyToControl(int key)
+        {
+            switch (key) {
+            case SDLK_w:
+            case SDLK_UP:
+                return UP_CONTROL_FLAG;
+
+            case SDLK_a:
+            case SDLK_LEFT:
+                return LEFT_CONTROL_FLAG;
+
+            case SDLK_s:
+            case SDLK_DOWN:
+                return DOWN_CONTROL_FLAG;
+
+            case SDLK_d:
+            case SDLK_RIGHT:
+                return RIGHT_CONTROL_FLAG;
+
+            case SDLK_SPACE:
+                return JUMP_CONTROL_FLAG;
+
+            case SDLK_LSHIFT:
+            case SDLK_RSHIFT:
+                return ACTION_CONTROL_FLAG;
+
+            default:
+                return CONTROL_FLAG_COUNT;
+            }
+        }
+    }
+
     GameLoop::GameLoop(boost::shared_ptr<GameLogic> gameLogic) :
         quit_(false),
         gameLogic_(gameLogic),
@@ -35,14 +68,14 @@ namespace monomi {
 
             while (t2 - t1 >= dt) {
                 t1 += dt;
-                handleInput();
+                handleEvents();
                 updateLogic(dt);
                 updateView(dt);
             }
         }
     }
 
-    void GameLoop::handleInput()
+    void GameLoop::handleEvents()
     {
         SDL_Event event;
         while (SDL_PollEvent(&event)) {
@@ -50,15 +83,42 @@ namespace monomi {
             case SDL_KEYDOWN:
                 if (event.key.keysym.sym == SDLK_ESCAPE) {
                     quit_ = true;
+                } else {
+                    handleKeyDownEvent(event);
                 }
                 break;
     
             case SDL_KEYUP:
+                handleKeyUpEvent(event);
                 break;
     
             case SDL_QUIT:
                 quit_ = true;
                 break;
+            }
+        }
+    }
+
+    void GameLoop::handleKeyDownEvent(SDL_Event const &event)
+    {
+        ControlFlag control = mapKeyToControl(event.key.keysym.sym);
+        if (control != CONTROL_FLAG_COUNT) {
+            if (GameLogic::CharacterPtr character =
+                gameLogic_->playerCharacter())
+            {
+                character->setControl(control, true);
+            }
+        }
+    }
+
+    void GameLoop::handleKeyUpEvent(SDL_Event const &event)
+    {
+        ControlFlag control = mapKeyToControl(event.key.keysym.sym);
+        if (control != CONTROL_FLAG_COUNT) {
+            if (GameLogic::CharacterPtr character =
+                gameLogic_->playerCharacter())
+            {
+                character->setControl(control, false);
             }
         }
     }
