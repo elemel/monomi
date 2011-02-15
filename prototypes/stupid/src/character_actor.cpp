@@ -1,7 +1,7 @@
 #include "character_actor.hpp"
 
 #include "character_states.hpp"
-#include "format_enum_bits.hpp"
+#include "format_flags.hpp"
 #include "game_logic.hpp"
 #include "state.hpp"
 
@@ -107,7 +107,7 @@ namespace monomi {
             supports_ = newSupports;
             std::ostringstream out;
             out << "DEBUG: Character changed supports to ";
-            formatEnumBits<Support>(out, supports_);
+            formatFlags<Support>(out, supports_);
             out << ".";
             std::cerr << out.str() << std::endl;
         }
