@@ -12,27 +12,27 @@ namespace monomi {
         declarations_.clear();
         Matrix3 result;
         Tokenizer tokenizer(str, separator_);
-        State state = beforePropertyState;
+        State state = BEFORE_PROPERTY_STATE;
         for (Tokenizer::iterator i = tokenizer.begin(); i != tokenizer.end();
              ++i)
         {
             token_ = *i;
             if (token_ == ":") {
-                state = beforeValueState;
+                state = BEFORE_VALUE_STATE;
             } else if (token_ == ";") {
                 declarations_[property_] = value_;
-                state = beforePropertyState;
+                state = BEFORE_PROPERTY_STATE;
             } else {
-                if (state == beforePropertyState) {
+                if (state == BEFORE_PROPERTY_STATE) {
                     property_ = token_;
-                    state = afterPropertyState;
-                } else if (state == beforeValueState) {
+                    state = AFTER_PROPERTY_STATE;
+                } else if (state == BEFORE_VALUE_STATE) {
                     value_ = token_;
-                    state = afterValueState;
+                    state = AFTER_VALUE_STATE;
                 }
             }
         }
-        if (state == afterValueState) {
+        if (state == AFTER_VALUE_STATE) {
             declarations_[property_] = value_;
         }
         return declarations_;

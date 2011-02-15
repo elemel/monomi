@@ -17,9 +17,12 @@ namespace monomi {
         typedef boost::tokenizer<Separator> Tokenizer;
 
         enum State {
-            beforeTypeState,
-            afterTypeState,
-            inArgsState
+            BEFORE_TYPE_STATE,
+            AFTER_TYPE_STATE,
+            BEFORE_ARG_STATE,
+            AFTER_ARG_STATE,
+
+            STATE_COUNT
         };
 
         Separator separator_;

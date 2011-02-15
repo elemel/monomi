@@ -11,24 +11,27 @@ namespace monomi {
     {
         Matrix3 result;
         Tokenizer tokenizer(str, separator_);
-        State state = beforeTypeState;
+        State state = BEFORE_TYPE_STATE;
         for (Tokenizer::iterator i = tokenizer.begin(); i != tokenizer.end();
              ++i)
         {
             token_ = *i;
             if (token_ == "(") {
                 args_.clear();
-                state = inArgsState;
+                state = BEFORE_ARG_STATE;
             } else if (token_ == ")") {
                 // debugPrintTransform();
                 result *= parseTransform();
-                state = beforeTypeState;
+                state = BEFORE_TYPE_STATE;
             } else {
-                if (state == beforeTypeState) {
+                if (state == BEFORE_TYPE_STATE) {
                     type_ = token_;
-                    state = afterTypeState;
-                } else if (state == inArgsState) {
+                    state = AFTER_TYPE_STATE;
+                } else if (state == BEFORE_ARG_STATE ||
+                           state == AFTER_ARG_STATE)
+                {
                     args_.push_back(atof(token_.c_str()));
+                    state = AFTER_ARG_STATE;
                 }
             }
         }
