@@ -25,6 +25,7 @@ namespace monomi {
         while (!quit_) {
             float t2 = 0.001f * SDL_GetTicks();
 
+            // Skip frames to avoid becoming unresponsive.
             if (t2 - t1 >= 10.0f * dt) {
                 int skip = int((t2 - t1) / dt);
                 t1 += float(skip) * dt;
