@@ -72,7 +72,7 @@ namespace monomi {
 
         b2FixtureDef fixtureDef;
         fixtureDef.shape = &polygonShape;
-        fixtureDef.filter.categoryBits = (1 << platformCategoryFlag);
+        fixtureDef.filter.categoryBits = (1 << PLATFORM_CATEGORY_FLAG);
         worldBody_->CreateFixture(&fixtureDef);
     }
 
@@ -84,7 +84,7 @@ namespace monomi {
         b2FixtureDef fixtureDef;
         fixtureDef.isSensor = true;
         fixtureDef.shape = &polygonShape;
-        fixtureDef.filter.categoryBits = (1 << shadowCategoryFlag);
+        fixtureDef.filter.categoryBits = (1 << SHADOW_CATEGORY_FLAG);
         worldBody_->CreateFixture(&fixtureDef);
     }
 
@@ -96,7 +96,7 @@ namespace monomi {
         b2FixtureDef fixtureDef;
         fixtureDef.isSensor = true;
         fixtureDef.shape = &polygonShape;
-        fixtureDef.filter.categoryBits = (1 << waterCategoryFlag);
+        fixtureDef.filter.categoryBits = (1 << WATER_CATEGORY_FLAG);
         worldBody_->CreateFixture(&fixtureDef);
     }
 
@@ -150,7 +150,7 @@ namespace monomi {
     {
         if (!playerCharacter_&& !startPositions_.empty()) {
             Vector2 position = startPositions_.front();
-            playerCharacter_ = createCharacter(friendCategoryFlag, position);
+            playerCharacter_ = createCharacter(FRIEND_CATEGORY_FLAG, position);
             std::cerr << "DEBUG: Created player character." << std::endl;
         }
     }
@@ -192,7 +192,7 @@ namespace monomi {
         for (CharacterVector::iterator i = characters_.begin();
              i != characters_.end(); ++i)
         {
-            CharacterRayCastCallback callback(1 << platformCategoryFlag);
+            CharacterRayCastCallback callback(1 << PLATFORM_CATEGORY_FLAG);
             b2Vec2 p1 = (*i)->body()->GetPosition();
             b2Vec2 p2 = p1 + b2Vec2(0.0f, -1.0f);
             // world_->RayCast(&callback, p1, p2);
