@@ -43,7 +43,8 @@ objects := \
 	svg_parser.o \
 	svg_path_parser.o \
 	svg_style_parser.o \
-	svg_transform_parser.o
+	svg_transform_parser.o \
+	type.o
 
 monomi: $(objects)
 	g++ -o monomi $(objects) $(LDFLAGS)
@@ -56,7 +57,7 @@ clean:
 character_actor.o: character_actor.hpp actor.hpp category_flag.hpp
 character_actor.o: control_flag.hpp geometry.hpp support_flag.hpp
 character_actor.o: character_states.hpp state.hpp format_flags.hpp
-character_actor.o: game_logic.hpp
+character_actor.o: game_logic.hpp type.hpp
 character_states.o: character_states.hpp state.hpp
 color.o: color.hpp
 debug_graphics.o: debug_graphics.hpp
@@ -81,3 +82,4 @@ svg_path_parser.o: svg_path_parser.hpp geometry.hpp string_buffer.hpp
 svg_style_parser.o: svg_style_parser.hpp geometry.hpp string_buffer.hpp
 svg_transform_parser.o: svg_transform_parser.hpp geometry.hpp
 svg_transform_parser.o: string_buffer.hpp
+type.o: type.hpp
