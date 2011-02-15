@@ -72,7 +72,7 @@ namespace monomi {
 
         b2FixtureDef fixtureDef;
         fixtureDef.shape = &polygonShape;
-        fixtureDef.filter.categoryBits = (1 << platformCollisionCategory);
+        fixtureDef.filter.categoryBits = (1 << platformCategoryFlag);
         worldBody_->CreateFixture(&fixtureDef);
     }
 
@@ -84,7 +84,7 @@ namespace monomi {
         b2FixtureDef fixtureDef;
         fixtureDef.isSensor = true;
         fixtureDef.shape = &polygonShape;
-        fixtureDef.filter.categoryBits = (1 << shadowCollisionCategory);
+        fixtureDef.filter.categoryBits = (1 << shadowCategoryFlag);
         worldBody_->CreateFixture(&fixtureDef);
     }
 
@@ -96,7 +96,7 @@ namespace monomi {
         b2FixtureDef fixtureDef;
         fixtureDef.isSensor = true;
         fixtureDef.shape = &polygonShape;
-        fixtureDef.filter.categoryBits = (1 << waterCollisionCategory);
+        fixtureDef.filter.categoryBits = (1 << waterCategoryFlag);
         worldBody_->CreateFixture(&fixtureDef);
     }
 
@@ -128,7 +128,7 @@ namespace monomi {
         goalFixtures_.push_back(fixture);
     }
 
-    GameLogic::CharacterPtr GameLogic::createCharacter(CollisionCategory category,
+    GameLogic::CharacterPtr GameLogic::createCharacter(CategoryFlag category,
                                                        Vector2 const &position)
     {
         boost::shared_ptr<CharacterActor> character(new CharacterActor(category));
@@ -150,7 +150,7 @@ namespace monomi {
     {
         if (!playerCharacter_&& !startPositions_.empty()) {
             Vector2 position = startPositions_.front();
-            playerCharacter_ = createCharacter(friendCollisionCategory, position);
+            playerCharacter_ = createCharacter(friendCategoryFlag, position);
             std::cerr << "DEBUG: Created player character." << std::endl;
         }
     }
@@ -192,7 +192,7 @@ namespace monomi {
         for (CharacterVector::iterator i = characters_.begin();
              i != characters_.end(); ++i)
         {
-            CharacterRayCastCallback callback(1 << platformCollisionCategory);
+            CharacterRayCastCallback callback(1 << platformCategoryFlag);
             b2Vec2 p1 = (*i)->body()->GetPosition();
             b2Vec2 p2 = p1 + b2Vec2(0.0f, -1.0f);
             // world_->RayCast(&callback, p1, p2);

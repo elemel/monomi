@@ -71,7 +71,7 @@ namespace monomi {
         b2FixtureDef fixtureDef;
         fixtureDef.shape = &circleShape;
         fixtureDef.filter.categoryBits = (1 << category_);
-        fixtureDef.filter.maskBits = (1 << platformCollisionCategory);
+        fixtureDef.filter.maskBits = (1 << platformCategoryFlag);
         fixtureDef.isSensor = true;
 
         return body_->CreateFixture(&fixtureDef);

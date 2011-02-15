@@ -2,7 +2,7 @@
 #define MONOMI_CHARACTER_ACTOR_HPP
 
 #include "actor.hpp"
-#include "collision_category.hpp"
+#include "category_flag.hpp"
 #include "geometry.hpp"
 #include "support.hpp"
 
@@ -29,7 +29,7 @@ namespace monomi {
     public:
         typedef boost::shared_ptr<State> StatePtr;
 
-        CharacterActor(CollisionCategory category);
+        CharacterActor(CategoryFlag category);
 
         Vector2 position() const;
 
@@ -53,7 +53,7 @@ namespace monomi {
         typedef std::bitset<CONTROL_COUNT> ControlBits;
         typedef std::bitset<SUPPORT_COUNT> SupportBits;
 
-        CollisionCategory category_;
+        CategoryFlag category_;
         GameLogic *logic_;
         StatePtr state_;
         b2Body *body_;
@@ -67,7 +67,7 @@ namespace monomi {
         void updateState(float dt);
     };
 
-    inline CharacterActor::CharacterActor(CollisionCategory category) :
+    inline CharacterActor::CharacterActor(CategoryFlag category) :
         category_(category),
         logic_(0),
         body_(0),
@@ -79,7 +79,6 @@ namespace monomi {
         assert(body_);
         b2Vec2 const &position = body_->GetPosition();
         return Vector2(position.x, position.y);
-
     }
 
     inline CharacterActor::StatePtr CharacterActor::state() const

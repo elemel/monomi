@@ -1,7 +1,7 @@
 #ifndef MONOMI_GAME_LOGIC_HPP
 #define MONOMI_GAME_LOGIC_HPP
 
-#include "collision_category.hpp"
+#include "category_flag.hpp"
 #include "geometry.hpp"
 
 #include <boost/noncopyable.hpp>
@@ -38,7 +38,7 @@ namespace monomi {
         void createStart(Circle2 const &circle);
         void createGoal(Circle2 const &circle);
 
-        CharacterPtr createCharacter(CollisionCategory category,
+        CharacterPtr createCharacter(CategoryFlag category,
                                      Vector2 const &position);
         void destroyCharacter(CharacterPtr character);
 
