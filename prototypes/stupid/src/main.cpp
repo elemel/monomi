@@ -18,11 +18,11 @@ namespace {
                           ColorName colorName)
     {
         switch (colorName) {
-        case limeColorName:
+        case LIME_COLOR_NAME:
             gameLogic->createStart(circle);
             break;
 
-        case redColorName:
+        case RED_COLOR_NAME:
             gameLogic->createGoal(circle);
             break;
 
@@ -36,15 +36,15 @@ namespace {
                           ColorName colorName)
     {
         switch (colorName) {
-        case blueColorName:
+        case BLUE_COLOR_NAME:
             gameLogic->createWater(polygon);
             break;
 
-        case fuchsiaColorName:
+        case FUCHSIA_COLOR_NAME:
             gameLogic->createShadow(polygon);
             break;
 
-        case yellowColorName:
+        case YELLOW_COLOR_NAME:
             gameLogic->createPlatform(polygon);
             break;
 

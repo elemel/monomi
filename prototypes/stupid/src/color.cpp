@@ -37,52 +37,52 @@ namespace monomi {
     std::ostream &operator<<(std::ostream &out, ColorName colorName)
     {
         switch (colorName) {
-        case aquaColorName:
+        case AQUA_COLOR_NAME:
             return out << "aqua";
 
-        case blackColorName:
+        case BLACK_COLOR_NAME:
             return out << "black";
 
-        case blueColorName:
+        case BLUE_COLOR_NAME:
             return out << "blue";
 
-        case fuchsiaColorName:
+        case FUCHSIA_COLOR_NAME:
             return out << "fuchsia";
 
-        case grayColorName:
+        case GRAY_COLOR_NAME:
             return out << "gray";
 
-        case greenColorName:
+        case GREEN_COLOR_NAME:
             return out << "green";
 
-        case limeColorName:
+        case LIME_COLOR_NAME:
             return out << "lime";
 
-        case maroonColorName:
+        case MAROON_COLOR_NAME:
             return out << "maroon";
 
-        case navyColorName:
+        case NAVY_COLOR_NAME:
             return out << "navy";
 
-        case oliveColorName:
+        case OLIVE_COLOR_NAME:
             return out << "olive";
 
-        case purpleColorName:
+        case PURPLE_COLOR_NAME:
             return out << "purple";
 
-        case redColorName:
+        case RED_COLOR_NAME:
             return out << "red";
 
-        case silverColorName:
+        case SILVER_COLOR_NAME:
             return out << "silver";
 
-        case tealColorName:
+        case TEAL_COLOR_NAME:
             return out << "teal";
 
-        case whiteColorName:
+        case WHITE_COLOR_NAME:
             return out << "white";
 
-        case yellowColorName:
+        case YELLOW_COLOR_NAME:
             return out << "yellow";
 
         default:
@@ -100,7 +100,7 @@ namespace monomi {
     {
         int result = 0;
         int minDistance = squaredDistance(*this, Color3(ColorName(result)));
-        for (int i = 1; i < colorNameCount; ++i) {
+        for (int i = 1; i < COLOR_NAME_COUNT; ++i) {
             int distance = squaredDistance(*this, Color3(ColorName(i)));
             if (distance < minDistance) {
                 result = i;
