@@ -1,7 +1,9 @@
 #ifndef MONOMI_STATE_HPP
 #define MONOMI_STATE_HPP
 
-#include <boost/shared_ptr.hpp>
+#include "state_fwd.hpp"
+
+#include <iostream>
 
 namespace monomi {
     class State {
@@ -12,9 +14,17 @@ namespace monomi {
         virtual void enter() = 0;
         virtual void leave() = 0;
 
-        virtual boost::shared_ptr<State> transition() = 0;
+        virtual StatePtr transition() = 0;
         virtual void update(float dt) = 0;
+
+        virtual void print(std::ostream &out) const = 0;
     };
+
+    inline std::ostream &operator<<(std::ostream &out, State const &state)
+    {
+        state.print(out);
+        return out;
+    }
 }
 
 #endif // MONOMI_STATE_HPP

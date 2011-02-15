@@ -27,7 +27,7 @@ namespace monomi {
 
     GameLogic::GameLogic() :
         time_(0.0f),
-        world_(new b2World(b2Vec2(0.0f, -10.0f), true))
+        world_(new b2World(b2Vec2(0.0f, -15.0f), true))
     {
         b2BodyDef bodyDef;
         worldBody_ = world_->CreateBody(&bodyDef);

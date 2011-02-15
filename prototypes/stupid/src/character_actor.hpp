@@ -22,6 +22,8 @@ namespace monomi {
 
         Vector2 position() const;
 
+        void verticalVelocity(float verticalVelocity);
+
         StatePtr state() const;
         void state(StatePtr state);
 
@@ -68,6 +70,14 @@ namespace monomi {
         assert(body_);
         b2Vec2 const &position = body_->GetPosition();
         return Vector2(position.x, position.y);
+    }
+
+    inline void CharacterActor::verticalVelocity(float verticalVelocity)
+    {
+        assert(body_);
+        b2Vec2 linearVelocity = body_->GetLinearVelocity();
+        linearVelocity.y = verticalVelocity;
+        body_->SetLinearVelocity(linearVelocity);
     }
 
     inline CharacterActor::StatePtr CharacterActor::state() const

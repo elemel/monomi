@@ -1,8 +1,8 @@
 #include "character_actor.hpp"
 
 #include "character_states.hpp"
-#include "format_flags.hpp"
 #include "game_logic.hpp"
+#include "print_flags.hpp"
 #include "state.hpp"
 #include "type.hpp"
 
@@ -108,7 +108,7 @@ namespace monomi {
             supports_ = newSupports;
             std::ostringstream out;
             out << "DEBUG: Character changed supports to ";
-            formatFlags<SupportFlag>(out, supports_);
+            printFlags<SupportFlag>(out, supports_);
             out << ".";
             std::cerr << out.str() << std::endl;
         }
@@ -119,7 +119,7 @@ namespace monomi {
         if (CharacterActor::StatePtr state = state_->transition()) {
             state_->leave();
             state_ = state;
-            std::cerr << "DEBUG: Character changed state to " << Type(typeid(*state_)) << "." << std::endl;
+            std::cerr << "DEBUG: Character changed state to " << *state_ << "." << std::endl;
             state_->enter();
         }
         state_->update(dt);

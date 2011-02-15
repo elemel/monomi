@@ -13,8 +13,10 @@ namespace monomi {
         void enter();
         void leave();
 
-        boost::shared_ptr<State> transition();
+        StatePtr transition();
         void update(float dt);
+
+        void print(std::ostream &out) const;
 
     private:
         CharacterActor *character_;
@@ -24,10 +26,44 @@ namespace monomi {
         character_(character)
     { }
     
-    inline void CharacterFallState::enter()
+    class CharacterJumpState : public State {
+    public:
+        explicit CharacterJumpState(CharacterActor *character);
+
+        void enter();
+        void leave();
+
+        StatePtr transition();
+        void update(float dt);
+
+        void print(std::ostream &out) const;
+
+    private:
+        CharacterActor *character_;
+    };
+
+    inline CharacterJumpState::CharacterJumpState(CharacterActor *character) :
+        character_(character)
     { }
-    
-    inline void CharacterFallState::leave()
+
+    class CharacterStandState : public State {
+    public:
+        explicit CharacterStandState(CharacterActor *character);
+
+        void enter();
+        void leave();
+
+        StatePtr transition();
+        void update(float dt);
+
+        void print(std::ostream &out) const;
+
+    private:
+        CharacterActor *character_;
+    };
+
+    inline CharacterStandState::CharacterStandState(CharacterActor *character) :
+        character_(character)
     { }
 }
 
