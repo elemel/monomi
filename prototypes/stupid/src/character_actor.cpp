@@ -1,5 +1,6 @@
 #include "character_actor.hpp"
 
+#include "capitalize.hpp"
 #include "character_states.hpp"
 #include "game_logic.hpp"
 #include "print_flags.hpp"
@@ -63,7 +64,13 @@ namespace monomi {
         updateState(dt);
     }
 
-    b2Fixture *CharacterActor::createSensor(Vector2 const &center, float radius)
+    void CharacterActor::print(std::ostream &out) const
+    {
+        out << name_;
+    }
+
+    b2Fixture *CharacterActor::createSensor(Vector2 const &center,
+                                            float radius)
     {
         b2CircleShape circleShape;
         circleShape.m_p.Set(center.x, center.y);
@@ -107,7 +114,7 @@ namespace monomi {
         if (newSupports != supports_) {
             supports_ = newSupports;
             std::ostringstream out;
-            out << "DEBUG: Character changed supports to ";
+            out << "DEBUG: " << capitalize(*this) << " changed supports to ";
             printFlags<SupportFlag>(out, supports_);
             out << ".";
             std::cerr << out.str() << std::endl;
@@ -119,7 +126,8 @@ namespace monomi {
         if (CharacterActor::StatePtr state = state_->transition()) {
             state_->leave();
             state_ = state;
-            std::cerr << "DEBUG: Character changed state to " << *state_ << "." << std::endl;
+            std::cerr << "DEBUG: " << capitalize(*this) << " changed state to "
+                      << *state_ << "." << std::endl;
             state_->enter();
         }
         state_->update(dt);

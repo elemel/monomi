@@ -8,6 +8,7 @@ namespace monomi {
         DOWN_CONTROL_FLAG,
         RIGHT_CONTROL_FLAG,
 
+        RUN_CONTROL_FLAG,
         JUMP_CONTROL_FLAG,
         ACTION_CONTROL_FLAG,
 

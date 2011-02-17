@@ -8,6 +8,7 @@
 #include "support_flag.hpp"
 
 #include <bitset>
+#include <string>
 #include <Box2D/Dynamics/b2Body.h>
 #include <boost/shared_ptr.hpp>
 
@@ -18,9 +19,11 @@ namespace monomi {
     public:
         typedef boost::shared_ptr<State> StatePtr;
 
-        CharacterActor(CategoryFlag category);
+        CharacterActor(CategoryFlag category, std::string const &name);
 
         Vector2 position() const;
+
+        void horizontalVelocity(float horizontalVelocity);
 
         void verticalVelocity(float verticalVelocity);
 
@@ -39,12 +42,14 @@ namespace monomi {
         void destroy();
 
         void update(float dt);
+        void print(std::ostream &out) const;
 
     private:
         typedef std::bitset<CONTROL_FLAG_COUNT> ControlFlagSet;
         typedef std::bitset<SUPPORT_FLAG_COUNT> SupportFlagSet;
 
         CategoryFlag category_;
+        std::string name_;
         GameLogic *logic_;
         StatePtr state_;
         b2Body *body_;
@@ -58,8 +63,10 @@ namespace monomi {
         void updateState(float dt);
     };
 
-    inline CharacterActor::CharacterActor(CategoryFlag category) :
+    inline CharacterActor::CharacterActor(CategoryFlag category,
+                                          std::string const &name) :
         category_(category),
+        name_(name),
         logic_(0),
         body_(0),
         leftSensor_(0), rightSensor_(0), downSensor_(0), upSensor_(0)
@@ -70,6 +77,14 @@ namespace monomi {
         assert(body_);
         b2Vec2 const &position = body_->GetPosition();
         return Vector2(position.x, position.y);
+    }
+
+    inline void CharacterActor::horizontalVelocity(float horizontalVelocity)
+    {
+        assert(body_);
+        b2Vec2 linearVelocity = body_->GetLinearVelocity();
+        linearVelocity.x = horizontalVelocity;
+        body_->SetLinearVelocity(linearVelocity);
     }
 
     inline void CharacterActor::verticalVelocity(float verticalVelocity)

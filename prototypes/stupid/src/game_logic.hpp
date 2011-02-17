@@ -4,6 +4,7 @@
 #include "category_flag.hpp"
 #include "geometry.hpp"
 
+#include <string>
 #include <boost/noncopyable.hpp>
 #include <boost/shared_ptr.hpp>
 #include <Box2D/Dynamics/b2World.h>
@@ -39,6 +40,7 @@ namespace monomi {
         void createGoal(Circle2 const &circle);
 
         CharacterPtr createCharacter(CategoryFlag category,
+                                     std::string const &name,
                                      Vector2 const &position);
         void destroyCharacter(CharacterPtr character);
 

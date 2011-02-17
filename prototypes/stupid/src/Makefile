@@ -29,6 +29,7 @@ else
 endif
 
 objects := \
+	capitalize.o \
 	character_actor.o \
 	character_states.o \
 	color.o \
@@ -54,10 +55,11 @@ clean:
 
 # DO NOT DELETE
 
+capitalize.o: capitalize.hpp
 character_actor.o: character_actor.hpp actor.hpp category_flag.hpp
 character_actor.o: control_flag.hpp geometry.hpp support_flag.hpp
-character_actor.o: character_states.hpp state.hpp state_fwd.hpp
-character_actor.o: game_logic.hpp print_flags.hpp type.hpp
+character_actor.o: capitalize.hpp character_states.hpp state.hpp
+character_actor.o: state_fwd.hpp game_logic.hpp print_flags.hpp type.hpp
 character_states.o: character_states.hpp state.hpp state_fwd.hpp
 character_states.o: character_actor.hpp actor.hpp category_flag.hpp
 character_states.o: control_flag.hpp geometry.hpp support_flag.hpp

@@ -129,9 +129,10 @@ namespace monomi {
     }
 
     GameLogic::CharacterPtr GameLogic::createCharacter(CategoryFlag category,
+                                                       std::string const &name,
                                                        Vector2 const &position)
     {
-        boost::shared_ptr<CharacterActor> character(new CharacterActor(category));
+        boost::shared_ptr<CharacterActor> character(new CharacterActor(category, name));
         character->create(this, position);
         characters_.push_back(character);
         return character;
@@ -150,7 +151,8 @@ namespace monomi {
     {
         if (!playerCharacter_&& !startPositions_.empty()) {
             Vector2 position = startPositions_.front();
-            playerCharacter_ = createCharacter(FRIEND_CATEGORY_FLAG, position);
+            playerCharacter_ = createCharacter(FRIEND_CATEGORY_FLAG, "ninja", position);
+            playerCharacter_->setControl(RUN_CONTROL_FLAG, true);
             std::cerr << "DEBUG: Created player character." << std::endl;
         }
     }
