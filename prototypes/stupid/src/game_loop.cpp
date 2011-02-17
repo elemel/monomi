@@ -13,34 +13,34 @@
 
 namespace monomi {
     namespace {
-        ControlFlag mapKeyToControl(int key)
+        InputFlag mapKeyToInput(int key)
         {
             switch (key) {
             case SDLK_w:
             case SDLK_UP:
-                return UP_CONTROL_FLAG;
+                return UP_INPUT_FLAG;
 
             case SDLK_a:
             case SDLK_LEFT:
-                return LEFT_CONTROL_FLAG;
+                return LEFT_INPUT_FLAG;
 
             case SDLK_s:
             case SDLK_DOWN:
-                return DOWN_CONTROL_FLAG;
+                return DOWN_INPUT_FLAG;
 
             case SDLK_d:
             case SDLK_RIGHT:
-                return RIGHT_CONTROL_FLAG;
+                return RIGHT_INPUT_FLAG;
 
             case SDLK_SPACE:
-                return JUMP_CONTROL_FLAG;
+                return JUMP_INPUT_FLAG;
 
             case SDLK_LSHIFT:
             case SDLK_RSHIFT:
-                return ACTION_CONTROL_FLAG;
+                return ACTION_INPUT_FLAG;
 
             default:
-                return CONTROL_FLAG_COUNT;
+                return INPUT_FLAG_COUNT;
             }
         }
     }
@@ -101,24 +101,24 @@ namespace monomi {
 
     void GameLoop::handleKeyDownEvent(SDL_Event const &event)
     {
-        ControlFlag control = mapKeyToControl(event.key.keysym.sym);
-        if (control != CONTROL_FLAG_COUNT) {
+        InputFlag input = mapKeyToInput(event.key.keysym.sym);
+        if (input != INPUT_FLAG_COUNT) {
             if (GameLogic::CharacterPtr character =
                 gameLogic_->playerCharacter())
             {
-                character->setControl(control, true);
+                character->setInput(input, true);
             }
         }
     }
 
     void GameLoop::handleKeyUpEvent(SDL_Event const &event)
     {
-        ControlFlag control = mapKeyToControl(event.key.keysym.sym);
-        if (control != CONTROL_FLAG_COUNT) {
+        InputFlag input = mapKeyToInput(event.key.keysym.sym);
+        if (input != INPUT_FLAG_COUNT) {
             if (GameLogic::CharacterPtr character =
                 gameLogic_->playerCharacter())
             {
-                character->setControl(control, false);
+                character->setInput(input, false);
             }
         }
     }

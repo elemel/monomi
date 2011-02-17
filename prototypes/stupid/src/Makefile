@@ -57,21 +57,21 @@ clean:
 
 capitalize.o: capitalize.hpp
 character_actor.o: character_actor.hpp actor.hpp category_flag.hpp
-character_actor.o: control_flag.hpp geometry.hpp support_flag.hpp
+character_actor.o: geometry.hpp input_flag.hpp support_flag.hpp
 character_actor.o: capitalize.hpp character_states.hpp state.hpp
 character_actor.o: state_fwd.hpp game_logic.hpp print_flags.hpp type.hpp
 character_states.o: character_states.hpp state.hpp state_fwd.hpp
 character_states.o: character_actor.hpp actor.hpp category_flag.hpp
-character_states.o: control_flag.hpp geometry.hpp support_flag.hpp
+character_states.o: geometry.hpp input_flag.hpp support_flag.hpp
 color.o: color.hpp
 debug_graphics.o: debug_graphics.hpp
 game_logic.o: game_logic.hpp category_flag.hpp geometry.hpp
-game_logic.o: character_actor.hpp actor.hpp control_flag.hpp support_flag.hpp
+game_logic.o: character_actor.hpp actor.hpp input_flag.hpp support_flag.hpp
 game_logic.o: character_states.hpp state.hpp state_fwd.hpp
 game_logic.o: physics_debug_graphics_adapter.hpp
 game_loop.o: game_loop.hpp character_actor.hpp actor.hpp category_flag.hpp
-game_loop.o: control_flag.hpp geometry.hpp support_flag.hpp
-game_loop.o: debug_graphics.hpp game_logic.hpp
+game_loop.o: geometry.hpp input_flag.hpp support_flag.hpp debug_graphics.hpp
+game_loop.o: game_logic.hpp
 geometry.o: geometry.hpp
 main.o: color.hpp game_logic.hpp category_flag.hpp geometry.hpp game_loop.hpp
 main.o: string_buffer.hpp svg_parser.hpp svg_path_parser.hpp

@@ -152,7 +152,7 @@ namespace monomi {
         if (!playerCharacter_&& !startPositions_.empty()) {
             Vector2 position = startPositions_.front();
             playerCharacter_ = createCharacter(FRIEND_CATEGORY_FLAG, "ninja", position);
-            playerCharacter_->setControl(RUN_CONTROL_FLAG, true);
+            playerCharacter_->setInput(RUN_INPUT_FLAG, true);
             std::cerr << "DEBUG: Created player character." << std::endl;
         }
     }

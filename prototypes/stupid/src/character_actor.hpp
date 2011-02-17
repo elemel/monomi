@@ -3,8 +3,8 @@
 
 #include "actor.hpp"
 #include "category_flag.hpp"
-#include "control_flag.hpp"
 #include "geometry.hpp"
+#include "input_flag.hpp"
 #include "support_flag.hpp"
 
 #include <bitset>
@@ -33,8 +33,8 @@ namespace monomi {
         b2Body *body() const;
         void body(b2Body *body);
 
-        bool testControl(ControlFlag control) const;
-        void setControl(ControlFlag control, bool value);
+        bool testInput(InputFlag input) const;
+        void setInput(InputFlag input, bool value);
 
         bool testSupport(SupportFlag support) const;
 
@@ -45,7 +45,7 @@ namespace monomi {
         void print(std::ostream &out) const;
 
     private:
-        typedef std::bitset<CONTROL_FLAG_COUNT> ControlFlagSet;
+        typedef std::bitset<INPUT_FLAG_COUNT> InputFlagSet;
         typedef std::bitset<SUPPORT_FLAG_COUNT> SupportFlagSet;
 
         CategoryFlag category_;
@@ -54,7 +54,7 @@ namespace monomi {
         StatePtr state_;
         b2Body *body_;
         b2Fixture *leftSensor_, *rightSensor_, *downSensor_, *upSensor_;
-        ControlFlagSet controls_;
+        InputFlagSet inputs_;
         SupportFlagSet supports_;
 
         b2Fixture *createSensor(Vector2 const &center, float radius);
@@ -115,14 +115,14 @@ namespace monomi {
         body_ = body;
     }
 
-    inline bool CharacterActor::testControl(ControlFlag control) const
+    inline bool CharacterActor::testInput(InputFlag input) const
     {
-        return controls_.test(control);
+        return inputs_.test(input);
     }
 
-    inline void CharacterActor::setControl(ControlFlag control, bool value)
+    inline void CharacterActor::setInput(InputFlag input, bool value)
     {
-        controls_.set(control, value);
+        inputs_.set(input, value);
     }
 
     inline bool CharacterActor::testSupport(SupportFlag support) const

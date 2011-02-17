@@ -21,7 +21,7 @@ namespace monomi {
         {
             return StatePtr(new CharacterWallSlideState(character_));
         }
-        if (character_->testControl(DOWN_CONTROL_FLAG)) {
+        if (character_->testInput(DOWN_INPUT_FLAG)) {
             return StatePtr(new CharacterStompState(character_));
         }
         return StatePtr();
@@ -75,14 +75,14 @@ namespace monomi {
         if (!character_->testSupport(DOWN_SUPPORT_FLAG)) {
             return StatePtr(new CharacterFallState(character_));
         }
-        if (!character_->testControl(RUN_CONTROL_FLAG)) {
+        if (!character_->testInput(RUN_INPUT_FLAG)) {
             return StatePtr(new CharacterWalkState(character_));
         }
-        if (character_->testControl(JUMP_CONTROL_FLAG)) {
+        if (character_->testInput(JUMP_INPUT_FLAG)) {
             return StatePtr(new CharacterJumpState(character_));
         }
-        if (!character_->testControl(LEFT_CONTROL_FLAG) &&
-            !character_->testControl(RIGHT_CONTROL_FLAG))
+        if (!character_->testInput(LEFT_INPUT_FLAG) &&
+            !character_->testInput(RIGHT_INPUT_FLAG))
         {
             return StatePtr(new CharacterWalkState(character_));
         }
@@ -117,11 +117,11 @@ namespace monomi {
         if (!character_->testSupport(DOWN_SUPPORT_FLAG)) {
             return StatePtr(new CharacterFallState(character_));
         }
-        if (character_->testControl(JUMP_CONTROL_FLAG)) {
+        if (character_->testInput(JUMP_INPUT_FLAG)) {
             return StatePtr(new CharacterJumpState(character_));
         }
-        if (character_->testControl(LEFT_CONTROL_FLAG) ||
-            character_->testControl(RIGHT_CONTROL_FLAG))
+        if (character_->testInput(LEFT_INPUT_FLAG) ||
+            character_->testInput(RIGHT_INPUT_FLAG))
         {
             return StatePtr(new CharacterWalkState(character_));
         }
@@ -178,14 +178,14 @@ namespace monomi {
         if (!character_->testSupport(DOWN_SUPPORT_FLAG)) {
             return StatePtr(new CharacterFallState(character_));
         }
-        if (character_->testControl(RUN_CONTROL_FLAG)) {
+        if (character_->testInput(RUN_INPUT_FLAG)) {
             return StatePtr(new CharacterRunState(character_));
         }
-        if (character_->testControl(JUMP_CONTROL_FLAG)) {
+        if (character_->testInput(JUMP_INPUT_FLAG)) {
             return StatePtr(new CharacterJumpState(character_));
         }
-        if (!character_->testControl(LEFT_CONTROL_FLAG) &&
-            !character_->testControl(RIGHT_CONTROL_FLAG))
+        if (!character_->testInput(LEFT_INPUT_FLAG) &&
+            !character_->testInput(RIGHT_INPUT_FLAG))
         {
             return StatePtr(new CharacterStandState(character_));
         }
@@ -212,9 +212,9 @@ namespace monomi {
 
     StatePtr CharacterWallRunState::transition()
     {
-        if (!character_->testControl(LEFT_CONTROL_FLAG) &&
-            !character_->testControl(RIGHT_CONTROL_FLAG) &&
-            !character_->testControl(UP_CONTROL_FLAG))
+        if (!character_->testInput(LEFT_INPUT_FLAG) &&
+            !character_->testInput(RIGHT_INPUT_FLAG) &&
+            !character_->testInput(UP_INPUT_FLAG))
         {
             return StatePtr(new CharacterFallState(character_));
         }
@@ -249,7 +249,7 @@ namespace monomi {
 
     StatePtr CharacterWallSlideState::transition()
     {
-        if (character_->testControl(DOWN_CONTROL_FLAG)) {
+        if (character_->testInput(DOWN_INPUT_FLAG)) {
             return StatePtr(new CharacterStompState(character_));
         }
         if (!character_->testSupport(LEFT_SUPPORT_FLAG) &&
