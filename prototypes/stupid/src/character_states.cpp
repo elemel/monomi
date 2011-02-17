@@ -13,11 +13,11 @@ namespace monomi {
 
     StatePtr CharacterFallState::transition()
     {
-        if (character_->testSupport(DOWN_SUPPORT_FLAG)) {
+        if (character_->testContact(DOWN_CONTACT_FLAG)) {
             return StatePtr(new CharacterStandState(character_));
         }
-        if (character_->testSupport(LEFT_SUPPORT_FLAG) ||
-            character_->testSupport(RIGHT_SUPPORT_FLAG))
+        if (character_->testContact(LEFT_CONTACT_FLAG) ||
+            character_->testContact(RIGHT_CONTACT_FLAG))
         {
             return StatePtr(new CharacterWallSlideState(character_));
         }
@@ -72,7 +72,7 @@ namespace monomi {
 
     StatePtr CharacterRunState::transition()
     {
-        if (!character_->testSupport(DOWN_SUPPORT_FLAG)) {
+        if (!character_->testContact(DOWN_CONTACT_FLAG)) {
             return StatePtr(new CharacterFallState(character_));
         }
         if (!character_->testInput(RUN_INPUT_FLAG)) {
@@ -86,8 +86,8 @@ namespace monomi {
         {
             return StatePtr(new CharacterWalkState(character_));
         }
-        if (character_->testSupport(LEFT_SUPPORT_FLAG) ||
-            character_->testSupport(RIGHT_SUPPORT_FLAG))
+        if (character_->testContact(LEFT_CONTACT_FLAG) ||
+            character_->testContact(RIGHT_CONTACT_FLAG))
         {
             return StatePtr(new CharacterWallRunState(character_));
         }
@@ -114,7 +114,7 @@ namespace monomi {
 
     StatePtr CharacterStandState::transition()
     {
-        if (!character_->testSupport(DOWN_SUPPORT_FLAG)) {
+        if (!character_->testContact(DOWN_CONTACT_FLAG)) {
             return StatePtr(new CharacterFallState(character_));
         }
         if (character_->testInput(JUMP_INPUT_FLAG)) {
@@ -149,7 +149,7 @@ namespace monomi {
 
     StatePtr CharacterStompState::transition()
     {
-        if (character_->testSupport(DOWN_SUPPORT_FLAG)) {
+        if (character_->testContact(DOWN_CONTACT_FLAG)) {
             return StatePtr(new CharacterStandState(character_));
         }
         return StatePtr();
@@ -175,7 +175,7 @@ namespace monomi {
 
     StatePtr CharacterWalkState::transition()
     {
-        if (!character_->testSupport(DOWN_SUPPORT_FLAG)) {
+        if (!character_->testContact(DOWN_CONTACT_FLAG)) {
             return StatePtr(new CharacterFallState(character_));
         }
         if (character_->testInput(RUN_INPUT_FLAG)) {
@@ -218,12 +218,12 @@ namespace monomi {
         {
             return StatePtr(new CharacterFallState(character_));
         }
-        if (!character_->testSupport(LEFT_SUPPORT_FLAG) &&
-            !character_->testSupport(RIGHT_SUPPORT_FLAG))
+        if (!character_->testContact(LEFT_CONTACT_FLAG) &&
+            !character_->testContact(RIGHT_CONTACT_FLAG))
         {
             return StatePtr(new CharacterFallState(character_));
         }
-        if (character_->testSupport(UP_SUPPORT_FLAG)) {
+        if (character_->testContact(UP_CONTACT_FLAG)) {
             return StatePtr(new CharacterFallState(character_));
         }
         return StatePtr();
@@ -252,8 +252,8 @@ namespace monomi {
         if (character_->testInput(DOWN_INPUT_FLAG)) {
             return StatePtr(new CharacterStompState(character_));
         }
-        if (!character_->testSupport(LEFT_SUPPORT_FLAG) &&
-            !character_->testSupport(RIGHT_SUPPORT_FLAG))
+        if (!character_->testContact(LEFT_CONTACT_FLAG) &&
+            !character_->testContact(RIGHT_CONTACT_FLAG))
         {
             return StatePtr(new CharacterFallState(character_));
         }

@@ -60,7 +60,7 @@ namespace monomi {
 
     void CharacterActor::update(float dt)
     {
-        updateSupports(dt);
+        updateContacts(dt);
         updateState(dt);
     }
 
@@ -85,11 +85,11 @@ namespace monomi {
         return body_->CreateFixture(&fixtureDef);
     }
 
-    void CharacterActor::updateSupports(float dt)
+    void CharacterActor::updateContacts(float dt)
     {
         (void) dt;
 
-        SupportFlagSet newSupports;
+        ContactFlagSet newContacts;
         for (b2ContactEdge *edge = body_->GetContactList(); edge != 0;
              edge = edge->next)
         {
@@ -97,25 +97,25 @@ namespace monomi {
                 b2Fixture *f1 = edge->contact->GetFixtureA();
                 b2Fixture *f2 = edge->contact->GetFixtureB();
                 if (f1 == leftSensor_ || f2 == leftSensor_) {
-                    newSupports.set(LEFT_SUPPORT_FLAG);
+                    newContacts.set(LEFT_CONTACT_FLAG);
                 }
                 if (f1 == rightSensor_ || f2 == rightSensor_) {
-                    newSupports.set(RIGHT_SUPPORT_FLAG);
+                    newContacts.set(RIGHT_CONTACT_FLAG);
                 }
                 if (f1 == downSensor_ || f2 == downSensor_) {
-                    newSupports.set(DOWN_SUPPORT_FLAG);
+                    newContacts.set(DOWN_CONTACT_FLAG);
                 }
                 if (f1 == upSensor_ || f2 == upSensor_) {
-                    newSupports.set(UP_SUPPORT_FLAG);
+                    newContacts.set(UP_CONTACT_FLAG);
                 }
             }
         }
 
-        if (newSupports != supports_) {
-            supports_ = newSupports;
+        if (newContacts != contacts_) {
+            contacts_ = newContacts;
             std::ostringstream out;
-            out << "DEBUG: " << capitalize(*this) << " changed supports to ";
-            printFlags<SupportFlag>(out, supports_);
+            out << "DEBUG: " << capitalize(*this) << " changed contacts to ";
+            printFlags<ContactFlag>(out, contacts_);
             out << ".";
             std::cerr << out.str() << std::endl;
         }

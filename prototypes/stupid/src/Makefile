@@ -33,6 +33,7 @@ objects := \
 	character_actor.o \
 	character_states.o \
 	color.o \
+	contact_flag.o \
 	debug_graphics.o \
 	game_logic.o \
 	game_loop.o \
@@ -40,7 +41,6 @@ objects := \
 	main.o \
 	physics_debug_graphics_adapter.o \
 	string_buffer.o \
-	support_flag.o \
 	svg_parser.o \
 	svg_path_parser.o \
 	svg_style_parser.o \
@@ -57,20 +57,21 @@ clean:
 
 capitalize.o: capitalize.hpp
 character_actor.o: character_actor.hpp actor.hpp category_flag.hpp
-character_actor.o: geometry.hpp input_flag.hpp support_flag.hpp
+character_actor.o: contact_flag.hpp geometry.hpp input_flag.hpp
 character_actor.o: capitalize.hpp character_states.hpp state.hpp
 character_actor.o: state_fwd.hpp game_logic.hpp print_flags.hpp type.hpp
 character_states.o: character_states.hpp state.hpp state_fwd.hpp
 character_states.o: character_actor.hpp actor.hpp category_flag.hpp
-character_states.o: geometry.hpp input_flag.hpp support_flag.hpp
+character_states.o: contact_flag.hpp geometry.hpp input_flag.hpp
 color.o: color.hpp
+contact_flag.o: contact_flag.hpp
 debug_graphics.o: debug_graphics.hpp
 game_logic.o: game_logic.hpp category_flag.hpp geometry.hpp
-game_logic.o: character_actor.hpp actor.hpp input_flag.hpp support_flag.hpp
+game_logic.o: character_actor.hpp actor.hpp contact_flag.hpp input_flag.hpp
 game_logic.o: character_states.hpp state.hpp state_fwd.hpp
 game_logic.o: physics_debug_graphics_adapter.hpp
 game_loop.o: game_loop.hpp character_actor.hpp actor.hpp category_flag.hpp
-game_loop.o: geometry.hpp input_flag.hpp support_flag.hpp debug_graphics.hpp
+game_loop.o: contact_flag.hpp geometry.hpp input_flag.hpp debug_graphics.hpp
 game_loop.o: game_logic.hpp
 geometry.o: geometry.hpp
 main.o: color.hpp game_logic.hpp category_flag.hpp geometry.hpp game_loop.hpp
@@ -79,7 +80,6 @@ main.o: svg_style_parser.hpp svg_transform_parser.hpp
 physics_debug_graphics_adapter.o: physics_debug_graphics_adapter.hpp
 physics_debug_graphics_adapter.o: debug_graphics.hpp
 string_buffer.o: string_buffer.hpp
-support_flag.o: support_flag.hpp
 svg_parser.o: svg_parser.hpp color.hpp geometry.hpp svg_path_parser.hpp
 svg_parser.o: svg_style_parser.hpp svg_transform_parser.hpp string_buffer.hpp
 svg_path_parser.o: svg_path_parser.hpp geometry.hpp string_buffer.hpp

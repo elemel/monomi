@@ -3,9 +3,9 @@
 
 #include "actor.hpp"
 #include "category_flag.hpp"
+#include "contact_flag.hpp"
 #include "geometry.hpp"
 #include "input_flag.hpp"
-#include "support_flag.hpp"
 
 #include <bitset>
 #include <string>
@@ -36,7 +36,7 @@ namespace monomi {
         bool testInput(InputFlag input) const;
         void setInput(InputFlag input, bool value);
 
-        bool testSupport(SupportFlag support) const;
+        bool testContact(ContactFlag contact) const;
 
         void create(GameLogic *logic, Vector2 const &position);
         void destroy();
@@ -46,7 +46,7 @@ namespace monomi {
 
     private:
         typedef std::bitset<INPUT_FLAG_COUNT> InputFlagSet;
-        typedef std::bitset<SUPPORT_FLAG_COUNT> SupportFlagSet;
+        typedef std::bitset<CONTACT_FLAG_COUNT> ContactFlagSet;
 
         CategoryFlag category_;
         std::string name_;
@@ -55,11 +55,11 @@ namespace monomi {
         b2Body *body_;
         b2Fixture *leftSensor_, *rightSensor_, *downSensor_, *upSensor_;
         InputFlagSet inputs_;
-        SupportFlagSet supports_;
+        ContactFlagSet contacts_;
 
         b2Fixture *createSensor(Vector2 const &center, float radius);
 
-        void updateSupports(float dt);
+        void updateContacts(float dt);
         void updateState(float dt);
     };
 
@@ -125,9 +125,9 @@ namespace monomi {
         inputs_.set(input, value);
     }
 
-    inline bool CharacterActor::testSupport(SupportFlag support) const
+    inline bool CharacterActor::testContact(ContactFlag contact) const
     {
-        return supports_.test(support);
+        return contacts_.test(contact);
     }
 }
 
