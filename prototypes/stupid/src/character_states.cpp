@@ -2,6 +2,8 @@
 
 #include "character_actor.hpp"
 
+#include <Box2D/Dynamics/b2Fixture.h>
+
 namespace monomi {
     // FALL ///////////////////////////////////////////////////////////////////
 
@@ -41,7 +43,7 @@ namespace monomi {
 
     void CharacterJumpState::enter()
     {
-        character_->verticalVelocity(10.0f);
+        character_->verticalVelocity(character_->jumpVelocity());
     }
 
     void CharacterJumpState::leave()
@@ -86,8 +88,10 @@ namespace monomi {
         {
             return StatePtr(new CharacterWalkState(character_));
         }
-        if (character_->testContact(LEFT_CONTACT_FLAG) ||
-            character_->testContact(RIGHT_CONTACT_FLAG))
+        if (character_->testContact(LEFT_CONTACT_FLAG) &&
+            character_->testInput(LEFT_INPUT_FLAG) ||
+            character_->testContact(RIGHT_CONTACT_FLAG) &&
+            character_->testInput(RIGHT_INPUT_FLAG))
         {
             return StatePtr(new CharacterWallRunState(character_));
         }
@@ -96,7 +100,14 @@ namespace monomi {
 
     void CharacterRunState::update(float dt)
     {
-        (void) dt;
+        float velocity = character_->horizontalVelocity();
+        int horizontalInput = (int(character_->testInput(RIGHT_INPUT_FLAG)) -
+                               int(character_->testInput(LEFT_INPUT_FLAG)));
+        velocity += (dt * character_->runAcceleration() *
+                     float(horizontalInput));
+        velocity = sign(velocity) * std::min(std::abs(velocity),
+                                             character_->runVelocity());
+        character_->horizontalVelocity(velocity);
     }
 
     void CharacterRunState::print(std::ostream &out) const
@@ -107,10 +118,14 @@ namespace monomi {
     // STAND //////////////////////////////////////////////////////////////////
 
     void CharacterStandState::enter()
-    { }
+    {
+        character_->fixture()->SetFriction(5.0f);
+    }
 
     void CharacterStandState::leave()
-    { }
+    {
+        character_->fixture()->SetFriction(0.0f);
+    }
 
     StatePtr CharacterStandState::transition()
     {
@@ -131,7 +146,6 @@ namespace monomi {
     void CharacterStandState::update(float dt)
     {
         (void) dt;
-        character_->horizontalVelocity(0.0f);
     }
 
     void CharacterStandState::print(std::ostream &out) const
@@ -178,23 +192,30 @@ namespace monomi {
         if (!character_->testContact(DOWN_CONTACT_FLAG)) {
             return StatePtr(new CharacterFallState(character_));
         }
+        if (!character_->testInput(LEFT_INPUT_FLAG) &&
+            !character_->testInput(RIGHT_INPUT_FLAG))
+        {
+            return StatePtr(new CharacterStandState(character_));
+        }
         if (character_->testInput(RUN_INPUT_FLAG)) {
             return StatePtr(new CharacterRunState(character_));
         }
         if (character_->testInput(JUMP_INPUT_FLAG)) {
             return StatePtr(new CharacterJumpState(character_));
         }
-        if (!character_->testInput(LEFT_INPUT_FLAG) &&
-            !character_->testInput(RIGHT_INPUT_FLAG))
-        {
-            return StatePtr(new CharacterStandState(character_));
-        }
         return StatePtr();
     }
 
     void CharacterWalkState::update(float dt)
     {
-        (void) dt;
+        float velocity = character_->horizontalVelocity();
+        int horizontalInput = (int(character_->testInput(RIGHT_INPUT_FLAG)) -
+                               int(character_->testInput(LEFT_INPUT_FLAG)));
+        velocity += (dt * character_->walkAcceleration() *
+                     float(horizontalInput));
+        velocity = sign(velocity) * std::min(std::abs(velocity),
+                                             character_->walkVelocity());
+        character_->horizontalVelocity(velocity);
     }
 
     void CharacterWalkState::print(std::ostream &out) const
@@ -232,6 +253,7 @@ namespace monomi {
     void CharacterWallRunState::update(float dt)
     {
         (void) dt;
+        character_->verticalVelocity(character_->wallRunVelocity());
     }
 
     void CharacterWallRunState::print(std::ostream &out) const
@@ -263,6 +285,11 @@ namespace monomi {
     void CharacterWallSlideState::update(float dt)
     {
         (void) dt;
+
+        float velocity = character_->verticalVelocity();
+        velocity = sign(velocity) * std::min(std::abs(velocity),
+                                             character_->wallSlideVelocity());
+        character_->verticalVelocity(velocity);
     }
 
     void CharacterWallSlideState::print(std::ostream &out) const

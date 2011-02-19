@@ -36,12 +36,12 @@ namespace monomi {
         fixtureDef.friction = 0.0f;
         fixtureDef.shape = &circleShape;
         fixtureDef.filter.categoryBits = (1 << category_);
-        body_->CreateFixture(&fixtureDef);
+        fixture_ = body_->CreateFixture(&fixtureDef);
 
-        leftSensor_ = createSensor(Vector2(-0.2f, 0.0f), 0.4f);
-        rightSensor_ = createSensor(Vector2(0.2f, 0.0f), 0.4f);
-        downSensor_ = createSensor(Vector2(0.0f, -0.2f), 0.4f);
-        upSensor_ = createSensor(Vector2(0.0f, 0.2f), 0.4f);
+        leftSensor_ = createSensor(Vector2(-0.3f, 0.0f), 0.3f);
+        rightSensor_ = createSensor(Vector2(0.3f, 0.0f), 0.3f);
+        downSensor_ = createSensor(Vector2(0.0f, -0.3f), 0.3f);
+        upSensor_ = createSensor(Vector2(0.0f, 0.3f), 0.3f);
 
         state_.reset(new CharacterFallState(this));
         state_->enter();

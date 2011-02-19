@@ -23,20 +23,30 @@ namespace monomi {
 
         Vector2 position() const;
 
+        float horizontalVelocity() const;
         void horizontalVelocity(float horizontalVelocity);
 
+        float verticalVelocity() const;
         void verticalVelocity(float verticalVelocity);
 
         StatePtr state() const;
         void state(StatePtr state);
 
         b2Body *body() const;
-        void body(b2Body *body);
+        b2Fixture *fixture() const;
 
         bool testInput(InputFlag input) const;
         void setInput(InputFlag input, bool value);
 
         bool testContact(ContactFlag contact) const;
+
+        float jumpVelocity() const;
+        float walkAcceleration() const;
+        float walkVelocity() const;
+        float runAcceleration() const;
+        float runVelocity() const;
+        float wallSlideVelocity() const;
+        float wallRunVelocity() const;
 
         void create(GameLogic *logic, Vector2 const &position);
         void destroy();
@@ -53,6 +63,7 @@ namespace monomi {
         GameLogic *logic_;
         StatePtr state_;
         b2Body *body_;
+        b2Fixture *fixture_;
         b2Fixture *leftSensor_, *rightSensor_, *downSensor_, *upSensor_;
         InputFlagSet inputs_;
         ContactFlagSet contacts_;
@@ -79,12 +90,22 @@ namespace monomi {
         return Vector2(position.x, position.y);
     }
 
+    inline float CharacterActor::horizontalVelocity() const
+    {
+        return body_->GetLinearVelocity().x;
+    }
+
     inline void CharacterActor::horizontalVelocity(float horizontalVelocity)
     {
         assert(body_);
         b2Vec2 linearVelocity = body_->GetLinearVelocity();
         linearVelocity.x = horizontalVelocity;
         body_->SetLinearVelocity(linearVelocity);
+    }
+
+    inline float CharacterActor::verticalVelocity() const
+    {
+        return body_->GetLinearVelocity().y;
     }
 
     inline void CharacterActor::verticalVelocity(float verticalVelocity)
@@ -110,9 +131,9 @@ namespace monomi {
         return body_;
     }
 
-    inline void CharacterActor::body(b2Body *body)
+    inline b2Fixture *CharacterActor::fixture() const
     {
-        body_ = body;
+        return fixture_;
     }
 
     inline bool CharacterActor::testInput(InputFlag input) const
@@ -128,6 +149,41 @@ namespace monomi {
     inline bool CharacterActor::testContact(ContactFlag contact) const
     {
         return contacts_.test(contact);
+    }
+
+    inline float CharacterActor::jumpVelocity() const
+    {
+        return 7.0f;
+    }
+
+    inline float CharacterActor::walkAcceleration() const
+    {
+        return 10.0f;
+    }
+
+    inline float CharacterActor::walkVelocity() const
+    {
+        return 4.0f;
+    }
+
+    inline float CharacterActor::runAcceleration() const
+    {
+        return 10.0f;
+    }
+
+    inline float CharacterActor::runVelocity() const
+    {
+        return 7.0f;
+    }
+
+    inline float CharacterActor::wallSlideVelocity() const
+    {
+        return 5.0f;
+    }
+
+    inline float CharacterActor::wallRunVelocity() const
+    {
+        return 5.0f;
     }
 }
 
