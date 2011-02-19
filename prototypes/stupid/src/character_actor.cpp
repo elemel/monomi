@@ -35,7 +35,7 @@ namespace monomi {
         fixtureDef.restitution = 0.0f;
         fixtureDef.friction = 0.0f;
         fixtureDef.shape = &circleShape;
-        fixtureDef.filter.categoryBits = (1 << category_);
+        fixtureDef.filter.categoryBits = (1 << type_->category());
         fixture_ = body_->CreateFixture(&fixtureDef);
 
         leftSensor_ = createSensor(Vector2(-0.3f, 0.0f), 0.3f);
@@ -66,7 +66,7 @@ namespace monomi {
 
     void CharacterActor::print(std::ostream &out) const
     {
-        out << name_;
+        out << type_->name();
     }
 
     b2Fixture *CharacterActor::createSensor(Vector2 const &center,
@@ -78,7 +78,7 @@ namespace monomi {
 
         b2FixtureDef fixtureDef;
         fixtureDef.shape = &circleShape;
-        fixtureDef.filter.categoryBits = (1 << category_);
+        fixtureDef.filter.categoryBits = (1 << type_->category());
         fixtureDef.filter.maskBits = (1 << PLATFORM_CATEGORY_FLAG);
         fixtureDef.isSensor = true;
 

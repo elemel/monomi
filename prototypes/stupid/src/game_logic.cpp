@@ -23,11 +23,20 @@ namespace monomi {
             }
             target.Set(vertices, vertexCount);
         }
+
+        GameLogic::CharacterTypePtr createNinjaType()
+        {
+            GameLogic::CharacterTypePtr result(new CharacterType);
+            result->name("ninja");
+            result->category(FRIEND_CATEGORY_FLAG);
+            return result;
+        }
     }
 
     GameLogic::GameLogic() :
         time_(0.0f),
-        world_(new b2World(b2Vec2(0.0f, -15.0f), true))
+        world_(new b2World(b2Vec2(0.0f, -15.0f), true)),
+        ninjaType_(createNinjaType())
     {
         b2BodyDef bodyDef;
         worldBody_ = world_->CreateBody(&bodyDef);
@@ -128,11 +137,10 @@ namespace monomi {
         goalFixtures_.push_back(fixture);
     }
 
-    GameLogic::CharacterPtr GameLogic::createCharacter(CategoryFlag category,
-                                                       std::string const &name,
+    GameLogic::CharacterPtr GameLogic::createCharacter(CharacterType *type,
                                                        Vector2 const &position)
     {
-        boost::shared_ptr<CharacterActor> character(new CharacterActor(category, name));
+        boost::shared_ptr<CharacterActor> character(new CharacterActor(type));
         character->create(this, position);
         characters_.push_back(character);
         return character;
@@ -151,7 +159,7 @@ namespace monomi {
     {
         if (!playerCharacter_&& !startPositions_.empty()) {
             Vector2 position = startPositions_.front();
-            playerCharacter_ = createCharacter(FRIEND_CATEGORY_FLAG, "ninja", position);
+            playerCharacter_ = createCharacter(ninjaType_.get(), position);
             playerCharacter_->setInput(RUN_INPUT_FLAG, true);
             std::cerr << "DEBUG: Created player character." << std::endl;
         }

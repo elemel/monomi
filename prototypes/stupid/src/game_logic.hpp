@@ -2,6 +2,7 @@
 #define MONOMI_GAME_LOGIC_HPP
 
 #include "category_flag.hpp"
+#include "character_type.hpp"
 #include "geometry.hpp"
 
 #include <string>
@@ -11,10 +12,12 @@
 
 namespace monomi {
     class CharacterActor;
+    class CharacterType;
     class DebugGraphics;
 
     class GameLogic : private boost::noncopyable {
     public:
+        typedef boost::shared_ptr<CharacterType> CharacterTypePtr;
         typedef boost::shared_ptr<CharacterActor> CharacterPtr;
         typedef std::vector<CharacterPtr> CharacterVector;
         typedef std::vector<b2Fixture *> FixtureVector;
@@ -39,8 +42,7 @@ namespace monomi {
         void createStart(Circle2 const &circle);
         void createGoal(Circle2 const &circle);
 
-        CharacterPtr createCharacter(CategoryFlag category,
-                                     std::string const &name,
+        CharacterPtr createCharacter(CharacterType *type,
                                      Vector2 const &position);
         void destroyCharacter(CharacterPtr character);
 
@@ -49,6 +51,7 @@ namespace monomi {
         boost::shared_ptr<b2World> world_;
         b2Body *worldBody_;
 
+        CharacterTypePtr ninjaType_;
         CharacterVector characters_;
         CharacterPtr playerCharacter_;
 

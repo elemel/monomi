@@ -3,6 +3,7 @@
 
 #include "actor.hpp"
 #include "category_flag.hpp"
+#include "character_type.hpp"
 #include "contact_flag.hpp"
 #include "geometry.hpp"
 #include "input_flag.hpp"
@@ -19,7 +20,7 @@ namespace monomi {
     public:
         typedef boost::shared_ptr<State> StatePtr;
 
-        CharacterActor(CategoryFlag category, std::string const &name);
+        CharacterActor(CharacterType *type);
 
         Vector2 position() const;
 
@@ -58,8 +59,7 @@ namespace monomi {
         typedef std::bitset<INPUT_FLAG_COUNT> InputFlagSet;
         typedef std::bitset<CONTACT_FLAG_COUNT> ContactFlagSet;
 
-        CategoryFlag category_;
-        std::string name_;
+        CharacterType *type_;
         GameLogic *logic_;
         StatePtr state_;
         b2Body *body_;
@@ -74,10 +74,8 @@ namespace monomi {
         void updateState(float dt);
     };
 
-    inline CharacterActor::CharacterActor(CategoryFlag category,
-                                          std::string const &name) :
-        category_(category),
-        name_(name),
+    inline CharacterActor::CharacterActor(CharacterType *type) :
+        type_(type),
         logic_(0),
         body_(0),
         leftSensor_(0), rightSensor_(0), downSensor_(0), upSensor_(0)
@@ -153,37 +151,37 @@ namespace monomi {
 
     inline float CharacterActor::jumpVelocity() const
     {
-        return 10.0f;
+        return type_->jumpVelocity();
     }
 
     inline float CharacterActor::walkAcceleration() const
     {
-        return 10.0f;
+        return type_->walkAcceleration();
     }
 
     inline float CharacterActor::walkVelocity() const
     {
-        return 4.0f;
+        return type_->walkVelocity();
     }
 
     inline float CharacterActor::runAcceleration() const
     {
-        return 10.0f;
+        return type_->runAcceleration();
     }
 
     inline float CharacterActor::runVelocity() const
     {
-        return 7.0f;
+        return type_->runVelocity();
     }
 
     inline float CharacterActor::wallSlideVelocity() const
     {
-        return 5.0f;
+        return type_->wallSlideVelocity();
     }
 
     inline float CharacterActor::wallRunVelocity() const
     {
-        return 5.0f;
+        return type_->wallRunVelocity();
     }
 }
 
