@@ -153,7 +153,7 @@ namespace monomi {
 
     inline float CharacterActor::jumpVelocity() const
     {
-        return 7.0f;
+        return 10.0f;
     }
 
     inline float CharacterActor::walkAcceleration() const

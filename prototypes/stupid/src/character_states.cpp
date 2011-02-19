@@ -43,7 +43,13 @@ namespace monomi {
 
     void CharacterJumpState::enter()
     {
-        character_->verticalVelocity(character_->jumpVelocity());
+        float jumpVelocity = character_->jumpVelocity();
+        float horizontalVelocity = character_->horizontalVelocity();
+        if (horizontalVelocity < jumpVelocity) {
+            float verticalVelocity = std::sqrt(square(jumpVelocity) -
+                                               square(horizontalVelocity));
+            character_->verticalVelocity(verticalVelocity);
+        }
     }
 
     void CharacterJumpState::leave()
