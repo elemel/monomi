@@ -3,6 +3,7 @@
 
 #include "category_flag.hpp"
 
+#include <cmath>
 #include <string>
 
 namespace monomi {
@@ -37,6 +38,12 @@ namespace monomi {
         float wallRunVelocity() const;
         void wallRunVelocity(float wallRunVelocity);
 
+        float wallJumpVelocity() const;
+        void wallJumpVelocity(float wallJumpVelocity);
+
+        float wallJumpAngle() const;
+        void wallJumpAngle(float wallJumpAngle);
+
     private:
         std::string name_;
         CategoryFlag category_;
@@ -47,6 +54,8 @@ namespace monomi {
         float runVelocity_;
         float wallSlideVelocity_;
         float wallRunVelocity_;
+        float wallJumpVelocity_;
+        float wallJumpAngle_;
     };
 
     inline CharacterType::CharacterType() :
@@ -57,7 +66,9 @@ namespace monomi {
         runAcceleration_(10.0f),
         runVelocity_(7.0f),
         wallSlideVelocity_(5.0f),
-        wallRunVelocity_(5.0f)
+        wallRunVelocity_(5.0f),
+        wallJumpVelocity_(10.0f),
+        wallJumpAngle_(0.3 * M_PI)
     { }
 
     inline std::string const &CharacterType::name() const
@@ -148,6 +159,26 @@ namespace monomi {
     inline void CharacterType::wallRunVelocity(float wallRunVelocity)
     {
         wallRunVelocity_ = wallRunVelocity;
+    }
+
+    inline float CharacterType::wallJumpVelocity() const
+    {
+        return wallJumpVelocity_;
+    }
+
+    inline void CharacterType::wallJumpVelocity(float wallJumpVelocity)
+    {
+        wallJumpVelocity_ = wallJumpVelocity;
+    }
+
+    inline float CharacterType::wallJumpAngle() const
+    {
+        return wallJumpAngle_;
+    }
+
+    inline void CharacterType::wallJumpAngle(float wallJumpAngle)
+    {
+        wallJumpAngle_ = wallJumpAngle;
     }
 }
 

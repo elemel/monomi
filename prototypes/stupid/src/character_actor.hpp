@@ -48,6 +48,8 @@ namespace monomi {
         float runVelocity() const;
         float wallSlideVelocity() const;
         float wallRunVelocity() const;
+        float wallJumpVelocity() const;
+        float wallJumpAngle() const;
 
         void create(GameLogic *logic, Vector2 const &position);
         void destroy();
@@ -182,6 +184,16 @@ namespace monomi {
     inline float CharacterActor::wallRunVelocity() const
     {
         return type_->wallRunVelocity();
+    }
+
+    inline float CharacterActor::wallJumpVelocity() const
+    {
+        return type_->wallJumpVelocity();
+    }
+
+    inline float CharacterActor::wallJumpAngle() const
+    {
+        return type_->wallJumpAngle();
     }
 }
 

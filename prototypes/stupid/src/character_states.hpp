@@ -138,6 +138,28 @@ namespace monomi {
         character_(character)
     { }
 
+    // WALL JUMP ///////////////////////////////////////////////////////////////
+
+    class CharacterWallJumpState : public State {
+    public:
+        explicit CharacterWallJumpState(CharacterActor *character);
+
+        void enter();
+        void leave();
+
+        StatePtr transition();
+        void update(float dt);
+
+        void print(std::ostream &out) const;
+
+    private:
+        CharacterActor *character_;
+    };
+
+    inline CharacterWallJumpState::CharacterWallJumpState(CharacterActor *character) :
+        character_(character)
+    { }
+
     // WALL RUN ///////////////////////////////////////////////////////////////
 
     class CharacterWallRunState : public State {

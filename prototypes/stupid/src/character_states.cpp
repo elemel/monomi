@@ -229,6 +229,38 @@ namespace monomi {
         out << "walk";
     }
 
+    // WALL JUMP //////////////////////////////////////////////////////////////
+
+    void CharacterWallJumpState::enter()
+    {
+        int horizontalContact = (int(character_->testContact(RIGHT_CONTACT_FLAG)) -
+                                 int(character_->testContact(LEFT_CONTACT_FLAG)));
+        float wallJumpVelocity = character_->wallJumpVelocity();
+        float wallJumpAngle = character_->wallJumpAngle();
+        float horizontalVelocity = float(-horizontalContact) * std::cos(wallJumpAngle) * wallJumpVelocity;
+        float verticalVelocity = std::sin(wallJumpAngle) * wallJumpVelocity;
+        character_->horizontalVelocity(horizontalVelocity);
+        character_->verticalVelocity(verticalVelocity);
+    }
+
+    void CharacterWallJumpState::leave()
+    { }
+
+    StatePtr CharacterWallJumpState::transition()
+    {
+        return StatePtr(new CharacterFallState(character_));
+    }
+
+    void CharacterWallJumpState::update(float dt)
+    {
+        (void) dt;
+    }
+
+    void CharacterWallJumpState::print(std::ostream &out) const
+    {
+        out << "wall-jump";
+    }
+
     // WALL RUN ///////////////////////////////////////////////////////////////
 
     void CharacterWallRunState::enter()
@@ -239,12 +271,6 @@ namespace monomi {
 
     StatePtr CharacterWallRunState::transition()
     {
-        if (!character_->testInput(LEFT_INPUT_FLAG) &&
-            !character_->testInput(RIGHT_INPUT_FLAG) &&
-            !character_->testInput(UP_INPUT_FLAG))
-        {
-            return StatePtr(new CharacterFallState(character_));
-        }
         if (!character_->testContact(LEFT_CONTACT_FLAG) &&
             !character_->testContact(RIGHT_CONTACT_FLAG))
         {
@@ -252,6 +278,15 @@ namespace monomi {
         }
         if (character_->testContact(UP_CONTACT_FLAG)) {
             return StatePtr(new CharacterFallState(character_));
+        }
+        if (!character_->testInput(LEFT_INPUT_FLAG) &&
+            !character_->testInput(RIGHT_INPUT_FLAG) &&
+            !character_->testInput(UP_INPUT_FLAG))
+        {
+            return StatePtr(new CharacterFallState(character_));
+        }
+        if (character_->testInput(JUMP_INPUT_FLAG)) {
+            return StatePtr(new CharacterWallJumpState(character_));
         }
         return StatePtr();
     }
@@ -277,13 +312,16 @@ namespace monomi {
 
     StatePtr CharacterWallSlideState::transition()
     {
-        if (character_->testInput(DOWN_INPUT_FLAG)) {
-            return StatePtr(new CharacterStompState(character_));
-        }
         if (!character_->testContact(LEFT_CONTACT_FLAG) &&
             !character_->testContact(RIGHT_CONTACT_FLAG))
         {
             return StatePtr(new CharacterFallState(character_));
+        }
+        if (character_->testInput(DOWN_INPUT_FLAG)) {
+            return StatePtr(new CharacterStompState(character_));
+        }
+        if (character_->testInput(JUMP_INPUT_FLAG)) {
+            return StatePtr(new CharacterWallJumpState(character_));
         }
         return StatePtr();
     }

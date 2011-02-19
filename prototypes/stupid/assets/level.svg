@@ -95,7 +95,7 @@ alfa beta</desc>
        transform="matrix(0.95028988,0.31136657,-0.31124609,0.95032935,0,0)" />
     <path
        style="fill:#ffff00;stroke:#000000;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
-       d="M -157.61642,675.39263 L 314.80436,844.21234 L 199.74959,496.24175 L -2.0175124,461.2798 L -312.28177,555.98181 z"
+       d="M -157.61642,675.39263 L 314.80436,844.21234 L 199.74959,496.24175 L 38.388589,475.42194 L -312.28177,555.98181 z"
        id="path3081"
        inkscape:connector-curvature="0"
        sodipodi:nodetypes="cccccc" />
@@ -103,7 +103,7 @@ alfa beta</desc>
        sodipodi:nodetypes="cccccc"
        inkscape:connector-curvature="0"
        id="path3091"
-       d="M 705.59871,868.89786 L 884.52225,642.86664 L 865.11594,448.98527 L 604.32909,493.66335 L 523.20333,850.77907 z"
+       d="M 705.59871,868.89786 L 884.52225,642.86664 L 865.11594,448.98527 L 588.16665,485.58213 L 523.20333,850.77907 z"
        style="fill:#ffff00;stroke:#000000;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1" />
     <path
        sodipodi:nodetypes="ccccc"
@@ -121,7 +121,7 @@ alfa beta</desc>
        sodipodi:nodetypes="cccccc"
        inkscape:connector-curvature="0"
        id="path3044"
-       d="M -428.3373,764.82259 L -34.708418,681.10416 L -127.53983,514.96103 L -525.27653,554.75036 L -619.36814,689.85847 z"
+       d="M -428.3373,764.82259 L -34.708418,681.10416 L -103.29617,527.08286 L -525.27653,554.75036 L -619.36814,689.85847 z"
        style="fill:#ffff00;stroke:#000000;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1" />
     <path
        sodipodi:nodetypes="ccccc"
