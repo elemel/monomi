@@ -17,6 +17,12 @@ namespace monomi {
         CategoryFlag category() const;
         void category(CategoryFlag category);
 
+        float fallAcceleration() const;
+        void fallAcceleration(float fallAcceleration);
+
+        float fallVelocity() const;
+        void fallVelocity(float fallVelocity);
+
         float jumpVelocity() const;
         void jumpVelocity(float jumpVelocity);
 
@@ -32,8 +38,14 @@ namespace monomi {
         float runVelocity() const;
         void runVelocity(float runVelocity);
 
+        float wallSlideAcceleration() const;
+        void wallSlideAcceleration(float wallSlideAcceleration);
+
         float wallSlideVelocity() const;
         void wallSlideVelocity(float wallSlideVelocity);
+
+        float wallRunAcceleration() const;
+        void wallRunAcceleration(float wallRunAcceleration);
 
         float wallRunVelocity() const;
         void wallRunVelocity(float wallRunVelocity);
@@ -44,31 +56,49 @@ namespace monomi {
         float wallJumpAngle() const;
         void wallJumpAngle(float wallJumpAngle);
 
+        float stompAcceleration() const;
+        void stompAcceleration(float stompAcceleration);
+
+        float stompVelocity() const;
+        void stompVelocity(float stompVelocity);
+
     private:
         std::string name_;
         CategoryFlag category_;
+        float fallAcceleration_;
+        float fallVelocity_;
         float jumpVelocity_;
         float walkAcceleration_;
         float walkVelocity_;
         float runAcceleration_;
         float runVelocity_;
+        float wallSlideAcceleration_;
         float wallSlideVelocity_;
+        float wallRunAcceleration_;
         float wallRunVelocity_;
         float wallJumpVelocity_;
         float wallJumpAngle_;
+        float stompAcceleration_;
+        float stompVelocity_;
     };
 
     inline CharacterType::CharacterType() :
         category_(NEUTRAL_CATEGORY_FLAG),
+        fallAcceleration_(15.0f),
+        fallVelocity_(20.0f),
         jumpVelocity_(10.0f),
         walkAcceleration_(10.0f),
         walkVelocity_(4.0f),
         runAcceleration_(10.0f),
         runVelocity_(7.0f),
-        wallSlideVelocity_(5.0f),
-        wallRunVelocity_(5.0f),
+        wallSlideAcceleration_(10.0f),
+        wallSlideVelocity_(7.0f),
+        wallRunAcceleration_(10.0f),
+        wallRunVelocity_(7.0f),
         wallJumpVelocity_(10.0f),
-        wallJumpAngle_(0.3 * M_PI)
+        wallJumpAngle_(0.3 * M_PI),
+        stompAcceleration_(30.0f),
+        stompVelocity_(40.0f)
     { }
 
     inline std::string const &CharacterType::name() const
@@ -89,6 +119,26 @@ namespace monomi {
     inline void CharacterType::category(CategoryFlag category)
     {
         category_ = category;
+    }
+
+    inline float CharacterType::fallAcceleration() const
+    {
+        return fallAcceleration_;
+    }
+
+    inline void CharacterType::fallAcceleration(float fallAcceleration)
+    {
+        fallAcceleration_ = fallAcceleration;
+    }
+
+    inline float CharacterType::fallVelocity() const
+    {
+        return fallVelocity_;
+    }
+
+    inline void CharacterType::fallVelocity(float fallVelocity)
+    {
+        fallVelocity_ = fallVelocity;
     }
 
     inline float CharacterType::jumpVelocity() const
@@ -141,6 +191,16 @@ namespace monomi {
         runVelocity_ = runVelocity;
     }
 
+    inline float CharacterType::wallSlideAcceleration() const
+    {
+        return wallSlideAcceleration_;
+    }
+
+    inline void CharacterType::wallSlideAcceleration(float wallSlideAcceleration)
+    {
+        wallSlideAcceleration_ = wallSlideAcceleration;
+    }
+
     inline float CharacterType::wallSlideVelocity() const
     {
         return wallSlideVelocity_;
@@ -149,6 +209,16 @@ namespace monomi {
     inline void CharacterType::wallSlideVelocity(float wallSlideVelocity)
     {
         wallSlideVelocity_ = wallSlideVelocity;
+    }
+
+    inline float CharacterType::wallRunAcceleration() const
+    {
+        return wallRunAcceleration_;
+    }
+
+    inline void CharacterType::wallRunAcceleration(float wallRunAcceleration)
+    {
+        wallRunAcceleration_ = wallRunAcceleration;
     }
 
     inline float CharacterType::wallRunVelocity() const
@@ -179,6 +249,26 @@ namespace monomi {
     inline void CharacterType::wallJumpAngle(float wallJumpAngle)
     {
         wallJumpAngle_ = wallJumpAngle;
+    }
+
+    inline float CharacterType::stompAcceleration() const
+    {
+        return stompAcceleration_;
+    }
+
+    inline void CharacterType::stompAcceleration(float stompAcceleration)
+    {
+        stompAcceleration_ = stompAcceleration;
+    }
+
+    inline float CharacterType::stompVelocity() const
+    {
+        return stompVelocity_;
+    }
+
+    inline void CharacterType::stompVelocity(float stompVelocity)
+    {
+        stompVelocity_ = stompVelocity;
     }
 }
 

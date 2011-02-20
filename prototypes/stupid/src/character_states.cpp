@@ -31,7 +31,10 @@ namespace monomi {
 
     void CharacterFallState::update(float dt)
     {
-        (void) dt;
+        Vector2 velocity = character_->velocity();
+        velocity.y -= dt * character_->fallAcceleration();
+        velocity.clamp(character_->fallVelocity());
+        character_->velocity(velocity);
     }
 
     void CharacterFallState::print(std::ostream &out) const
@@ -111,6 +114,7 @@ namespace monomi {
         velocity.x += (dt * character_->runAcceleration() * horizontalInput);
         velocity.x = sign(velocity.x) * std::min(std::abs(velocity.x),
                                                  character_->runVelocity());
+        velocity.y -= dt * character_->fallAcceleration();
         character_->velocity(velocity);
     }
 
@@ -149,7 +153,9 @@ namespace monomi {
 
     void CharacterStandState::update(float dt)
     {
-        (void) dt;
+        Vector2 velocity = character_->velocity();
+        velocity.y -= dt * character_->fallAcceleration();
+        character_->velocity(velocity);
     }
 
     void CharacterStandState::print(std::ostream &out) const
@@ -175,7 +181,10 @@ namespace monomi {
 
     void CharacterStompState::update(float dt)
     {
-        (void) dt;
+        Vector2 velocity = character_->velocity();
+        velocity.y -= dt * character_->stompAcceleration();
+        velocity.clamp(character_->stompVelocity());
+        character_->velocity(velocity);
     }
 
     void CharacterStompState::print(std::ostream &out) const
@@ -218,6 +227,7 @@ namespace monomi {
         velocity.x += dt * character_->walkAcceleration() * horizontalInput;
         velocity.x = sign(velocity.x) * std::min(std::abs(velocity.x),
                                                  character_->walkVelocity());
+        velocity.y -= dt * character_->fallAcceleration();
         character_->velocity(velocity);
     }
 
@@ -293,8 +303,9 @@ namespace monomi {
         Vector2 velocity = character_->velocity();
         float horizontalContact = (float(character_->testContact(RIGHT_CONTACT_FLAG)) -
                                    float(character_->testContact(LEFT_CONTACT_FLAG)));
-        velocity.x += 10.0f * dt * horizontalContact;
-        velocity.y = character_->wallRunVelocity();
+        velocity.x += dt * horizontalContact * character_->fallAcceleration();
+        velocity.y += dt * character_->wallRunAcceleration();
+        velocity.clamp(character_->wallRunVelocity());
         character_->velocity(velocity);
     }
 
@@ -318,8 +329,8 @@ namespace monomi {
         {
             return StatePtr(new CharacterFallState(character_));
         }
-        if (character_->testInput(DOWN_INPUT_FLAG)) {
-            return StatePtr(new CharacterStompState(character_));
+        if (character_->testContact(DOWN_CONTACT_FLAG)) {
+            return StatePtr(new CharacterStandState(character_));
         }
         if (character_->testInput(JUMP_INPUT_FLAG)) {
             return StatePtr(new CharacterWallJumpState(character_));
@@ -329,11 +340,12 @@ namespace monomi {
 
     void CharacterWallSlideState::update(float dt)
     {
-        (void) dt;
-
         Vector2 velocity = character_->velocity();
-        velocity.y = sign(velocity.y) * std::min(std::abs(velocity.y),
-                                                 character_->wallSlideVelocity());
+        float horizontalContact = (float(character_->testContact(RIGHT_CONTACT_FLAG)) -
+                                   float(character_->testContact(LEFT_CONTACT_FLAG)));
+        velocity.x += dt * horizontalContact * character_->fallAcceleration();
+        velocity.y -= dt * character_->wallSlideAcceleration();
+        velocity.clamp(character_->wallSlideVelocity());
         character_->velocity(velocity);
     }
 

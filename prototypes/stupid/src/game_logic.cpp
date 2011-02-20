@@ -35,7 +35,7 @@ namespace monomi {
 
     GameLogic::GameLogic() :
         time_(0.0f),
-        world_(new b2World(b2Vec2(0.0f, -15.0f), true)),
+        world_(new b2World(b2Vec2(0.0f, 0.0f), true)),
         ninjaType_(createNinjaType())
     {
         b2BodyDef bodyDef;

@@ -38,15 +38,21 @@ namespace monomi {
 
         bool testContact(ContactFlag contact) const;
 
+        float fallAcceleration() const;
+        float fallVelocity() const;
         float jumpVelocity() const;
         float walkAcceleration() const;
         float walkVelocity() const;
         float runAcceleration() const;
         float runVelocity() const;
+        float wallSlideAcceleration() const;
         float wallSlideVelocity() const;
+        float wallRunAcceleration() const;
         float wallRunVelocity() const;
         float wallJumpVelocity() const;
         float wallJumpAngle() const;
+        float stompAcceleration() const;
+        float stompVelocity() const;
 
         void create(GameLogic *logic, Vector2 const &position);
         void destroy();
@@ -135,6 +141,16 @@ namespace monomi {
         return contacts_.test(contact);
     }
 
+    inline float CharacterActor::fallAcceleration() const
+    {
+        return type_->fallAcceleration();
+    }
+
+    inline float CharacterActor::fallVelocity() const
+    {
+        return type_->fallVelocity();
+    }
+
     inline float CharacterActor::jumpVelocity() const
     {
         return type_->jumpVelocity();
@@ -160,9 +176,19 @@ namespace monomi {
         return type_->runVelocity();
     }
 
+    inline float CharacterActor::wallSlideAcceleration() const
+    {
+        return type_->wallSlideAcceleration();
+    }
+
     inline float CharacterActor::wallSlideVelocity() const
     {
         return type_->wallSlideVelocity();
+    }
+
+    inline float CharacterActor::wallRunAcceleration() const
+    {
+        return type_->wallRunAcceleration();
     }
 
     inline float CharacterActor::wallRunVelocity() const
@@ -178,6 +204,16 @@ namespace monomi {
     inline float CharacterActor::wallJumpAngle() const
     {
         return type_->wallJumpAngle();
+    }
+
+    inline float CharacterActor::stompAcceleration() const
+    {
+        return type_->stompAcceleration();
+    }
+
+    inline float CharacterActor::stompVelocity() const
+    {
+        return type_->stompVelocity();
     }
 }
 

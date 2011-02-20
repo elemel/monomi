@@ -42,6 +42,7 @@ namespace monomi {
         Vector2 &operator/=(float f);
 
         float normalize();
+        void clamp(float length);
     };
 
     inline Vector2::Vector2() :
@@ -108,6 +109,14 @@ namespace monomi {
         return f;
     }
 
+    inline void Vector2::clamp(float length)
+    {
+        if (squaredLength() > square(length)) {
+            normalize();
+            *this *= length;
+        }
+    }
+
     inline Vector2 operator+(Vector2 const &v1, Vector2 const &v2)
     {
         return Vector2(v1) += v2;
@@ -150,9 +159,16 @@ namespace monomi {
 
     inline Vector2 normalize(Vector2 const &v)
     {
-        Vector2 v2(v);
-        v2.normalize();
-        return v2;
+        Vector2 result(v);
+        result.normalize();
+        return result;
+    }
+
+    inline Vector2 clamp(Vector2 const &v, float length)
+    {
+        Vector2 result(v);
+        result.clamp(length);
+        return result;
     }
 
     inline float distance(Vector2 const &p1, Vector2 const &p2)
