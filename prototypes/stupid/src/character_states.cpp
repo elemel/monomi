@@ -43,12 +43,11 @@ namespace monomi {
 
     void CharacterJumpState::enter()
     {
+        Vector2 velocity = character_->velocity();
         float jumpVelocity = character_->jumpVelocity();
-        float horizontalVelocity = character_->horizontalVelocity();
-        if (horizontalVelocity < jumpVelocity) {
-            float verticalVelocity = std::sqrt(square(jumpVelocity) -
-                                               square(horizontalVelocity));
-            character_->verticalVelocity(verticalVelocity);
+        if (velocity.x < jumpVelocity) {
+            velocity.y = std::sqrt(square(jumpVelocity) - square(velocity.x));
+            character_->velocity(velocity);
         }
     }
 
@@ -106,14 +105,13 @@ namespace monomi {
 
     void CharacterRunState::update(float dt)
     {
-        float velocity = character_->horizontalVelocity();
-        int horizontalInput = (int(character_->testInput(RIGHT_INPUT_FLAG)) -
-                               int(character_->testInput(LEFT_INPUT_FLAG)));
-        velocity += (dt * character_->runAcceleration() *
-                     float(horizontalInput));
-        velocity = sign(velocity) * std::min(std::abs(velocity),
-                                             character_->runVelocity());
-        character_->horizontalVelocity(velocity);
+        Vector2 velocity = character_->velocity();
+        float horizontalInput = (float(character_->testInput(RIGHT_INPUT_FLAG)) -
+                                 float(character_->testInput(LEFT_INPUT_FLAG)));
+        velocity.x += (dt * character_->runAcceleration() * horizontalInput);
+        velocity.x = sign(velocity.x) * std::min(std::abs(velocity.x),
+                                                 character_->runVelocity());
+        character_->velocity(velocity);
     }
 
     void CharacterRunState::print(std::ostream &out) const
@@ -214,14 +212,13 @@ namespace monomi {
 
     void CharacterWalkState::update(float dt)
     {
-        float velocity = character_->horizontalVelocity();
-        int horizontalInput = (int(character_->testInput(RIGHT_INPUT_FLAG)) -
-                               int(character_->testInput(LEFT_INPUT_FLAG)));
-        velocity += (dt * character_->walkAcceleration() *
-                     float(horizontalInput));
-        velocity = sign(velocity) * std::min(std::abs(velocity),
-                                             character_->walkVelocity());
-        character_->horizontalVelocity(velocity);
+        Vector2 velocity = character_->velocity();
+        float horizontalInput = (float(character_->testInput(RIGHT_INPUT_FLAG)) -
+                                 float(character_->testInput(LEFT_INPUT_FLAG)));
+        velocity.x += dt * character_->walkAcceleration() * horizontalInput;
+        velocity.x = sign(velocity.x) * std::min(std::abs(velocity.x),
+                                                 character_->walkVelocity());
+        character_->velocity(velocity);
     }
 
     void CharacterWalkState::print(std::ostream &out) const
@@ -233,14 +230,14 @@ namespace monomi {
 
     void CharacterWallJumpState::enter()
     {
-        int horizontalContact = (int(character_->testContact(RIGHT_CONTACT_FLAG)) -
-                                 int(character_->testContact(LEFT_CONTACT_FLAG)));
+        Vector2 velocity = character_->velocity();
+        float horizontalContact = (float(character_->testContact(RIGHT_CONTACT_FLAG)) -
+                                   float(character_->testContact(LEFT_CONTACT_FLAG)));
         float wallJumpVelocity = character_->wallJumpVelocity();
         float wallJumpAngle = character_->wallJumpAngle();
-        float horizontalVelocity = float(-horizontalContact) * std::cos(wallJumpAngle) * wallJumpVelocity;
-        float verticalVelocity = std::sin(wallJumpAngle) * wallJumpVelocity;
-        character_->horizontalVelocity(horizontalVelocity);
-        character_->verticalVelocity(verticalVelocity);
+        velocity.x = -horizontalContact * std::cos(wallJumpAngle) * wallJumpVelocity;
+        velocity.y = std::sin(wallJumpAngle) * wallJumpVelocity;
+        character_->velocity(velocity);
     }
 
     void CharacterWallJumpState::leave()
@@ -293,8 +290,12 @@ namespace monomi {
 
     void CharacterWallRunState::update(float dt)
     {
-        (void) dt;
-        character_->verticalVelocity(character_->wallRunVelocity());
+        Vector2 velocity = character_->velocity();
+        float horizontalContact = (float(character_->testContact(RIGHT_CONTACT_FLAG)) -
+                                   float(character_->testContact(LEFT_CONTACT_FLAG)));
+        velocity.x += 10.0f * dt * horizontalContact;
+        velocity.y = character_->wallRunVelocity();
+        character_->velocity(velocity);
     }
 
     void CharacterWallRunState::print(std::ostream &out) const
@@ -330,10 +331,10 @@ namespace monomi {
     {
         (void) dt;
 
-        float velocity = character_->verticalVelocity();
-        velocity = sign(velocity) * std::min(std::abs(velocity),
-                                             character_->wallSlideVelocity());
-        character_->verticalVelocity(velocity);
+        Vector2 velocity = character_->velocity();
+        velocity.y = sign(velocity.y) * std::min(std::abs(velocity.y),
+                                                 character_->wallSlideVelocity());
+        character_->velocity(velocity);
     }
 
     void CharacterWallSlideState::print(std::ostream &out) const

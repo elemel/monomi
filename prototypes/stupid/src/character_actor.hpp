@@ -24,11 +24,8 @@ namespace monomi {
 
         Vector2 position() const;
 
-        float horizontalVelocity() const;
-        void horizontalVelocity(float horizontalVelocity);
-
-        float verticalVelocity() const;
-        void verticalVelocity(float verticalVelocity);
+        Vector2 velocity() const;
+        void velocity(Vector2 const &velocity);
 
         StatePtr state() const;
         void state(StatePtr state);
@@ -90,30 +87,17 @@ namespace monomi {
         return Vector2(position.x, position.y);
     }
 
-    inline float CharacterActor::horizontalVelocity() const
-    {
-        return body_->GetLinearVelocity().x;
-    }
-
-    inline void CharacterActor::horizontalVelocity(float horizontalVelocity)
+    inline Vector2 CharacterActor::velocity() const
     {
         assert(body_);
-        b2Vec2 linearVelocity = body_->GetLinearVelocity();
-        linearVelocity.x = horizontalVelocity;
-        body_->SetLinearVelocity(linearVelocity);
+        b2Vec2 const &linearVelocity = body_->GetLinearVelocity();
+        return Vector2(linearVelocity.x, linearVelocity.y);
     }
 
-    inline float CharacterActor::verticalVelocity() const
-    {
-        return body_->GetLinearVelocity().y;
-    }
-
-    inline void CharacterActor::verticalVelocity(float verticalVelocity)
+    inline void CharacterActor::velocity(Vector2 const &velocity)
     {
         assert(body_);
-        b2Vec2 linearVelocity = body_->GetLinearVelocity();
-        linearVelocity.y = verticalVelocity;
-        body_->SetLinearVelocity(linearVelocity);
+        body_->SetLinearVelocity(b2Vec2(velocity.x, velocity.y));
     }
 
     inline CharacterActor::StatePtr CharacterActor::state() const
