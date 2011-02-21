@@ -18,29 +18,29 @@ namespace monomi {
             switch (key) {
             case SDLK_w:
             case SDLK_UP:
-                return UP_INPUT_FLAG;
+                return UP_INPUT;
 
             case SDLK_a:
             case SDLK_LEFT:
-                return LEFT_INPUT_FLAG;
+                return LEFT_INPUT;
 
             case SDLK_s:
             case SDLK_DOWN:
-                return DOWN_INPUT_FLAG;
+                return DOWN_INPUT;
 
             case SDLK_d:
             case SDLK_RIGHT:
-                return RIGHT_INPUT_FLAG;
+                return RIGHT_INPUT;
 
             case SDLK_SPACE:
-                return JUMP_INPUT_FLAG;
+                return JUMP_INPUT;
 
             case SDLK_LSHIFT:
             case SDLK_RSHIFT:
-                return ACTION_INPUT_FLAG;
+                return ACTION_INPUT;
 
             default:
-                return INPUT_FLAG_COUNT;
+                return INPUT_COUNT;
             }
         }
     }
@@ -102,7 +102,7 @@ namespace monomi {
     void GameLoop::handleKeyDownEvent(SDL_Event const &event)
     {
         InputFlag input = mapKeyToInput(event.key.keysym.sym);
-        if (input != INPUT_FLAG_COUNT) {
+        if (input != INPUT_COUNT) {
             if (GameLogic::CharacterPtr character =
                 gameLogic_->playerCharacter())
             {
@@ -114,7 +114,7 @@ namespace monomi {
     void GameLoop::handleKeyUpEvent(SDL_Event const &event)
     {
         InputFlag input = mapKeyToInput(event.key.keysym.sym);
-        if (input != INPUT_FLAG_COUNT) {
+        if (input != INPUT_COUNT) {
             if (GameLogic::CharacterPtr character =
                 gameLogic_->playerCharacter())
             {

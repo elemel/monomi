@@ -5,6 +5,7 @@
 #include "character_type.hpp"
 #include "geometry.hpp"
 
+#include <map>
 #include <string>
 #include <boost/noncopyable.hpp>
 #include <boost/shared_ptr.hpp>
@@ -32,6 +33,8 @@ namespace monomi {
         CharacterPtr playerCharacter() const;
         CharacterVector const &characters() const;
 
+        void addCharacterType(CharacterTypePtr type);
+
         void update(float dt);
         void debugDraw(DebugGraphics *graphics);
 
@@ -42,16 +45,18 @@ namespace monomi {
         void createStart(Circle2 const &circle);
         void createGoal(Circle2 const &circle);
 
-        CharacterPtr createCharacter(CharacterType *type,
+        CharacterPtr createCharacter(std::string const &name,
                                      Vector2 const &position);
         void destroyCharacter(CharacterPtr character);
 
     private:
+        typedef std::map<std::string, CharacterTypePtr> CharacterTypeMap;
+
         float time_;
         boost::shared_ptr<b2World> world_;
         b2Body *worldBody_;
 
-        CharacterTypePtr ninjaType_;
+        CharacterTypeMap characterTypes_;
         CharacterVector characters_;
         CharacterPtr playerCharacter_;
 

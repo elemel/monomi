@@ -24,9 +24,9 @@
      borderopacity="1.0"
      inkscape:pageopacity="0.0"
      inkscape:pageshadow="2"
-     inkscape:zoom="0.49497475"
-     inkscape:cx="150.8858"
-     inkscape:cy="439.18778"
+     inkscape:zoom="0.24748738"
+     inkscape:cx="-576.42402"
+     inkscape:cy="358.37557"
      inkscape:document-units="px"
      inkscape:current-layer="layer1"
      showgrid="false"
@@ -135,5 +135,21 @@ alfa beta</desc>
        id="path3048"
        inkscape:connector-curvature="0"
        sodipodi:nodetypes="cccccc" />
+    <rect
+       style="fill:#ffff00;fill-opacity:1;stroke:#000000;stroke-width:1;stroke-opacity:1"
+       id="rect3050"
+       width="161.6244"
+       height="383.85797"
+       x="1065.1498"
+       y="396.11279"
+       transform="matrix(0.95507848,-0.296353,0.296353,0.95507848,0,0)" />
+    <rect
+       transform="matrix(0.99602887,0.08903082,-0.08903082,0.99602887,0,0)"
+       y="-418.57764"
+       x="1136.228"
+       height="383.85797"
+       width="161.6244"
+       id="rect3052"
+       style="fill:#ffff00;fill-opacity:1;stroke:#000000;stroke-width:1;stroke-opacity:1" />
   </g>
 </svg>

@@ -3,16 +3,16 @@
 
 namespace monomi {
     enum InputFlag {
-        UP_INPUT_FLAG,
-        LEFT_INPUT_FLAG,
-        DOWN_INPUT_FLAG,
-        RIGHT_INPUT_FLAG,
+        UP_INPUT,
+        LEFT_INPUT,
+        DOWN_INPUT,
+        RIGHT_INPUT,
 
-        RUN_INPUT_FLAG,
-        JUMP_INPUT_FLAG,
-        ACTION_INPUT_FLAG,
+        RUN_INPUT,
+        JUMP_INPUT,
+        ACTION_INPUT,
 
-        INPUT_FLAG_COUNT
+        INPUT_COUNT
     };
 }
 

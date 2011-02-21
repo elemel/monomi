@@ -1,28 +1,106 @@
+#include "character_type.hpp"
 #include "color.hpp"
 #include "game_logic.hpp"
 #include "game_loop.hpp"
 #include "string_buffer.hpp"
 #include "svg_parser.hpp"
 
-#include <SDL.h>
-
 #include <iostream>
 #include <stdexcept>
 #include <sstream>
+#include <SDL.h>
+#include <boost/property_tree/ptree.hpp>
+#include <boost/property_tree/ini_parser.hpp>
 
 using namespace monomi;
 
 namespace {
+    template <typename T>
+    T get(std::string const &path, boost::property_tree::ptree const &values,
+          boost::property_tree::ptree const &defaults)
+    {
+        boost::optional<T> result = values.get_optional<T>(path);
+        return result ? *result : defaults.get<T>(path);
+    }
+
+    void loadCharacterType(std::string const &name,
+                           boost::property_tree::ptree const &tree,
+                           boost::shared_ptr<GameLogic> gameLogic)
+    {
+        boost::optional<boost::property_tree::ptree const &> optionalValues = tree.get_child_optional(name);
+        boost::property_tree::ptree emptyValues;
+        boost::property_tree::ptree const &values = optionalValues ? *optionalValues : emptyValues;
+        boost::property_tree::ptree const &defaults = tree.get_child("defaults");
+
+        GameLogic::CharacterTypePtr type(new CharacterType);
+        type->name(name);
+
+        type->fallAcceleration(get<float>("fall-acceleration", values, defaults));
+        type->fallVelocity(get<float>("fall-velocity", values, defaults));
+        type->jumpVelocity(get<float>("jump-velocity", values, defaults));
+        type->runAcceleration(get<float>("run-acceleration", values, defaults));
+        type->runVelocity(get<float>("run-velocity", values, defaults));
+        type->stompAcceleration(get<float>("stomp-acceleration", values, defaults));
+        type->stompVelocity(get<float>("stomp-velocity", values, defaults));
+        type->walkAcceleration(get<float>("walk-acceleration", values, defaults));
+        type->walkVelocity(get<float>("walk-velocity", values, defaults));
+        type->wallJumpVelocity(get<float>("wall-jump-velocity", values, defaults));
+        type->wallJumpAngle(get<float>("wall-jump-angle", values, defaults));
+        type->wallRunAcceleration(get<float>("wall-run-acceleration", values, defaults));
+        type->wallRunVelocity(get<float>("wall-run-velocity", values, defaults));
+        type->wallSlideAcceleration(get<float>("wall-slide-acceleration", values, defaults));
+        type->wallSlideVelocity(get<float>("wall-slide-velocity", values, defaults));
+
+        CharacterType::TechniqueSet techniques;
+        techniques.set(CharacterType::DOUBLE_JUMP_TECHNIQUE, get<bool>("double-jump-technique", values, defaults));
+        techniques.set(CharacterType::GLIDE_TECHNIQUE, get<bool>("glide-technique", values, defaults));
+        techniques.set(CharacterType::SLIDE_TECHNIQUE, get<bool>("slide-technique", values, defaults));
+        techniques.set(CharacterType::STOMP_TECHNIQUE, get<bool>("stomp-technique", values, defaults));
+        techniques.set(CharacterType::TELEPORT_TECHNIQUE, get<bool>("teleport-technique", values, defaults));
+        techniques.set(CharacterType::TRIPLE_JUMP_TECHNIQUE, get<bool>("triple-jump-technique", values, defaults));
+        techniques.set(CharacterType::WALL_JUMP_TECHNIQUE, get<bool>("wall-jump-technique", values, defaults));
+        techniques.set(CharacterType::WALL_RUN_TECHNIQUE, get<bool>("wall-run-technique", values, defaults));
+        techniques.set(CharacterType::WALL_SLIDE_TECHNIQUE, get<bool>("wall-slide-technique", values, defaults));
+        type->techniques(techniques);
+
+        CharacterType::ToolSet tools;
+        tools.set(CharacterType::AIR_SKIN_TOOL, get<bool>("air-skin-tool", values, defaults));
+        tools.set(CharacterType::BAMBOO_FLUTE_TOOL, get<bool>("bamboo-flute-tool", values, defaults));
+        tools.set(CharacterType::GRAPPLING_HOOK_TOOL, get<bool>("grappling-hook-tool", values, defaults));
+        tools.set(CharacterType::IRON_FAN_TOOL, get<bool>("iron-fan-tool", values, defaults));
+        tools.set(CharacterType::SMOKE_BOMBS_TOOL, get<bool>("smoke-bombs-tool", values, defaults));
+        tools.set(CharacterType::STRAW_BASKET_TOOL, get<bool>("straw-basket-tool", values, defaults));
+        tools.set(CharacterType::THROWING_STARS_TOOL, get<bool>("throwing-stars-tool", values, defaults));
+        tools.set(CharacterType::TIGER_CLAWS_TOOL, get<bool>("tiger-claws-tool", values, defaults));
+        type->tools(tools);
+
+        gameLogic->addCharacterType(type);
+    }
+
+    void loadCharacterTypes(std::istream &config, boost::shared_ptr<GameLogic> gameLogic)
+    {
+        boost::property_tree::ptree tree;
+        boost::property_tree::read_ini(config, tree);
+
+        loadCharacterType("air-master", tree, gameLogic);
+        loadCharacterType("earth-master", tree, gameLogic);
+        loadCharacterType("fire-master", tree, gameLogic);
+        loadCharacterType("kunoichi", tree, gameLogic);
+        loadCharacterType("ninja", tree, gameLogic);
+        loadCharacterType("samurai", tree, gameLogic);
+        loadCharacterType("void-master", tree, gameLogic);
+        loadCharacterType("water-master", tree, gameLogic);
+    }
+
     void createCircleGameObject(boost::shared_ptr<GameLogic> gameLogic,
-                          Circle2 const &circle,
-                          ColorName colorName)
+                          Circle2 const &circle, ColorName colorName)
     {
         switch (colorName) {
-        case LIME_COLOR_NAME:
+        case LIME_COLOR:
             gameLogic->createStart(circle);
             break;
 
-        case RED_COLOR_NAME:
+        case RED_COLOR:
             gameLogic->createGoal(circle);
             break;
 
@@ -32,19 +110,18 @@ namespace {
     }
 
     void createPolygonGameObject(boost::shared_ptr<GameLogic> gameLogic,
-                          Polygon2 const &polygon,
-                          ColorName colorName)
+                          Polygon2 const &polygon, ColorName colorName)
     {
         switch (colorName) {
-        case BLUE_COLOR_NAME:
+        case BLUE_COLOR:
             gameLogic->createWater(polygon);
             break;
 
-        case FUCHSIA_COLOR_NAME:
+        case FUCHSIA_COLOR:
             gameLogic->createShadow(polygon);
             break;
 
-        case YELLOW_COLOR_NAME:
+        case YELLOW_COLOR:
             gameLogic->createPlatform(polygon);
             break;
 
@@ -102,6 +179,9 @@ int main(int argc, char *argv[])
         }
 
         boost::shared_ptr<GameLogic> gameLogic(new GameLogic);
+
+        std::ifstream characterConfig("../config/character.ini");
+        loadCharacterTypes(characterConfig, gameLogic);
 
         boost::shared_ptr<SvgParser> svgParser(new SvgParser);
         SvgParser::ElementVector const &elements = svgParser->parse(argc == 2 ? argv[1] : "");

@@ -5,12 +5,12 @@
 
 namespace monomi {
     enum ContactFlag {
-        UP_CONTACT_FLAG,
-        LEFT_CONTACT_FLAG,
-        DOWN_CONTACT_FLAG,
-        RIGHT_CONTACT_FLAG,
+        UP_CONTACT,
+        LEFT_CONTACT,
+        DOWN_CONTACT,
+        RIGHT_CONTACT,
         
-        CONTACT_FLAG_COUNT
+        CONTACT_COUNT
     };
 
     std::ostream &operator<<(std::ostream &out, ContactFlag contact);

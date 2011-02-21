@@ -1,21 +1,47 @@
 #ifndef MONOMI_CHARACTER_TYPE_HPP
 #define MONOMI_CHARACTER_TYPE_HPP
 
-#include "category_flag.hpp"
-
+#include <bitset>
 #include <cmath>
 #include <string>
 
 namespace monomi {
     class CharacterType {
     public:
+        enum TechniqueFlag {
+            DOUBLE_JUMP_TECHNIQUE,
+            GLIDE_TECHNIQUE,
+            SLIDE_TECHNIQUE,
+            STOMP_TECHNIQUE,
+            TELEPORT_TECHNIQUE,
+            TRIPLE_JUMP_TECHNIQUE,
+            WALL_JUMP_TECHNIQUE,
+            WALL_RUN_TECHNIQUE,
+            WALL_SLIDE_TECHNIQUE,
+
+            TECHNIQUE_COUNT
+        };
+
+        enum ToolFlag {
+            AIR_SKIN_TOOL,
+            BAMBOO_FLUTE_TOOL,
+            GRAPPLING_HOOK_TOOL,
+            IRON_FAN_TOOL,
+            SMOKE_BOMBS_TOOL,
+            STRAW_BASKET_TOOL,
+            THROWING_STARS_TOOL,
+            TIGER_CLAWS_TOOL,
+
+            TOOL_COUNT
+        };
+
+        typedef std::bitset<TECHNIQUE_COUNT> TechniqueSet;
+        typedef std::bitset<TOOL_COUNT> ToolSet;
+
         CharacterType();
 
         std::string const &name() const;
         void name(std::string const &name);
-
-        CategoryFlag category() const;
-        void category(CategoryFlag category);
 
         float fallAcceleration() const;
         void fallAcceleration(float fallAcceleration);
@@ -62,43 +88,51 @@ namespace monomi {
         float stompVelocity() const;
         void stompVelocity(float stompVelocity);
 
+        TechniqueSet const &techniques() const;
+        void techniques(TechniqueSet const &techniques);
+
+        ToolSet const &tools() const;
+        void tools(ToolSet const &tools);
+
     private:
         std::string name_;
-        CategoryFlag category_;
+
         float fallAcceleration_;
         float fallVelocity_;
         float jumpVelocity_;
-        float walkAcceleration_;
-        float walkVelocity_;
         float runAcceleration_;
         float runVelocity_;
-        float wallSlideAcceleration_;
-        float wallSlideVelocity_;
-        float wallRunAcceleration_;
-        float wallRunVelocity_;
-        float wallJumpVelocity_;
-        float wallJumpAngle_;
         float stompAcceleration_;
         float stompVelocity_;
+        float walkAcceleration_;
+        float walkVelocity_;
+        float wallJumpAngle_;
+        float wallJumpVelocity_;
+        float wallRunAcceleration_;
+        float wallRunVelocity_;
+        float wallSlideAcceleration_;
+        float wallSlideVelocity_;
+
+        TechniqueSet techniques_;
+        ToolSet tools_;
     };
 
     inline CharacterType::CharacterType() :
-        category_(NEUTRAL_CATEGORY_FLAG),
-        fallAcceleration_(15.0f),
-        fallVelocity_(20.0f),
-        jumpVelocity_(10.0f),
-        walkAcceleration_(10.0f),
-        walkVelocity_(4.0f),
-        runAcceleration_(10.0f),
-        runVelocity_(7.0f),
-        wallSlideAcceleration_(10.0f),
-        wallSlideVelocity_(7.0f),
-        wallRunAcceleration_(10.0f),
-        wallRunVelocity_(7.0f),
-        wallJumpVelocity_(10.0f),
-        wallJumpAngle_(0.3 * M_PI),
-        stompAcceleration_(30.0f),
-        stompVelocity_(40.0f)
+        fallAcceleration_(0.0f),
+        fallVelocity_(0.0f),
+        jumpVelocity_(0.0f),
+        runAcceleration_(0.0f),
+        runVelocity_(0.0f),
+        stompAcceleration_(0.0f),
+        stompVelocity_(0.0f),
+        walkAcceleration_(0.0f),
+        walkVelocity_(0.0f),
+        wallJumpAngle_(0.0f),
+        wallJumpVelocity_(0.0f),
+        wallRunAcceleration_(0.0f),
+        wallRunVelocity_(0.0f),
+        wallSlideAcceleration_(0.0f),
+        wallSlideVelocity_(0.0f)
     { }
 
     inline std::string const &CharacterType::name() const
@@ -109,16 +143,6 @@ namespace monomi {
     inline void CharacterType::name(std::string const &name)
     {
         name_ = name;
-    }
-
-    inline CategoryFlag CharacterType::category() const
-    {
-        return category_;
-    }
-
-    inline void CharacterType::category(CategoryFlag category)
-    {
-        category_ = category;
     }
 
     inline float CharacterType::fallAcceleration() const
@@ -269,6 +293,26 @@ namespace monomi {
     inline void CharacterType::stompVelocity(float stompVelocity)
     {
         stompVelocity_ = stompVelocity;
+    }
+
+    inline CharacterType::TechniqueSet const &CharacterType::techniques() const
+    {
+        return techniques_;
+    }
+
+    inline void CharacterType::techniques(TechniqueSet const &techniques)
+    {
+        techniques_ = techniques;
+    }
+
+    inline CharacterType::ToolSet const &CharacterType::tools() const
+    {
+        return tools_;
+    }
+
+    inline void CharacterType::tools(ToolSet const &tools)
+    {
+        tools_ = tools;
     }
 }
 

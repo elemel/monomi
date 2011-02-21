@@ -37,52 +37,52 @@ namespace monomi {
     std::ostream &operator<<(std::ostream &out, ColorName colorName)
     {
         switch (colorName) {
-        case AQUA_COLOR_NAME:
+        case AQUA_COLOR:
             return out << "aqua";
 
-        case BLACK_COLOR_NAME:
+        case BLACK_COLOR:
             return out << "black";
 
-        case BLUE_COLOR_NAME:
+        case BLUE_COLOR:
             return out << "blue";
 
-        case FUCHSIA_COLOR_NAME:
+        case FUCHSIA_COLOR:
             return out << "fuchsia";
 
-        case GRAY_COLOR_NAME:
+        case GRAY_COLOR:
             return out << "gray";
 
-        case GREEN_COLOR_NAME:
+        case GREEN_COLOR:
             return out << "green";
 
-        case LIME_COLOR_NAME:
+        case LIME_COLOR:
             return out << "lime";
 
-        case MAROON_COLOR_NAME:
+        case MAROON_COLOR:
             return out << "maroon";
 
-        case NAVY_COLOR_NAME:
+        case NAVY_COLOR:
             return out << "navy";
 
-        case OLIVE_COLOR_NAME:
+        case OLIVE_COLOR:
             return out << "olive";
 
-        case PURPLE_COLOR_NAME:
+        case PURPLE_COLOR:
             return out << "purple";
 
-        case RED_COLOR_NAME:
+        case RED_COLOR:
             return out << "red";
 
-        case SILVER_COLOR_NAME:
+        case SILVER_COLOR:
             return out << "silver";
 
-        case TEAL_COLOR_NAME:
+        case TEAL_COLOR:
             return out << "teal";
 
-        case WHITE_COLOR_NAME:
+        case WHITE_COLOR:
             return out << "white";
 
-        case YELLOW_COLOR_NAME:
+        case YELLOW_COLOR:
             return out << "yellow";
 
         default:
@@ -100,7 +100,7 @@ namespace monomi {
     {
         int result = 0;
         int minDistance = squaredDistance(*this, Color3(ColorName(result)));
-        for (int i = 1; i < COLOR_NAME_COUNT; ++i) {
+        for (int i = 1; i < COLOR_COUNT; ++i) {
             int distance = squaredDistance(*this, Color3(ColorName(i)));
             if (distance < minDistance) {
                 result = i;

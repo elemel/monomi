@@ -35,7 +35,7 @@ namespace monomi {
         fixtureDef.restitution = 0.0f;
         fixtureDef.friction = 0.0f;
         fixtureDef.shape = &circleShape;
-        fixtureDef.filter.categoryBits = (1 << type_->category());
+        fixtureDef.filter.categoryBits = (1 << NEUTRAL_CATEGORY);
         fixture_ = body_->CreateFixture(&fixtureDef);
 
         leftSensor_ = createSensor(Vector2(-0.3f, 0.0f), 0.3f);
@@ -66,7 +66,7 @@ namespace monomi {
 
     void CharacterActor::print(std::ostream &out) const
     {
-        out << type_->name();
+        out << type_->name() << "-" << id_;
     }
 
     b2Fixture *CharacterActor::createSensor(Vector2 const &center,
@@ -78,8 +78,8 @@ namespace monomi {
 
         b2FixtureDef fixtureDef;
         fixtureDef.shape = &circleShape;
-        fixtureDef.filter.categoryBits = (1 << type_->category());
-        fixtureDef.filter.maskBits = (1 << PLATFORM_CATEGORY_FLAG);
+        fixtureDef.filter.categoryBits = (1 << NEUTRAL_CATEGORY);
+        fixtureDef.filter.maskBits = (1 << PLATFORM_CATEGORY);
         fixtureDef.isSensor = true;
 
         return body_->CreateFixture(&fixtureDef);
@@ -97,16 +97,16 @@ namespace monomi {
                 b2Fixture *f1 = edge->contact->GetFixtureA();
                 b2Fixture *f2 = edge->contact->GetFixtureB();
                 if (f1 == leftSensor_ || f2 == leftSensor_) {
-                    newContacts.set(LEFT_CONTACT_FLAG);
+                    newContacts.set(LEFT_CONTACT);
                 }
                 if (f1 == rightSensor_ || f2 == rightSensor_) {
-                    newContacts.set(RIGHT_CONTACT_FLAG);
+                    newContacts.set(RIGHT_CONTACT);
                 }
                 if (f1 == downSensor_ || f2 == downSensor_) {
-                    newContacts.set(DOWN_CONTACT_FLAG);
+                    newContacts.set(DOWN_CONTACT);
                 }
                 if (f1 == upSensor_ || f2 == upSensor_) {
-                    newContacts.set(UP_CONTACT_FLAG);
+                    newContacts.set(UP_CONTACT);
                 }
             }
         }
@@ -123,7 +123,7 @@ namespace monomi {
 
     void CharacterActor::updateState(float dt)
     {
-        if (CharacterActor::StatePtr state = state_->transition()) {
+        if (StatePtr state = state_->transition()) {
             state_->leave();
             state_ = state;
             std::cerr << "DEBUG: " << capitalize(*this) << " changed state to "

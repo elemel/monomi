@@ -4,16 +4,16 @@ namespace monomi {
     std::ostream &operator<<(std::ostream &out, ContactFlag contact)
     {
         switch (contact) {
-        case LEFT_CONTACT_FLAG:
+        case LEFT_CONTACT:
             return out << "left";
 
-        case RIGHT_CONTACT_FLAG:
+        case RIGHT_CONTACT:
             return out << "right";
 
-        case DOWN_CONTACT_FLAG:
+        case DOWN_CONTACT:
             return out << "down";
 
-        case UP_CONTACT_FLAG:
+        case UP_CONTACT:
             return out << "up";
 
         default:

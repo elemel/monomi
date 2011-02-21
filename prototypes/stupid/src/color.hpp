@@ -5,24 +5,24 @@
 
 namespace monomi {
     enum ColorName {
-        AQUA_COLOR_NAME,
-        BLACK_COLOR_NAME,
-        BLUE_COLOR_NAME,
-        FUCHSIA_COLOR_NAME,
-        GRAY_COLOR_NAME,
-        GREEN_COLOR_NAME,
-        LIME_COLOR_NAME,
-        MAROON_COLOR_NAME,
-        NAVY_COLOR_NAME,
-        OLIVE_COLOR_NAME,
-        PURPLE_COLOR_NAME,
-        RED_COLOR_NAME,
-        SILVER_COLOR_NAME,
-        TEAL_COLOR_NAME,
-        WHITE_COLOR_NAME,
-        YELLOW_COLOR_NAME,
+        AQUA_COLOR,
+        BLACK_COLOR,
+        BLUE_COLOR,
+        FUCHSIA_COLOR,
+        GRAY_COLOR,
+        GREEN_COLOR,
+        LIME_COLOR,
+        MAROON_COLOR,
+        NAVY_COLOR,
+        OLIVE_COLOR,
+        PURPLE_COLOR,
+        RED_COLOR,
+        SILVER_COLOR,
+        TEAL_COLOR,
+        WHITE_COLOR,
+        YELLOW_COLOR,
 
-        COLOR_NAME_COUNT
+        COLOR_COUNT
     };
 
     std::ostream &operator<<(std::ostream &out, ColorName colorName);

@@ -7,6 +7,7 @@
 #include "contact_flag.hpp"
 #include "geometry.hpp"
 #include "input_flag.hpp"
+#include "state_fwd.hpp"
 
 #include <bitset>
 #include <string>
@@ -14,13 +15,9 @@
 #include <boost/shared_ptr.hpp>
 
 namespace monomi {
-    class State;
-
     class CharacterActor : public Actor {
     public:
-        typedef boost::shared_ptr<State> StatePtr;
-
-        CharacterActor(CharacterType *type);
+        CharacterActor(CharacterType *type, int id = 0);
 
         Vector2 position() const;
 
@@ -61,10 +58,11 @@ namespace monomi {
         void print(std::ostream &out) const;
 
     private:
-        typedef std::bitset<INPUT_FLAG_COUNT> InputFlagSet;
-        typedef std::bitset<CONTACT_FLAG_COUNT> ContactFlagSet;
+        typedef std::bitset<INPUT_COUNT> InputFlagSet;
+        typedef std::bitset<CONTACT_COUNT> ContactFlagSet;
 
         CharacterType *type_;
+        int id_;
         GameLogic *logic_;
         StatePtr state_;
         b2Body *body_;
@@ -79,8 +77,9 @@ namespace monomi {
         void updateState(float dt);
     };
 
-    inline CharacterActor::CharacterActor(CharacterType *type) :
+    inline CharacterActor::CharacterActor(CharacterType *type, int id) :
         type_(type),
+        id_(id),
         logic_(0),
         body_(0),
         leftSensor_(0), rightSensor_(0), downSensor_(0), upSensor_(0)
@@ -106,7 +105,7 @@ namespace monomi {
         body_->SetLinearVelocity(b2Vec2(velocity.x, velocity.y));
     }
 
-    inline CharacterActor::StatePtr CharacterActor::state() const
+    inline StatePtr CharacterActor::state() const
     {
         return state_;
     }

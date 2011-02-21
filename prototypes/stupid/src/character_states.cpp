@@ -15,15 +15,15 @@ namespace monomi {
 
     StatePtr CharacterFallState::transition()
     {
-        if (character_->testContact(DOWN_CONTACT_FLAG)) {
+        if (character_->testContact(DOWN_CONTACT)) {
             return StatePtr(new CharacterStandState(character_));
         }
-        if (character_->testContact(LEFT_CONTACT_FLAG) ||
-            character_->testContact(RIGHT_CONTACT_FLAG))
+        if (character_->testContact(LEFT_CONTACT) ||
+            character_->testContact(RIGHT_CONTACT))
         {
             return StatePtr(new CharacterWallSlideState(character_));
         }
-        if (character_->testInput(DOWN_INPUT_FLAG)) {
+        if (character_->testInput(DOWN_INPUT)) {
             return StatePtr(new CharacterStompState(character_));
         }
         return StatePtr();
@@ -82,24 +82,24 @@ namespace monomi {
 
     StatePtr CharacterRunState::transition()
     {
-        if (!character_->testContact(DOWN_CONTACT_FLAG)) {
+        if (!character_->testContact(DOWN_CONTACT)) {
             return StatePtr(new CharacterFallState(character_));
         }
-        if (!character_->testInput(RUN_INPUT_FLAG)) {
+        if (!character_->testInput(RUN_INPUT)) {
             return StatePtr(new CharacterWalkState(character_));
         }
-        if (character_->testInput(JUMP_INPUT_FLAG)) {
+        if (character_->testInput(JUMP_INPUT)) {
             return StatePtr(new CharacterJumpState(character_));
         }
-        if (!character_->testInput(LEFT_INPUT_FLAG) &&
-            !character_->testInput(RIGHT_INPUT_FLAG))
+        if (!character_->testInput(LEFT_INPUT) &&
+            !character_->testInput(RIGHT_INPUT))
         {
             return StatePtr(new CharacterWalkState(character_));
         }
-        if (character_->testContact(LEFT_CONTACT_FLAG) &&
-            character_->testInput(LEFT_INPUT_FLAG) ||
-            character_->testContact(RIGHT_CONTACT_FLAG) &&
-            character_->testInput(RIGHT_INPUT_FLAG))
+        if (character_->testContact(LEFT_CONTACT) &&
+            character_->testInput(LEFT_INPUT) ||
+            character_->testContact(RIGHT_CONTACT) &&
+            character_->testInput(RIGHT_INPUT))
         {
             return StatePtr(new CharacterWallRunState(character_));
         }
@@ -109,8 +109,8 @@ namespace monomi {
     void CharacterRunState::update(float dt)
     {
         Vector2 velocity = character_->velocity();
-        float horizontalInput = (float(character_->testInput(RIGHT_INPUT_FLAG)) -
-                                 float(character_->testInput(LEFT_INPUT_FLAG)));
+        float horizontalInput = (float(character_->testInput(RIGHT_INPUT)) -
+                                 float(character_->testInput(LEFT_INPUT)));
         velocity.x += (dt * character_->runAcceleration() * horizontalInput);
         velocity.x = sign(velocity.x) * std::min(std::abs(velocity.x),
                                                  character_->runVelocity());
@@ -137,14 +137,14 @@ namespace monomi {
 
     StatePtr CharacterStandState::transition()
     {
-        if (!character_->testContact(DOWN_CONTACT_FLAG)) {
+        if (!character_->testContact(DOWN_CONTACT)) {
             return StatePtr(new CharacterFallState(character_));
         }
-        if (character_->testInput(JUMP_INPUT_FLAG)) {
+        if (character_->testInput(JUMP_INPUT)) {
             return StatePtr(new CharacterJumpState(character_));
         }
-        if (character_->testInput(LEFT_INPUT_FLAG) ||
-            character_->testInput(RIGHT_INPUT_FLAG))
+        if (character_->testInput(LEFT_INPUT) ||
+            character_->testInput(RIGHT_INPUT))
         {
             return StatePtr(new CharacterWalkState(character_));
         }
@@ -173,7 +173,7 @@ namespace monomi {
 
     StatePtr CharacterStompState::transition()
     {
-        if (character_->testContact(DOWN_CONTACT_FLAG)) {
+        if (character_->testContact(DOWN_CONTACT)) {
             return StatePtr(new CharacterStandState(character_));
         }
         return StatePtr();
@@ -202,18 +202,18 @@ namespace monomi {
 
     StatePtr CharacterWalkState::transition()
     {
-        if (!character_->testContact(DOWN_CONTACT_FLAG)) {
+        if (!character_->testContact(DOWN_CONTACT)) {
             return StatePtr(new CharacterFallState(character_));
         }
-        if (!character_->testInput(LEFT_INPUT_FLAG) &&
-            !character_->testInput(RIGHT_INPUT_FLAG))
+        if (!character_->testInput(LEFT_INPUT) &&
+            !character_->testInput(RIGHT_INPUT))
         {
             return StatePtr(new CharacterStandState(character_));
         }
-        if (character_->testInput(RUN_INPUT_FLAG)) {
+        if (character_->testInput(RUN_INPUT)) {
             return StatePtr(new CharacterRunState(character_));
         }
-        if (character_->testInput(JUMP_INPUT_FLAG)) {
+        if (character_->testInput(JUMP_INPUT)) {
             return StatePtr(new CharacterJumpState(character_));
         }
         return StatePtr();
@@ -222,8 +222,8 @@ namespace monomi {
     void CharacterWalkState::update(float dt)
     {
         Vector2 velocity = character_->velocity();
-        float horizontalInput = (float(character_->testInput(RIGHT_INPUT_FLAG)) -
-                                 float(character_->testInput(LEFT_INPUT_FLAG)));
+        float horizontalInput = (float(character_->testInput(RIGHT_INPUT)) -
+                                 float(character_->testInput(LEFT_INPUT)));
         velocity.x += dt * character_->walkAcceleration() * horizontalInput;
         velocity.x = sign(velocity.x) * std::min(std::abs(velocity.x),
                                                  character_->walkVelocity());
@@ -241,8 +241,8 @@ namespace monomi {
     void CharacterWallJumpState::enter()
     {
         Vector2 velocity = character_->velocity();
-        float horizontalContact = (float(character_->testContact(RIGHT_CONTACT_FLAG)) -
-                                   float(character_->testContact(LEFT_CONTACT_FLAG)));
+        float horizontalContact = (float(character_->testContact(RIGHT_CONTACT)) -
+                                   float(character_->testContact(LEFT_CONTACT)));
         float wallJumpVelocity = character_->wallJumpVelocity();
         float wallJumpAngle = character_->wallJumpAngle();
         velocity.x = -horizontalContact * std::cos(wallJumpAngle) * wallJumpVelocity;
@@ -278,21 +278,21 @@ namespace monomi {
 
     StatePtr CharacterWallRunState::transition()
     {
-        if (!character_->testContact(LEFT_CONTACT_FLAG) &&
-            !character_->testContact(RIGHT_CONTACT_FLAG))
+        if (!character_->testContact(LEFT_CONTACT) &&
+            !character_->testContact(RIGHT_CONTACT))
         {
             return StatePtr(new CharacterFallState(character_));
         }
-        if (character_->testContact(UP_CONTACT_FLAG)) {
+        if (character_->testContact(UP_CONTACT)) {
             return StatePtr(new CharacterFallState(character_));
         }
-        if (!character_->testInput(LEFT_INPUT_FLAG) &&
-            !character_->testInput(RIGHT_INPUT_FLAG) &&
-            !character_->testInput(UP_INPUT_FLAG))
+        if (!character_->testInput(LEFT_INPUT) &&
+            !character_->testInput(RIGHT_INPUT) &&
+            !character_->testInput(UP_INPUT))
         {
             return StatePtr(new CharacterFallState(character_));
         }
-        if (character_->testInput(JUMP_INPUT_FLAG)) {
+        if (character_->testInput(JUMP_INPUT)) {
             return StatePtr(new CharacterWallJumpState(character_));
         }
         return StatePtr();
@@ -301,8 +301,8 @@ namespace monomi {
     void CharacterWallRunState::update(float dt)
     {
         Vector2 velocity = character_->velocity();
-        float horizontalContact = (float(character_->testContact(RIGHT_CONTACT_FLAG)) -
-                                   float(character_->testContact(LEFT_CONTACT_FLAG)));
+        float horizontalContact = (float(character_->testContact(RIGHT_CONTACT)) -
+                                   float(character_->testContact(LEFT_CONTACT)));
         velocity.x += dt * horizontalContact * character_->fallAcceleration();
         velocity.y += dt * character_->wallRunAcceleration();
         velocity.clamp(character_->wallRunVelocity());
@@ -324,15 +324,15 @@ namespace monomi {
 
     StatePtr CharacterWallSlideState::transition()
     {
-        if (!character_->testContact(LEFT_CONTACT_FLAG) &&
-            !character_->testContact(RIGHT_CONTACT_FLAG))
+        if (!character_->testContact(LEFT_CONTACT) &&
+            !character_->testContact(RIGHT_CONTACT))
         {
             return StatePtr(new CharacterFallState(character_));
         }
-        if (character_->testContact(DOWN_CONTACT_FLAG)) {
+        if (character_->testContact(DOWN_CONTACT)) {
             return StatePtr(new CharacterStandState(character_));
         }
-        if (character_->testInput(JUMP_INPUT_FLAG)) {
+        if (character_->testInput(JUMP_INPUT)) {
             return StatePtr(new CharacterWallJumpState(character_));
         }
         return StatePtr();
@@ -341,8 +341,8 @@ namespace monomi {
     void CharacterWallSlideState::update(float dt)
     {
         Vector2 velocity = character_->velocity();
-        float horizontalContact = (float(character_->testContact(RIGHT_CONTACT_FLAG)) -
-                                   float(character_->testContact(LEFT_CONTACT_FLAG)));
+        float horizontalContact = (float(character_->testContact(RIGHT_CONTACT)) -
+                                   float(character_->testContact(LEFT_CONTACT)));
         velocity.x += dt * horizontalContact * character_->fallAcceleration();
         velocity.y -= dt * character_->wallSlideAcceleration();
         velocity.clamp(character_->wallSlideVelocity());

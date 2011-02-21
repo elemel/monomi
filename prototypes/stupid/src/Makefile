@@ -58,9 +58,9 @@ clean:
 capitalize.o: capitalize.hpp
 character_actor.o: character_actor.hpp actor.hpp category_flag.hpp
 character_actor.o: character_type.hpp contact_flag.hpp geometry.hpp
-character_actor.o: input_flag.hpp capitalize.hpp character_states.hpp
-character_actor.o: state.hpp state_fwd.hpp game_logic.hpp print_flags.hpp
-character_actor.o: type.hpp
+character_actor.o: input_flag.hpp state_fwd.hpp capitalize.hpp
+character_actor.o: character_states.hpp state.hpp game_logic.hpp
+character_actor.o: print_flags.hpp type.hpp
 character_states.o: character_states.hpp state.hpp state_fwd.hpp
 character_states.o: character_actor.hpp actor.hpp category_flag.hpp
 character_states.o: character_type.hpp contact_flag.hpp geometry.hpp
@@ -70,13 +70,13 @@ contact_flag.o: contact_flag.hpp
 debug_graphics.o: debug_graphics.hpp
 game_logic.o: game_logic.hpp category_flag.hpp character_type.hpp
 game_logic.o: geometry.hpp character_actor.hpp actor.hpp contact_flag.hpp
-game_logic.o: input_flag.hpp character_states.hpp state.hpp state_fwd.hpp
+game_logic.o: input_flag.hpp state_fwd.hpp character_states.hpp state.hpp
 game_logic.o: physics_debug_graphics_adapter.hpp
 game_loop.o: game_loop.hpp character_actor.hpp actor.hpp category_flag.hpp
 game_loop.o: character_type.hpp contact_flag.hpp geometry.hpp input_flag.hpp
-game_loop.o: debug_graphics.hpp game_logic.hpp
+game_loop.o: state_fwd.hpp debug_graphics.hpp game_logic.hpp
 geometry.o: geometry.hpp
-main.o: color.hpp game_logic.hpp category_flag.hpp character_type.hpp
+main.o: character_type.hpp color.hpp game_logic.hpp category_flag.hpp
 main.o: geometry.hpp game_loop.hpp string_buffer.hpp svg_parser.hpp
 main.o: svg_path_parser.hpp svg_style_parser.hpp svg_transform_parser.hpp
 physics_debug_graphics_adapter.o: physics_debug_graphics_adapter.hpp

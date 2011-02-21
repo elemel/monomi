@@ -4,17 +4,17 @@
 namespace monomi {
     // Collision categories.
     enum CategoryFlag {
-        DEFAULT_CATEGORY_FLAG,
+        DEFAULT_CATEGORY,
 
-        PLATFORM_CATEGORY_FLAG,
-        SHADOW_CATEGORY_FLAG,
-        WATER_CATEGORY_FLAG,
+        PLATFORM_CATEGORY,
+        SHADOW_CATEGORY,
+        WATER_CATEGORY,
 
-        FRIEND_CATEGORY_FLAG,
-        NEUTRAL_CATEGORY_FLAG,
-        ENEMY_CATEGORY_FLAG,
+        FRIEND_CATEGORY,
+        NEUTRAL_CATEGORY,
+        ENEMY_CATEGORY,
 
-        CATEGORY_FLAG_COUNT
+        CATEGORY_COUNT
     };
 }
 

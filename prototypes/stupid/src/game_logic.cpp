@@ -23,20 +23,11 @@ namespace monomi {
             }
             target.Set(vertices, vertexCount);
         }
-
-        GameLogic::CharacterTypePtr createNinjaType()
-        {
-            GameLogic::CharacterTypePtr result(new CharacterType);
-            result->name("ninja");
-            result->category(FRIEND_CATEGORY_FLAG);
-            return result;
-        }
     }
 
     GameLogic::GameLogic() :
         time_(0.0f),
-        world_(new b2World(b2Vec2(0.0f, 0.0f), true)),
-        ninjaType_(createNinjaType())
+        world_(new b2World(b2Vec2(0.0f, 0.0f), true))
     {
         b2BodyDef bodyDef;
         worldBody_ = world_->CreateBody(&bodyDef);
@@ -55,6 +46,11 @@ namespace monomi {
     GameLogic::CharacterVector const &GameLogic::characters() const
     {
         return characters_;
+    }
+
+    void GameLogic::addCharacterType(CharacterTypePtr type)
+    {
+        characterTypes_[type->name()] = type;
     }
 
     void GameLogic::update(float dt)
@@ -81,7 +77,7 @@ namespace monomi {
 
         b2FixtureDef fixtureDef;
         fixtureDef.shape = &polygonShape;
-        fixtureDef.filter.categoryBits = (1 << PLATFORM_CATEGORY_FLAG);
+        fixtureDef.filter.categoryBits = (1 << PLATFORM_CATEGORY);
         worldBody_->CreateFixture(&fixtureDef);
     }
 
@@ -93,7 +89,7 @@ namespace monomi {
         b2FixtureDef fixtureDef;
         fixtureDef.isSensor = true;
         fixtureDef.shape = &polygonShape;
-        fixtureDef.filter.categoryBits = (1 << SHADOW_CATEGORY_FLAG);
+        fixtureDef.filter.categoryBits = (1 << SHADOW_CATEGORY);
         worldBody_->CreateFixture(&fixtureDef);
     }
 
@@ -105,7 +101,7 @@ namespace monomi {
         b2FixtureDef fixtureDef;
         fixtureDef.isSensor = true;
         fixtureDef.shape = &polygonShape;
-        fixtureDef.filter.categoryBits = (1 << WATER_CATEGORY_FLAG);
+        fixtureDef.filter.categoryBits = (1 << WATER_CATEGORY);
         worldBody_->CreateFixture(&fixtureDef);
     }
 
@@ -137,10 +133,12 @@ namespace monomi {
         goalFixtures_.push_back(fixture);
     }
 
-    GameLogic::CharacterPtr GameLogic::createCharacter(CharacterType *type,
+    GameLogic::CharacterPtr GameLogic::createCharacter(std::string const &name,
                                                        Vector2 const &position)
     {
-        boost::shared_ptr<CharacterActor> character(new CharacterActor(type));
+        CharacterTypeMap::const_iterator i = characterTypes_.find(name);
+        assert(i != characterTypes_.end());
+        boost::shared_ptr<CharacterActor> character(new CharacterActor(i->second.get()));
         character->create(this, position);
         characters_.push_back(character);
         return character;
@@ -159,8 +157,8 @@ namespace monomi {
     {
         if (!playerCharacter_&& !startPositions_.empty()) {
             Vector2 position = startPositions_.front();
-            playerCharacter_ = createCharacter(ninjaType_.get(), position);
-            playerCharacter_->setInput(RUN_INPUT_FLAG, true);
+            playerCharacter_ = createCharacter("earth-master", position);
+            playerCharacter_->setInput(RUN_INPUT, true);
             std::cerr << "DEBUG: Created player character." << std::endl;
         }
     }
@@ -202,7 +200,7 @@ namespace monomi {
         for (CharacterVector::iterator i = characters_.begin();
              i != characters_.end(); ++i)
         {
-            CharacterRayCastCallback callback(1 << PLATFORM_CATEGORY_FLAG);
+            CharacterRayCastCallback callback(1 << PLATFORM_CATEGORY);
             b2Vec2 p1 = (*i)->body()->GetPosition();
             b2Vec2 p2 = p1 + b2Vec2(0.0f, -1.0f);
             // world_->RayCast(&callback, p1, p2);
