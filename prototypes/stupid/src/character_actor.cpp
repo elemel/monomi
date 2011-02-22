@@ -16,6 +16,26 @@
 #include <Box2D/Dynamics/Contacts/b2Contact.h>
 
 namespace monomi {
+    std::ostream &operator<<(std::ostream &out, CharacterActor::SensorFlag sensor)
+    {
+        switch (sensor) {
+        case CharacterActor::CEILING_SENSOR:
+            return out << "ceiling";
+
+        case CharacterActor::LEFT_WALL_SENSOR:
+            return out << "left-wall";
+
+        case CharacterActor::FLOOR_SENSOR:
+            return out << "floor";
+
+        case CharacterActor::RIGHT_WALL_SENSOR:
+            return out << "right-wall";
+
+        default:
+            return out;
+        }
+    }
+
     void CharacterActor::create(GameLogic *logic, Vector2 const &position)
     {
         logic_ = logic;
@@ -38,10 +58,10 @@ namespace monomi {
         fixtureDef.filter.categoryBits = (1 << NEUTRAL_CATEGORY);
         fixture_ = body_->CreateFixture(&fixtureDef);
 
-        leftSensor_ = createSensor(Vector2(-0.3f, 0.0f), 0.3f);
-        rightSensor_ = createSensor(Vector2(0.3f, 0.0f), 0.3f);
-        downSensor_ = createSensor(Vector2(0.0f, -0.3f), 0.3f);
-        upSensor_ = createSensor(Vector2(0.0f, 0.3f), 0.3f);
+        ceilingSensorFixture_ = createSensorFixture(Vector2(0.0f, 0.3f), 0.3f);
+        leftWallSensorFixture_ = createSensorFixture(Vector2(-0.3f, 0.0f), 0.3f);
+        floorSensorFixture_ = createSensorFixture(Vector2(0.0f, -0.3f), 0.3f);
+        rightWallSensorFixture_ = createSensorFixture(Vector2(0.3f, 0.0f), 0.3f);
 
         state_.reset(new CharacterFallState(this));
         state_->enter();
@@ -60,7 +80,7 @@ namespace monomi {
 
     void CharacterActor::update(float dt)
     {
-        updateContacts(dt);
+        updateSensors(dt);
         updateState(dt);
     }
 
@@ -69,8 +89,8 @@ namespace monomi {
         out << type_->name() << "-" << id_;
     }
 
-    b2Fixture *CharacterActor::createSensor(Vector2 const &center,
-                                            float radius)
+    b2Fixture *CharacterActor::createSensorFixture(Vector2 const &center,
+                                                   float radius)
     {
         b2CircleShape circleShape;
         circleShape.m_p.Set(center.x, center.y);
@@ -85,37 +105,37 @@ namespace monomi {
         return body_->CreateFixture(&fixtureDef);
     }
 
-    void CharacterActor::updateContacts(float dt)
+    void CharacterActor::updateSensors(float dt)
     {
         (void) dt;
 
-        ContactFlagSet newContacts;
+        SensorSet newSensors;
         for (b2ContactEdge *edge = body_->GetContactList(); edge != 0;
              edge = edge->next)
         {
             if (edge->contact->IsTouching()) {
                 b2Fixture *f1 = edge->contact->GetFixtureA();
                 b2Fixture *f2 = edge->contact->GetFixtureB();
-                if (f1 == leftSensor_ || f2 == leftSensor_) {
-                    newContacts.set(LEFT_CONTACT);
+                if (f1 == ceilingSensorFixture_ || f2 == ceilingSensorFixture_) {
+                    newSensors.set(CEILING_SENSOR);
                 }
-                if (f1 == rightSensor_ || f2 == rightSensor_) {
-                    newContacts.set(RIGHT_CONTACT);
+                if (f1 == leftWallSensorFixture_ || f2 == leftWallSensorFixture_) {
+                    newSensors.set(LEFT_WALL_SENSOR);
                 }
-                if (f1 == downSensor_ || f2 == downSensor_) {
-                    newContacts.set(DOWN_CONTACT);
+                if (f1 == floorSensorFixture_ || f2 == floorSensorFixture_) {
+                    newSensors.set(FLOOR_SENSOR);
                 }
-                if (f1 == upSensor_ || f2 == upSensor_) {
-                    newContacts.set(UP_CONTACT);
+                if (f1 == rightWallSensorFixture_ || f2 == rightWallSensorFixture_) {
+                    newSensors.set(RIGHT_WALL_SENSOR);
                 }
             }
         }
 
-        if (newContacts != contacts_) {
-            contacts_ = newContacts;
+        if (newSensors != sensors_) {
+            sensors_ = newSensors;
             std::ostringstream out;
-            out << "DEBUG: " << capitalize(*this) << " changed contacts to ";
-            printFlags<ContactFlag>(out, contacts_);
+            out << "DEBUG: " << capitalize(*this) << " changed sensors to ";
+            printFlags<SensorFlag>(out, sensors_);
             out << ".";
             std::cerr << out.str() << std::endl;
         }

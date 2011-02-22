@@ -4,7 +4,6 @@
 #include "actor.hpp"
 #include "category_flag.hpp"
 #include "character_type.hpp"
-#include "contact_flag.hpp"
 #include "geometry.hpp"
 #include "input_flag.hpp"
 #include "state_fwd.hpp"
@@ -17,6 +16,17 @@
 namespace monomi {
     class CharacterActor : public Actor {
     public:
+        enum SensorFlag {
+            CEILING_SENSOR,
+            LEFT_WALL_SENSOR,
+            RIGHT_WALL_SENSOR,
+            FLOOR_SENSOR,
+            
+            SENSOR_COUNT
+        };
+
+        typedef std::bitset<SENSOR_COUNT> SensorSet;
+
         CharacterActor(CharacterType *type, int id = 0);
 
         Vector2 position() const;
@@ -33,7 +43,7 @@ namespace monomi {
         bool testInput(InputFlag input) const;
         void setInput(InputFlag input, bool value);
 
-        bool testContact(ContactFlag contact) const;
+        bool testSensor(SensorFlag sensor) const;
 
         float fallAcceleration() const;
         float fallVelocity() const;
@@ -58,8 +68,7 @@ namespace monomi {
         void print(std::ostream &out) const;
 
     private:
-        typedef std::bitset<INPUT_COUNT> InputFlagSet;
-        typedef std::bitset<CONTACT_COUNT> ContactFlagSet;
+        typedef std::bitset<INPUT_COUNT> InputSet;
 
         CharacterType *type_;
         int id_;
@@ -67,22 +76,29 @@ namespace monomi {
         StatePtr state_;
         b2Body *body_;
         b2Fixture *fixture_;
-        b2Fixture *leftSensor_, *rightSensor_, *downSensor_, *upSensor_;
-        InputFlagSet inputs_;
-        ContactFlagSet contacts_;
+        b2Fixture *ceilingSensorFixture_, *leftWallSensorFixture_,
+                  *floorSensorFixture_, *rightWallSensorFixture_;
+        InputSet inputs_;
+        SensorSet sensors_;
 
-        b2Fixture *createSensor(Vector2 const &center, float radius);
+        b2Fixture *createSensorFixture(Vector2 const &center, float radius);
 
-        void updateContacts(float dt);
+        void updateSensors(float dt);
         void updateState(float dt);
     };
+
+
+    std::ostream &operator<<(std::ostream &out, CharacterActor::SensorFlag sensor);
 
     inline CharacterActor::CharacterActor(CharacterType *type, int id) :
         type_(type),
         id_(id),
         logic_(0),
         body_(0),
-        leftSensor_(0), rightSensor_(0), downSensor_(0), upSensor_(0)
+        ceilingSensorFixture_(0),
+        leftWallSensorFixture_(0),
+        floorSensorFixture_(0),
+        rightWallSensorFixture_(0)
     { }
 
     inline Vector2 CharacterActor::position() const
@@ -135,9 +151,9 @@ namespace monomi {
         inputs_.set(input, value);
     }
 
-    inline bool CharacterActor::testContact(ContactFlag contact) const
+    inline bool CharacterActor::testSensor(SensorFlag sensor) const
     {
-        return contacts_.test(contact);
+        return sensors_.test(sensor);
     }
 
     inline float CharacterActor::fallAcceleration() const
