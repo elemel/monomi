@@ -16,9 +16,9 @@
 #include <Box2D/Dynamics/Contacts/b2Contact.h>
 
 namespace monomi {
-    std::ostream &operator<<(std::ostream &out, CharacterActor::SensorFlag sensor)
+    std::ostream &operator<<(std::ostream &out, CharacterActor::SensorFlag flag)
     {
-        switch (sensor) {
+        switch (flag) {
         case CharacterActor::CEILING_SENSOR:
             return out << "ceiling";
 
@@ -65,6 +65,8 @@ namespace monomi {
 
         state_.reset(new CharacterFallState(this));
         state_->enter();
+
+        controlFlags_.set(RUN_CONTROL, true);
     }
 
     void CharacterActor::destroy()
@@ -109,7 +111,7 @@ namespace monomi {
     {
         (void) dt;
 
-        SensorSet newSensors;
+        SensorFlagSet newSensorFlags;
         for (b2ContactEdge *edge = body_->GetContactList(); edge != 0;
              edge = edge->next)
         {
@@ -117,25 +119,25 @@ namespace monomi {
                 b2Fixture *f1 = edge->contact->GetFixtureA();
                 b2Fixture *f2 = edge->contact->GetFixtureB();
                 if (f1 == ceilingSensorFixture_ || f2 == ceilingSensorFixture_) {
-                    newSensors.set(CEILING_SENSOR);
+                    newSensorFlags.set(CEILING_SENSOR);
                 }
                 if (f1 == leftWallSensorFixture_ || f2 == leftWallSensorFixture_) {
-                    newSensors.set(LEFT_WALL_SENSOR);
+                    newSensorFlags.set(LEFT_WALL_SENSOR);
                 }
                 if (f1 == floorSensorFixture_ || f2 == floorSensorFixture_) {
-                    newSensors.set(FLOOR_SENSOR);
+                    newSensorFlags.set(FLOOR_SENSOR);
                 }
                 if (f1 == rightWallSensorFixture_ || f2 == rightWallSensorFixture_) {
-                    newSensors.set(RIGHT_WALL_SENSOR);
+                    newSensorFlags.set(RIGHT_WALL_SENSOR);
                 }
             }
         }
 
-        if (newSensors != sensors_) {
-            sensors_ = newSensors;
+        if (newSensorFlags != sensorFlags_) {
+            sensorFlags_ = newSensorFlags;
             std::ostringstream out;
             out << "DEBUG: " << capitalize(*this) << " changed sensors to ";
-            printFlags<SensorFlag>(out, sensors_);
+            printFlags<SensorFlag>(out, sensorFlags_);
             out << ".";
             std::cerr << out.str() << std::endl;
         }

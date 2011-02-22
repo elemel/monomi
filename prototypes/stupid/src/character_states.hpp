@@ -6,9 +6,21 @@
 namespace monomi {
     class CharacterActor;
 
+    class CharacterState : public State {
+    public:
+        explicit CharacterState(CharacterActor *character);
+
+    protected:
+        CharacterActor *character_;
+    };
+
+    inline CharacterState::CharacterState(CharacterActor *character) :
+        character_(character)
+    { }
+
     // FALL ///////////////////////////////////////////////////////////////////
 
-    class CharacterFallState : public State {
+    class CharacterFallState : public CharacterState {
     public:
         explicit CharacterFallState(CharacterActor *character);
 
@@ -19,18 +31,15 @@ namespace monomi {
         void update(float dt);
 
         void print(std::ostream &out) const;
-
-    private:
-        CharacterActor *character_;
     };
 
     inline CharacterFallState::CharacterFallState(CharacterActor *character) :
-        character_(character)
+        CharacterState(character)
     { }
     
     // JUMP ///////////////////////////////////////////////////////////////////
 
-    class CharacterJumpState : public State {
+    class CharacterJumpState : public CharacterState {
     public:
         explicit CharacterJumpState(CharacterActor *character);
 
@@ -41,18 +50,15 @@ namespace monomi {
         void update(float dt);
 
         void print(std::ostream &out) const;
-
-    private:
-        CharacterActor *character_;
     };
 
     inline CharacterJumpState::CharacterJumpState(CharacterActor *character) :
-        character_(character)
+        CharacterState(character)
     { }
 
     // RUN ////////////////////////////////////////////////////////////////////
 
-    class CharacterRunState : public State {
+    class CharacterRunState : public CharacterState {
     public:
         explicit CharacterRunState(CharacterActor *character);
 
@@ -63,18 +69,15 @@ namespace monomi {
         void update(float dt);
 
         void print(std::ostream &out) const;
-
-    private:
-        CharacterActor *character_;
     };
 
     inline CharacterRunState::CharacterRunState(CharacterActor *character) :
-        character_(character)
+        CharacterState(character)
     { }
 
     // STAND //////////////////////////////////////////////////////////////////
 
-    class CharacterStandState : public State {
+    class CharacterStandState : public CharacterState {
     public:
         explicit CharacterStandState(CharacterActor *character);
 
@@ -85,18 +88,15 @@ namespace monomi {
         void update(float dt);
 
         void print(std::ostream &out) const;
-
-    private:
-        CharacterActor *character_;
     };
 
     inline CharacterStandState::CharacterStandState(CharacterActor *character) :
-        character_(character)
+        CharacterState(character)
     { }
 
     // STOMP //////////////////////////////////////////////////////////////////
 
-    class CharacterStompState : public State {
+    class CharacterStompState : public CharacterState {
     public:
         explicit CharacterStompState(CharacterActor *character);
 
@@ -107,18 +107,15 @@ namespace monomi {
         void update(float dt);
 
         void print(std::ostream &out) const;
-
-    private:
-        CharacterActor *character_;
     };
 
     inline CharacterStompState::CharacterStompState(CharacterActor *character) :
-        character_(character)
+        CharacterState(character)
     { }
 
     // WALK ///////////////////////////////////////////////////////////////////
 
-    class CharacterWalkState : public State {
+    class CharacterWalkState : public CharacterState {
     public:
         explicit CharacterWalkState(CharacterActor *character);
 
@@ -129,18 +126,15 @@ namespace monomi {
         void update(float dt);
 
         void print(std::ostream &out) const;
-
-    private:
-        CharacterActor *character_;
     };
 
     inline CharacterWalkState::CharacterWalkState(CharacterActor *character) :
-        character_(character)
+        CharacterState(character)
     { }
 
     // WALL JUMP ///////////////////////////////////////////////////////////////
 
-    class CharacterWallJumpState : public State {
+    class CharacterWallJumpState : public CharacterState {
     public:
         explicit CharacterWallJumpState(CharacterActor *character);
 
@@ -151,18 +145,15 @@ namespace monomi {
         void update(float dt);
 
         void print(std::ostream &out) const;
-
-    private:
-        CharacterActor *character_;
     };
 
     inline CharacterWallJumpState::CharacterWallJumpState(CharacterActor *character) :
-        character_(character)
+        CharacterState(character)
     { }
 
     // WALL RUN ///////////////////////////////////////////////////////////////
 
-    class CharacterWallRunState : public State {
+    class CharacterWallRunState : public CharacterState {
     public:
         explicit CharacterWallRunState(CharacterActor *character);
 
@@ -173,18 +164,15 @@ namespace monomi {
         void update(float dt);
 
         void print(std::ostream &out) const;
-
-    private:
-        CharacterActor *character_;
     };
 
     inline CharacterWallRunState::CharacterWallRunState(CharacterActor *character) :
-        character_(character)
+        CharacterState(character)
     { }
 
     // WALL SLIDE /////////////////////////////////////////////////////////////
 
-    class CharacterWallSlideState : public State {
+    class CharacterWallSlideState : public CharacterState {
     public:
         explicit CharacterWallSlideState(CharacterActor *character);
 
@@ -195,13 +183,10 @@ namespace monomi {
         void update(float dt);
 
         void print(std::ostream &out) const;
-
-    private:
-        CharacterActor *character_;
     };
 
     inline CharacterWallSlideState::CharacterWallSlideState(CharacterActor *character) :
-        character_(character)
+        CharacterState(character)
     { }
 }
 

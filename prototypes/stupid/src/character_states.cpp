@@ -15,15 +15,15 @@ namespace monomi {
 
     StatePtr CharacterFallState::transition()
     {
-        if (character_->testSensor(CharacterActor::FLOOR_SENSOR)) {
+        if (character_->sensorFlags().test(CharacterActor::FLOOR_SENSOR)) {
             return StatePtr(new CharacterStandState(character_));
         }
-        if (character_->testSensor(CharacterActor::LEFT_WALL_SENSOR) ||
-            character_->testSensor(CharacterActor::RIGHT_WALL_SENSOR))
+        if (character_->sensorFlags().test(CharacterActor::LEFT_WALL_SENSOR) ||
+            character_->sensorFlags().test(CharacterActor::RIGHT_WALL_SENSOR))
         {
             return StatePtr(new CharacterWallSlideState(character_));
         }
-        if (character_->testInput(DOWN_INPUT)) {
+        if (character_->controlFlags().test(CharacterActor::DOWN_CONTROL)) {
             return StatePtr(new CharacterStompState(character_));
         }
         return StatePtr();
@@ -32,8 +32,8 @@ namespace monomi {
     void CharacterFallState::update(float dt)
     {
         Vector2 velocity = character_->velocity();
-        velocity.y -= dt * character_->fallAcceleration();
-        velocity.clamp(character_->fallVelocity());
+        velocity.y -= dt * character_->type()->fallAcceleration();
+        velocity.clamp(character_->type()->fallVelocity());
         character_->velocity(velocity);
     }
 
@@ -47,7 +47,7 @@ namespace monomi {
     void CharacterJumpState::enter()
     {
         Vector2 velocity = character_->velocity();
-        float jumpVelocity = character_->jumpVelocity();
+        float jumpVelocity = character_->type()->jumpVelocity();
         if (velocity.x < jumpVelocity) {
             velocity.y = std::sqrt(square(jumpVelocity) - square(velocity.x));
             character_->velocity(velocity);
@@ -82,24 +82,24 @@ namespace monomi {
 
     StatePtr CharacterRunState::transition()
     {
-        if (!character_->testSensor(CharacterActor::FLOOR_SENSOR)) {
+        if (!character_->sensorFlags().test(CharacterActor::FLOOR_SENSOR)) {
             return StatePtr(new CharacterFallState(character_));
         }
-        if (!character_->testInput(RUN_INPUT)) {
+        if (!character_->controlFlags().test(CharacterActor::RUN_CONTROL)) {
             return StatePtr(new CharacterWalkState(character_));
         }
-        if (character_->testInput(JUMP_INPUT)) {
+        if (character_->controlFlags().test(CharacterActor::JUMP_CONTROL)) {
             return StatePtr(new CharacterJumpState(character_));
         }
-        if (!character_->testInput(LEFT_INPUT) &&
-            !character_->testInput(RIGHT_INPUT))
+        if (!character_->controlFlags().test(CharacterActor::LEFT_CONTROL) &&
+            !character_->controlFlags().test(CharacterActor::RIGHT_CONTROL))
         {
             return StatePtr(new CharacterWalkState(character_));
         }
-        if (character_->testSensor(CharacterActor::LEFT_WALL_SENSOR) &&
-            character_->testInput(LEFT_INPUT) ||
-            character_->testSensor(CharacterActor::RIGHT_WALL_SENSOR) &&
-            character_->testInput(RIGHT_INPUT))
+        if (character_->sensorFlags().test(CharacterActor::LEFT_WALL_SENSOR) &&
+            character_->controlFlags().test(CharacterActor::LEFT_CONTROL) ||
+            character_->sensorFlags().test(CharacterActor::RIGHT_WALL_SENSOR) &&
+            character_->controlFlags().test(CharacterActor::RIGHT_CONTROL))
         {
             return StatePtr(new CharacterWallRunState(character_));
         }
@@ -109,12 +109,12 @@ namespace monomi {
     void CharacterRunState::update(float dt)
     {
         Vector2 velocity = character_->velocity();
-        float horizontalInput = (float(character_->testInput(RIGHT_INPUT)) -
-                                 float(character_->testInput(LEFT_INPUT)));
-        velocity.x += (dt * character_->runAcceleration() * horizontalInput);
+        float horizontalControl = (float(character_->controlFlags().test(CharacterActor::RIGHT_CONTROL)) -
+                                 float(character_->controlFlags().test(CharacterActor::LEFT_CONTROL)));
+        velocity.x += (dt * character_->type()->runAcceleration() * horizontalControl);
         velocity.x = sign(velocity.x) * std::min(std::abs(velocity.x),
-                                                 character_->runVelocity());
-        velocity.y -= dt * character_->fallAcceleration();
+                                                 character_->type()->runVelocity());
+        velocity.y -= dt * character_->type()->fallAcceleration();
         character_->velocity(velocity);
     }
 
@@ -137,14 +137,14 @@ namespace monomi {
 
     StatePtr CharacterStandState::transition()
     {
-        if (!character_->testSensor(CharacterActor::FLOOR_SENSOR)) {
+        if (!character_->sensorFlags().test(CharacterActor::FLOOR_SENSOR)) {
             return StatePtr(new CharacterFallState(character_));
         }
-        if (character_->testInput(JUMP_INPUT)) {
+        if (character_->controlFlags().test(CharacterActor::JUMP_CONTROL)) {
             return StatePtr(new CharacterJumpState(character_));
         }
-        if (character_->testInput(LEFT_INPUT) ||
-            character_->testInput(RIGHT_INPUT))
+        if (character_->controlFlags().test(CharacterActor::LEFT_CONTROL) ||
+            character_->controlFlags().test(CharacterActor::RIGHT_CONTROL))
         {
             return StatePtr(new CharacterWalkState(character_));
         }
@@ -154,7 +154,7 @@ namespace monomi {
     void CharacterStandState::update(float dt)
     {
         Vector2 velocity = character_->velocity();
-        velocity.y -= dt * character_->fallAcceleration();
+        velocity.y -= dt * character_->type()->fallAcceleration();
         character_->velocity(velocity);
     }
 
@@ -173,7 +173,7 @@ namespace monomi {
 
     StatePtr CharacterStompState::transition()
     {
-        if (character_->testSensor(CharacterActor::FLOOR_SENSOR)) {
+        if (character_->sensorFlags().test(CharacterActor::FLOOR_SENSOR)) {
             return StatePtr(new CharacterStandState(character_));
         }
         return StatePtr();
@@ -182,8 +182,8 @@ namespace monomi {
     void CharacterStompState::update(float dt)
     {
         Vector2 velocity = character_->velocity();
-        velocity.y -= dt * character_->stompAcceleration();
-        velocity.clamp(character_->stompVelocity());
+        velocity.y -= dt * character_->type()->stompAcceleration();
+        velocity.clamp(character_->type()->stompVelocity());
         character_->velocity(velocity);
     }
 
@@ -202,18 +202,18 @@ namespace monomi {
 
     StatePtr CharacterWalkState::transition()
     {
-        if (!character_->testSensor(CharacterActor::FLOOR_SENSOR)) {
+        if (!character_->sensorFlags().test(CharacterActor::FLOOR_SENSOR)) {
             return StatePtr(new CharacterFallState(character_));
         }
-        if (!character_->testInput(LEFT_INPUT) &&
-            !character_->testInput(RIGHT_INPUT))
+        if (!character_->controlFlags().test(CharacterActor::LEFT_CONTROL) &&
+            !character_->controlFlags().test(CharacterActor::RIGHT_CONTROL))
         {
             return StatePtr(new CharacterStandState(character_));
         }
-        if (character_->testInput(RUN_INPUT)) {
+        if (character_->controlFlags().test(CharacterActor::RUN_CONTROL)) {
             return StatePtr(new CharacterRunState(character_));
         }
-        if (character_->testInput(JUMP_INPUT)) {
+        if (character_->controlFlags().test(CharacterActor::JUMP_CONTROL)) {
             return StatePtr(new CharacterJumpState(character_));
         }
         return StatePtr();
@@ -222,12 +222,12 @@ namespace monomi {
     void CharacterWalkState::update(float dt)
     {
         Vector2 velocity = character_->velocity();
-        float horizontalInput = (float(character_->testInput(RIGHT_INPUT)) -
-                                 float(character_->testInput(LEFT_INPUT)));
-        velocity.x += dt * character_->walkAcceleration() * horizontalInput;
+        float horizontalControl = (float(character_->controlFlags().test(CharacterActor::RIGHT_CONTROL)) -
+                                  float(character_->controlFlags().test(CharacterActor::LEFT_CONTROL)));
+        velocity.x += dt * character_->type()->walkAcceleration() * horizontalControl;
         velocity.x = sign(velocity.x) * std::min(std::abs(velocity.x),
-                                                 character_->walkVelocity());
-        velocity.y -= dt * character_->fallAcceleration();
+                                                 character_->type()->walkVelocity());
+        velocity.y -= dt * character_->type()->fallAcceleration();
         character_->velocity(velocity);
     }
 
@@ -241,10 +241,10 @@ namespace monomi {
     void CharacterWallJumpState::enter()
     {
         Vector2 velocity = character_->velocity();
-        float horizontalContact = (float(character_->testSensor(CharacterActor::RIGHT_WALL_SENSOR)) -
-                                   float(character_->testSensor(CharacterActor::LEFT_WALL_SENSOR)));
-        float wallJumpVelocity = character_->wallJumpVelocity();
-        float wallJumpAngle = character_->wallJumpAngle();
+        float horizontalContact = (float(character_->sensorFlags().test(CharacterActor::RIGHT_WALL_SENSOR)) -
+                                   float(character_->sensorFlags().test(CharacterActor::LEFT_WALL_SENSOR)));
+        float wallJumpVelocity = character_->type()->wallJumpVelocity();
+        float wallJumpAngle = character_->type()->wallJumpAngle();
         velocity.x = -horizontalContact * std::cos(wallJumpAngle) * wallJumpVelocity;
         velocity.y = std::sin(wallJumpAngle) * wallJumpVelocity;
         character_->velocity(velocity);
@@ -278,21 +278,21 @@ namespace monomi {
 
     StatePtr CharacterWallRunState::transition()
     {
-        if (!character_->testSensor(CharacterActor::LEFT_WALL_SENSOR) &&
-            !character_->testSensor(CharacterActor::RIGHT_WALL_SENSOR))
+        if (!character_->sensorFlags().test(CharacterActor::LEFT_WALL_SENSOR) &&
+            !character_->sensorFlags().test(CharacterActor::RIGHT_WALL_SENSOR))
         {
             return StatePtr(new CharacterFallState(character_));
         }
-        if (character_->testSensor(CharacterActor::CEILING_SENSOR)) {
+        if (character_->sensorFlags().test(CharacterActor::CEILING_SENSOR)) {
             return StatePtr(new CharacterFallState(character_));
         }
-        if (!character_->testInput(LEFT_INPUT) &&
-            !character_->testInput(RIGHT_INPUT) &&
-            !character_->testInput(UP_INPUT))
+        if (!character_->controlFlags().test(CharacterActor::LEFT_CONTROL) &&
+            !character_->controlFlags().test(CharacterActor::RIGHT_CONTROL) &&
+            !character_->controlFlags().test(CharacterActor::UP_CONTROL))
         {
             return StatePtr(new CharacterFallState(character_));
         }
-        if (character_->testInput(JUMP_INPUT)) {
+        if (character_->controlFlags().test(CharacterActor::JUMP_CONTROL)) {
             return StatePtr(new CharacterWallJumpState(character_));
         }
         return StatePtr();
@@ -301,11 +301,11 @@ namespace monomi {
     void CharacterWallRunState::update(float dt)
     {
         Vector2 velocity = character_->velocity();
-        float horizontalContact = (float(character_->testSensor(CharacterActor::RIGHT_WALL_SENSOR)) -
-                                   float(character_->testSensor(CharacterActor::LEFT_WALL_SENSOR)));
-        velocity.x += dt * horizontalContact * character_->fallAcceleration();
-        velocity.y += dt * character_->wallRunAcceleration();
-        velocity.clamp(character_->wallRunVelocity());
+        float horizontalContact = (float(character_->sensorFlags().test(CharacterActor::RIGHT_WALL_SENSOR)) -
+                                   float(character_->sensorFlags().test(CharacterActor::LEFT_WALL_SENSOR)));
+        velocity.x += dt * horizontalContact * character_->type()->fallAcceleration();
+        velocity.y += dt * character_->type()->wallRunAcceleration();
+        velocity.clamp(character_->type()->wallRunVelocity());
         character_->velocity(velocity);
     }
 
@@ -324,15 +324,15 @@ namespace monomi {
 
     StatePtr CharacterWallSlideState::transition()
     {
-        if (!character_->testSensor(CharacterActor::LEFT_WALL_SENSOR) &&
-            !character_->testSensor(CharacterActor::RIGHT_WALL_SENSOR))
+        if (!character_->sensorFlags().test(CharacterActor::LEFT_WALL_SENSOR) &&
+            !character_->sensorFlags().test(CharacterActor::RIGHT_WALL_SENSOR))
         {
             return StatePtr(new CharacterFallState(character_));
         }
-        if (character_->testSensor(CharacterActor::FLOOR_SENSOR)) {
+        if (character_->sensorFlags().test(CharacterActor::FLOOR_SENSOR)) {
             return StatePtr(new CharacterStandState(character_));
         }
-        if (character_->testInput(JUMP_INPUT)) {
+        if (character_->controlFlags().test(CharacterActor::JUMP_CONTROL)) {
             return StatePtr(new CharacterWallJumpState(character_));
         }
         return StatePtr();
@@ -341,11 +341,11 @@ namespace monomi {
     void CharacterWallSlideState::update(float dt)
     {
         Vector2 velocity = character_->velocity();
-        float horizontalContact = (float(character_->testSensor(CharacterActor::RIGHT_WALL_SENSOR)) -
-                                   float(character_->testSensor(CharacterActor::LEFT_WALL_SENSOR)));
-        velocity.x += dt * horizontalContact * character_->fallAcceleration();
-        velocity.y -= dt * character_->wallSlideAcceleration();
-        velocity.clamp(character_->wallSlideVelocity());
+        float horizontalContact = (float(character_->sensorFlags().test(CharacterActor::RIGHT_WALL_SENSOR)) -
+                                   float(character_->sensorFlags().test(CharacterActor::LEFT_WALL_SENSOR)));
+        velocity.x += dt * horizontalContact * character_->type()->fallAcceleration();
+        velocity.y -= dt * character_->type()->wallSlideAcceleration();
+        velocity.clamp(character_->type()->wallSlideVelocity());
         character_->velocity(velocity);
     }
 

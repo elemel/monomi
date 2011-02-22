@@ -13,34 +13,34 @@
 
 namespace monomi {
     namespace {
-        InputFlag mapKeyToInput(int key)
+        CharacterActor::ControlFlag mapKeyToControl(int key)
         {
             switch (key) {
             case SDLK_w:
             case SDLK_UP:
-                return UP_INPUT;
+                return CharacterActor::UP_CONTROL;
 
             case SDLK_a:
             case SDLK_LEFT:
-                return LEFT_INPUT;
+                return CharacterActor::LEFT_CONTROL;
 
             case SDLK_s:
             case SDLK_DOWN:
-                return DOWN_INPUT;
+                return CharacterActor::DOWN_CONTROL;
 
             case SDLK_d:
             case SDLK_RIGHT:
-                return RIGHT_INPUT;
+                return CharacterActor::RIGHT_CONTROL;
 
             case SDLK_SPACE:
-                return JUMP_INPUT;
+                return CharacterActor::JUMP_CONTROL;
 
             case SDLK_LSHIFT:
             case SDLK_RSHIFT:
-                return ACTION_INPUT;
+                return CharacterActor::ACTION_CONTROL;
 
             default:
-                return INPUT_COUNT;
+                return CharacterActor::CONTROL_COUNT;
             }
         }
     }
@@ -101,24 +101,28 @@ namespace monomi {
 
     void GameLoop::handleKeyDownEvent(SDL_Event const &event)
     {
-        InputFlag input = mapKeyToInput(event.key.keysym.sym);
-        if (input != INPUT_COUNT) {
+        CharacterActor::ControlFlag flag = mapKeyToControl(event.key.keysym.sym);
+        if (flag != CharacterActor::CONTROL_COUNT) {
             if (GameLogic::CharacterPtr character =
                 gameLogic_->playerCharacter())
             {
-                character->setInput(input, true);
+                CharacterActor::ControlFlagSet flags = character->controlFlags();
+                flags.set(flag, true);
+                character->controlFlags(flags);
             }
         }
     }
 
     void GameLoop::handleKeyUpEvent(SDL_Event const &event)
     {
-        InputFlag input = mapKeyToInput(event.key.keysym.sym);
-        if (input != INPUT_COUNT) {
+        CharacterActor::ControlFlag flag = mapKeyToControl(event.key.keysym.sym);
+        if (flag != CharacterActor::CONTROL_COUNT) {
             if (GameLogic::CharacterPtr character =
                 gameLogic_->playerCharacter())
             {
-                character->setInput(input, false);
+                CharacterActor::ControlFlagSet flags = character->controlFlags();
+                flags.set(flag, false);
+                character->controlFlags(flags);
             }
         }
     }

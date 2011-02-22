@@ -158,7 +158,6 @@ namespace monomi {
         if (!playerCharacter_&& !startPositions_.empty()) {
             Vector2 position = startPositions_.front();
             playerCharacter_ = createCharacter("earth-master", position);
-            playerCharacter_->setInput(RUN_INPUT, true);
             std::cerr << "DEBUG: Created player character." << std::endl;
         }
     }

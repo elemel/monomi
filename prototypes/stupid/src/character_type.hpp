@@ -35,8 +35,8 @@ namespace monomi {
             TOOL_COUNT
         };
 
-        typedef std::bitset<TECHNIQUE_COUNT> TechniqueSet;
-        typedef std::bitset<TOOL_COUNT> ToolSet;
+        typedef std::bitset<TECHNIQUE_COUNT> TechniqueFlagSet;
+        typedef std::bitset<TOOL_COUNT> ToolFlagSet;
 
         CharacterType();
 
@@ -88,11 +88,11 @@ namespace monomi {
         float stompVelocity() const;
         void stompVelocity(float stompVelocity);
 
-        TechniqueSet const &techniques() const;
-        void techniques(TechniqueSet const &techniques);
+        TechniqueFlagSet const &techniqueFlags() const;
+        void techniqueFlags(TechniqueFlagSet const &flags);
 
-        ToolSet const &tools() const;
-        void tools(ToolSet const &tools);
+        ToolFlagSet const &toolFlags() const;
+        void toolFlags(ToolFlagSet const &flags);
 
     private:
         std::string name_;
@@ -113,8 +113,8 @@ namespace monomi {
         float wallSlideAcceleration_;
         float wallSlideVelocity_;
 
-        TechniqueSet techniques_;
-        ToolSet tools_;
+        TechniqueFlagSet techniqueFlags_;
+        ToolFlagSet toolFlags_;
     };
 
     inline CharacterType::CharacterType() :
@@ -295,24 +295,24 @@ namespace monomi {
         stompVelocity_ = stompVelocity;
     }
 
-    inline CharacterType::TechniqueSet const &CharacterType::techniques() const
+    inline CharacterType::TechniqueFlagSet const &CharacterType::techniqueFlags() const
     {
-        return techniques_;
+        return techniqueFlags_;
     }
 
-    inline void CharacterType::techniques(TechniqueSet const &techniques)
+    inline void CharacterType::techniqueFlags(TechniqueFlagSet const &flags)
     {
-        techniques_ = techniques;
+        techniqueFlags_ = flags;
     }
 
-    inline CharacterType::ToolSet const &CharacterType::tools() const
+    inline CharacterType::ToolFlagSet const &CharacterType::toolFlags() const
     {
-        return tools_;
+        return toolFlags_;
     }
 
-    inline void CharacterType::tools(ToolSet const &tools)
+    inline void CharacterType::toolFlags(ToolFlagSet const &flags)
     {
-        tools_ = tools;
+        toolFlags_ = flags;
     }
 }
 
