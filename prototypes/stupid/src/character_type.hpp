@@ -1,6 +1,9 @@
 #ifndef MONOMI_CHARACTER_TYPE_HPP
 #define MONOMI_CHARACTER_TYPE_HPP
 
+#include "character_technique_flag.hpp"
+#include "character_tool_flag.hpp"
+
 #include <bitset>
 #include <cmath>
 #include <string>
@@ -8,36 +11,6 @@
 namespace monomi {
     class CharacterType {
     public:
-        enum TechniqueFlag {
-            DOUBLE_JUMP_TECHNIQUE,
-            GLIDE_TECHNIQUE,
-            SLIDE_TECHNIQUE,
-            STOMP_TECHNIQUE,
-            TELEPORT_TECHNIQUE,
-            TRIPLE_JUMP_TECHNIQUE,
-            WALL_JUMP_TECHNIQUE,
-            WALL_RUN_TECHNIQUE,
-            WALL_SLIDE_TECHNIQUE,
-
-            TECHNIQUE_COUNT
-        };
-
-        enum ToolFlag {
-            AIR_SKIN_TOOL,
-            BAMBOO_FLUTE_TOOL,
-            GRAPPLING_HOOK_TOOL,
-            IRON_FAN_TOOL,
-            SMOKE_BOMBS_TOOL,
-            STRAW_BASKET_TOOL,
-            THROWING_STARS_TOOL,
-            TIGER_CLAWS_TOOL,
-
-            TOOL_COUNT
-        };
-
-        typedef std::bitset<TECHNIQUE_COUNT> TechniqueFlagSet;
-        typedef std::bitset<TOOL_COUNT> ToolFlagSet;
-
         CharacterType();
 
         std::string const &name() const;
@@ -88,11 +61,11 @@ namespace monomi {
         float stompVelocity() const;
         void stompVelocity(float stompVelocity);
 
-        TechniqueFlagSet const &techniqueFlags() const;
-        void techniqueFlags(TechniqueFlagSet const &flags);
+        CharacterTechniqueFlagSet const &techniqueFlags() const;
+        void techniqueFlags(CharacterTechniqueFlagSet const &flags);
 
-        ToolFlagSet const &toolFlags() const;
-        void toolFlags(ToolFlagSet const &flags);
+        CharacterToolFlagSet const &toolFlags() const;
+        void toolFlags(CharacterToolFlagSet const &flags);
 
     private:
         std::string name_;
@@ -113,8 +86,8 @@ namespace monomi {
         float wallSlideAcceleration_;
         float wallSlideVelocity_;
 
-        TechniqueFlagSet techniqueFlags_;
-        ToolFlagSet toolFlags_;
+        CharacterTechniqueFlagSet techniqueFlags_;
+        CharacterToolFlagSet toolFlags_;
     };
 
     inline CharacterType::CharacterType() :
@@ -295,22 +268,22 @@ namespace monomi {
         stompVelocity_ = stompVelocity;
     }
 
-    inline CharacterType::TechniqueFlagSet const &CharacterType::techniqueFlags() const
+    inline CharacterTechniqueFlagSet const &CharacterType::techniqueFlags() const
     {
         return techniqueFlags_;
     }
 
-    inline void CharacterType::techniqueFlags(TechniqueFlagSet const &flags)
+    inline void CharacterType::techniqueFlags(CharacterTechniqueFlagSet const &flags)
     {
         techniqueFlags_ = flags;
     }
 
-    inline CharacterType::ToolFlagSet const &CharacterType::toolFlags() const
+    inline CharacterToolFlagSet const &CharacterType::toolFlags() const
     {
         return toolFlags_;
     }
 
-    inline void CharacterType::toolFlags(ToolFlagSet const &flags)
+    inline void CharacterType::toolFlags(CharacterToolFlagSet const &flags)
     {
         toolFlags_ = flags;
     }

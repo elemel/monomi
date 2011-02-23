@@ -3,6 +3,8 @@
 
 #include "actor.hpp"
 #include "category_flag.hpp"
+#include "character_control_flag.hpp"
+#include "character_sensor_flag.hpp"
 #include "character_type.hpp"
 #include "geometry.hpp"
 #include "state_fwd.hpp"
@@ -15,32 +17,6 @@
 namespace monomi {
     class CharacterActor : public Actor {
     public:
-        enum SensorFlag {
-            CEILING_SENSOR,
-            LEFT_WALL_SENSOR,
-            RIGHT_WALL_SENSOR,
-            FLOOR_SENSOR,
-
-            SENSOR_COUNT
-        };
-
-        typedef std::bitset<SENSOR_COUNT> SensorFlagSet;
-
-        enum ControlFlag {
-            UP_CONTROL,
-            LEFT_CONTROL,
-            DOWN_CONTROL,
-            RIGHT_CONTROL,
-
-            RUN_CONTROL,
-            JUMP_CONTROL,
-            ACTION_CONTROL,
-
-            CONTROL_COUNT
-        };
-
-        typedef std::bitset<CONTROL_COUNT> ControlFlagSet;
-
         CharacterActor(CharacterType const *type, int id = 0);
 
         CharacterType const *type() const;
@@ -56,10 +32,46 @@ namespace monomi {
         Vector2 velocity() const;
         void velocity(Vector2 const &velocity);
 
-        ControlFlagSet const &controlFlags() const;
-        void controlFlags(ControlFlagSet const &flags);
+        CharacterControlFlagSet const &controlFlags() const;
+        void controlFlags(CharacterControlFlagSet const &flags);
 
-        SensorFlagSet const &sensorFlags() const;
+        bool upControlFlag() const;
+        bool leftControlFlag() const;
+        bool downControlFlag() const;
+        bool rightControlFlag() const;
+
+        bool runControlFlag() const;
+        bool jumpControlFlag() const;
+        bool actionControlFlag() const;
+
+        CharacterSensorFlagSet const &sensorFlags() const;
+
+        bool ceilingSensorFlag() const;
+        bool leftWallSensorFlag() const;
+        bool floorSensorFlag() const;
+        bool rightWallSensorFlag() const;
+
+        float fallAcceleration() const;
+        float fallVelocity() const;
+        float jumpVelocity() const;
+        float walkAcceleration() const;
+        float walkVelocity() const;
+        float runAcceleration() const;
+        float runVelocity() const;
+        float wallSlideAcceleration() const;
+        float wallSlideVelocity() const;
+        float wallRunAcceleration() const;
+        float wallRunVelocity() const;
+        float wallJumpVelocity() const;
+        float wallJumpAngle() const;
+        float stompAcceleration() const;
+        float stompVelocity() const;
+
+        CharacterTechniqueFlagSet const &techniqueFlags() const;
+        void techniqueFlags(CharacterTechniqueFlagSet const &flags);
+
+        CharacterToolFlagSet const &toolFlags() const;
+        void toolFlags(CharacterToolFlagSet const &flags);
 
         void create(GameLogic *logic, Vector2 const &position);
         void destroy();
@@ -78,17 +90,16 @@ namespace monomi {
                   *floorSensorFixture_, *rightWallSensorFixture_;
         StatePtr state_;
 
-        ControlFlagSet controlFlags_;
-        SensorFlagSet sensorFlags_;
+        CharacterControlFlagSet controlFlags_;
+        CharacterSensorFlagSet sensorFlags_;
+        CharacterTechniqueFlagSet techniqueFlags_;
+        CharacterToolFlagSet toolFlags_;
 
         b2Fixture *createSensorFixture(Vector2 const &center, float radius);
 
         void updateSensors(float dt);
         void updateState(float dt);
     };
-
-
-    std::ostream &operator<<(std::ostream &out, CharacterActor::SensorFlag sensor);
 
     inline CharacterActor::CharacterActor(CharacterType const *type, int id) :
         type_(type),
@@ -99,7 +110,9 @@ namespace monomi {
         ceilingSensorFixture_(0),
         leftWallSensorFixture_(0),
         floorSensorFixture_(0),
-        rightWallSensorFixture_(0)
+        rightWallSensorFixture_(0),
+        techniqueFlags_(type->techniqueFlags()),
+        toolFlags_(type->toolFlags())
     { }
 
     inline CharacterType const *CharacterActor::type() const
@@ -147,19 +160,169 @@ namespace monomi {
         body_->SetLinearVelocity(b2Vec2(velocity.x, velocity.y));
     }
 
-    inline CharacterActor::ControlFlagSet const &CharacterActor::controlFlags() const
+    inline CharacterControlFlagSet const &CharacterActor::controlFlags() const
     {
         return controlFlags_;
     }
 
-    inline void CharacterActor::controlFlags(ControlFlagSet const &flags)
+    inline void CharacterActor::controlFlags(CharacterControlFlagSet const &flags)
     {
         controlFlags_ = flags;
     }
 
-    inline CharacterActor::SensorFlagSet const &CharacterActor::sensorFlags() const
+    inline bool CharacterActor::upControlFlag() const
+    {
+        return controlFlags_.test(CHARACTER_UP_CONTROL);
+    }
+
+    inline bool CharacterActor::leftControlFlag() const
+    {
+        return controlFlags_.test(CHARACTER_LEFT_CONTROL);
+    }
+
+    inline bool CharacterActor::downControlFlag() const
+    {
+        return controlFlags_.test(CHARACTER_DOWN_CONTROL);
+    }
+
+    inline bool CharacterActor::rightControlFlag() const
+    {
+        return controlFlags_.test(CHARACTER_RIGHT_CONTROL);
+    }
+
+    inline bool CharacterActor::runControlFlag() const
+    {
+        return controlFlags_.test(CHARACTER_RUN_CONTROL);
+    }
+
+    inline bool CharacterActor::jumpControlFlag() const
+    {
+        return controlFlags_.test(CHARACTER_JUMP_CONTROL);
+    }
+
+    inline bool CharacterActor::actionControlFlag() const
+    {
+        return controlFlags_.test(CHARACTER_ACTION_CONTROL);
+    }
+
+    inline CharacterSensorFlagSet const &CharacterActor::sensorFlags() const
     {
         return sensorFlags_;
+    }
+
+    inline bool CharacterActor::ceilingSensorFlag() const
+    {
+        return sensorFlags_.test(CHARACTER_CEILING_SENSOR);
+    }
+
+    inline bool CharacterActor::leftWallSensorFlag() const
+    {
+        return sensorFlags_.test(CHARACTER_LEFT_WALL_SENSOR);
+    }
+
+    inline bool CharacterActor::floorSensorFlag() const
+    {
+        return sensorFlags_.test(CHARACTER_FLOOR_SENSOR);
+    }
+
+    inline bool CharacterActor::rightWallSensorFlag() const
+    {
+        return sensorFlags_.test(CHARACTER_RIGHT_WALL_SENSOR);
+    }
+
+    inline float CharacterActor::fallAcceleration() const
+    {
+        return type_->fallAcceleration();
+    }
+
+    inline float CharacterActor::fallVelocity() const
+    {
+        return type_->fallVelocity();
+    }
+
+    inline float CharacterActor::jumpVelocity() const
+    {
+        return type_->jumpVelocity();
+    }
+
+    inline float CharacterActor::walkAcceleration() const
+    {
+        return type_->walkAcceleration();
+    }
+
+    inline float CharacterActor::walkVelocity() const
+    {
+        return type_->walkVelocity();
+    }
+
+    inline float CharacterActor::runAcceleration() const
+    {
+        return type_->runAcceleration();
+    }
+
+    inline float CharacterActor::runVelocity() const
+    {
+        return type_->runVelocity();
+    }
+
+    inline float CharacterActor::wallSlideAcceleration() const
+    {
+        return type_->wallSlideAcceleration();
+    }
+
+    inline float CharacterActor::wallSlideVelocity() const
+    {
+        return type_->wallSlideVelocity();
+    }
+
+    inline float CharacterActor::wallRunAcceleration() const
+    {
+        return type_->wallRunAcceleration();
+    }
+
+    inline float CharacterActor::wallRunVelocity() const
+    {
+        return type_->wallRunVelocity();
+    }
+
+    inline float CharacterActor::wallJumpVelocity() const
+    {
+        return type_->wallJumpVelocity();
+    }
+
+    inline float CharacterActor::wallJumpAngle() const
+    {
+        return type_->wallJumpAngle();
+    }
+
+    inline float CharacterActor::stompAcceleration() const
+    {
+        return type_->stompAcceleration();
+    }
+
+    inline float CharacterActor::stompVelocity() const
+    {
+        return type_->stompVelocity();
+    }
+
+    inline CharacterTechniqueFlagSet const &CharacterActor::techniqueFlags() const
+    {
+        return techniqueFlags_;
+    }
+
+    inline void CharacterActor::techniqueFlags(CharacterTechniqueFlagSet const &flags)
+    {
+        techniqueFlags_ = flags;
+    }
+
+    inline CharacterToolFlagSet const &CharacterActor::toolFlags() const
+    {
+        return toolFlags_;
+    }
+
+    inline void CharacterActor::toolFlags(CharacterToolFlagSet const &flags)
+    {
+        toolFlags_ = flags;
     }
 }
 

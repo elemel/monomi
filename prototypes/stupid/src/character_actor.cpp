@@ -16,26 +16,6 @@
 #include <Box2D/Dynamics/Contacts/b2Contact.h>
 
 namespace monomi {
-    std::ostream &operator<<(std::ostream &out, CharacterActor::SensorFlag flag)
-    {
-        switch (flag) {
-        case CharacterActor::CEILING_SENSOR:
-            return out << "ceiling";
-
-        case CharacterActor::LEFT_WALL_SENSOR:
-            return out << "left-wall";
-
-        case CharacterActor::FLOOR_SENSOR:
-            return out << "floor";
-
-        case CharacterActor::RIGHT_WALL_SENSOR:
-            return out << "right-wall";
-
-        default:
-            return out;
-        }
-    }
-
     void CharacterActor::create(GameLogic *logic, Vector2 const &position)
     {
         logic_ = logic;
@@ -66,7 +46,7 @@ namespace monomi {
         state_.reset(new CharacterFallState(this));
         state_->enter();
 
-        controlFlags_.set(RUN_CONTROL, true);
+        controlFlags_.set(CHARACTER_RUN_CONTROL, true);
     }
 
     void CharacterActor::destroy()
@@ -111,7 +91,7 @@ namespace monomi {
     {
         (void) dt;
 
-        SensorFlagSet newSensorFlags;
+        CharacterSensorFlagSet newSensorFlags;
         for (b2ContactEdge *edge = body_->GetContactList(); edge != 0;
              edge = edge->next)
         {
@@ -119,16 +99,16 @@ namespace monomi {
                 b2Fixture *f1 = edge->contact->GetFixtureA();
                 b2Fixture *f2 = edge->contact->GetFixtureB();
                 if (f1 == ceilingSensorFixture_ || f2 == ceilingSensorFixture_) {
-                    newSensorFlags.set(CEILING_SENSOR);
+                    newSensorFlags.set(CHARACTER_CEILING_SENSOR);
                 }
                 if (f1 == leftWallSensorFixture_ || f2 == leftWallSensorFixture_) {
-                    newSensorFlags.set(LEFT_WALL_SENSOR);
+                    newSensorFlags.set(CHARACTER_LEFT_WALL_SENSOR);
                 }
                 if (f1 == floorSensorFixture_ || f2 == floorSensorFixture_) {
-                    newSensorFlags.set(FLOOR_SENSOR);
+                    newSensorFlags.set(CHARACTER_FLOOR_SENSOR);
                 }
                 if (f1 == rightWallSensorFixture_ || f2 == rightWallSensorFixture_) {
-                    newSensorFlags.set(RIGHT_WALL_SENSOR);
+                    newSensorFlags.set(CHARACTER_RIGHT_WALL_SENSOR);
                 }
             }
         }
@@ -137,7 +117,7 @@ namespace monomi {
             sensorFlags_ = newSensorFlags;
             std::ostringstream out;
             out << "DEBUG: " << capitalize(*this) << " changed sensors to ";
-            printFlags<SensorFlag>(out, sensorFlags_);
+            printFlags<CharacterSensorFlag>(out, sensorFlags_);
             out << ".";
             std::cerr << out.str() << std::endl;
         }

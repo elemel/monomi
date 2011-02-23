@@ -51,27 +51,27 @@ namespace {
         type->wallSlideAcceleration(get<float>("wall-slide-acceleration", values, defaults));
         type->wallSlideVelocity(get<float>("wall-slide-velocity", values, defaults));
 
-        CharacterType::TechniqueFlagSet techniqueFlags;
-        techniqueFlags.set(CharacterType::DOUBLE_JUMP_TECHNIQUE, get<bool>("double-jump-technique", values, defaults));
-        techniqueFlags.set(CharacterType::GLIDE_TECHNIQUE, get<bool>("glide-technique", values, defaults));
-        techniqueFlags.set(CharacterType::SLIDE_TECHNIQUE, get<bool>("slide-technique", values, defaults));
-        techniqueFlags.set(CharacterType::STOMP_TECHNIQUE, get<bool>("stomp-technique", values, defaults));
-        techniqueFlags.set(CharacterType::TELEPORT_TECHNIQUE, get<bool>("teleport-technique", values, defaults));
-        techniqueFlags.set(CharacterType::TRIPLE_JUMP_TECHNIQUE, get<bool>("triple-jump-technique", values, defaults));
-        techniqueFlags.set(CharacterType::WALL_JUMP_TECHNIQUE, get<bool>("wall-jump-technique", values, defaults));
-        techniqueFlags.set(CharacterType::WALL_RUN_TECHNIQUE, get<bool>("wall-run-technique", values, defaults));
-        techniqueFlags.set(CharacterType::WALL_SLIDE_TECHNIQUE, get<bool>("wall-slide-technique", values, defaults));
+        CharacterTechniqueFlagSet techniqueFlags;
+        techniqueFlags.set(CHARACTER_DOUBLE_JUMP_TECHNIQUE, get<bool>("double-jump-technique", values, defaults));
+        techniqueFlags.set(CHARACTER_GLIDE_TECHNIQUE, get<bool>("glide-technique", values, defaults));
+        techniqueFlags.set(CHARACTER_SLIDE_TECHNIQUE, get<bool>("slide-technique", values, defaults));
+        techniqueFlags.set(CHARACTER_STOMP_TECHNIQUE, get<bool>("stomp-technique", values, defaults));
+        techniqueFlags.set(CHARACTER_TELEPORT_TECHNIQUE, get<bool>("teleport-technique", values, defaults));
+        techniqueFlags.set(CHARACTER_TRIPLE_JUMP_TECHNIQUE, get<bool>("triple-jump-technique", values, defaults));
+        techniqueFlags.set(CHARACTER_WALL_JUMP_TECHNIQUE, get<bool>("wall-jump-technique", values, defaults));
+        techniqueFlags.set(CHARACTER_WALL_RUN_TECHNIQUE, get<bool>("wall-run-technique", values, defaults));
+        techniqueFlags.set(CHARACTER_WALL_SLIDE_TECHNIQUE, get<bool>("wall-slide-technique", values, defaults));
         type->techniqueFlags(techniqueFlags);
 
-        CharacterType::ToolFlagSet toolFlags;
-        toolFlags.set(CharacterType::AIR_SKIN_TOOL, get<bool>("air-skin-tool", values, defaults));
-        toolFlags.set(CharacterType::BAMBOO_FLUTE_TOOL, get<bool>("bamboo-flute-tool", values, defaults));
-        toolFlags.set(CharacterType::GRAPPLING_HOOK_TOOL, get<bool>("grappling-hook-tool", values, defaults));
-        toolFlags.set(CharacterType::IRON_FAN_TOOL, get<bool>("iron-fan-tool", values, defaults));
-        toolFlags.set(CharacterType::SMOKE_BOMBS_TOOL, get<bool>("smoke-bombs-tool", values, defaults));
-        toolFlags.set(CharacterType::STRAW_BASKET_TOOL, get<bool>("straw-basket-tool", values, defaults));
-        toolFlags.set(CharacterType::THROWING_STARS_TOOL, get<bool>("throwing-stars-tool", values, defaults));
-        toolFlags.set(CharacterType::TIGER_CLAWS_TOOL, get<bool>("tiger-claws-tool", values, defaults));
+        CharacterToolFlagSet toolFlags;
+        toolFlags.set(CHARACTER_AIR_SKIN_TOOL, get<bool>("air-skin-tool", values, defaults));
+        toolFlags.set(CHARACTER_BAMBOO_FLUTE_TOOL, get<bool>("bamboo-flute-tool", values, defaults));
+        toolFlags.set(CHARACTER_GRAPPLING_HOOK_TOOL, get<bool>("grappling-hook-tool", values, defaults));
+        toolFlags.set(CHARACTER_IRON_FAN_TOOL, get<bool>("iron-fan-tool", values, defaults));
+        toolFlags.set(CHARACTER_SMOKE_BOMBS_TOOL, get<bool>("smoke-bombs-tool", values, defaults));
+        toolFlags.set(CHARACTER_STRAW_BASKET_TOOL, get<bool>("straw-basket-tool", values, defaults));
+        toolFlags.set(CHARACTER_THROWING_STARS_TOOL, get<bool>("throwing-stars-tool", values, defaults));
+        toolFlags.set(CHARACTER_TIGER_CLAWS_TOOL, get<bool>("tiger-claws-tool", values, defaults));
         type->toolFlags(toolFlags);
 
         gameLogic->addCharacterType(type);
