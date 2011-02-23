@@ -30,10 +30,12 @@ namespace monomi {
         b2World *world() const;
         b2Body *worldBody() const;
 
+        void playerCharacterName(std::string const &name);
         CharacterPtr playerCharacter() const;
         CharacterVector const &characters() const;
 
         void addCharacterType(CharacterTypePtr type);
+        CharacterTypePtr findCharacterType(std::string const &name) const;
 
         void update(float dt);
         void debugDraw(DebugGraphics *graphics);
@@ -58,6 +60,7 @@ namespace monomi {
 
         CharacterTypeMap characterTypes_;
         CharacterVector characters_;
+        std::string playerCharacterName_;
         CharacterPtr playerCharacter_;
 
         std::vector<Vector2> startPositions_;
@@ -76,6 +79,11 @@ namespace monomi {
     inline b2Body *GameLogic::worldBody() const
     {
         return worldBody_;
+    }
+
+    inline void GameLogic::playerCharacterName(std::string const &name)
+    {
+        playerCharacterName_ = name;
     }
 }
 

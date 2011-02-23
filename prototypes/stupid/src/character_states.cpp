@@ -18,12 +18,14 @@ namespace monomi {
         if (character_->floorSensorFlag()) {
             return StatePtr(new CharacterStandState(character_));
         }
-        if (character_->leftWallSensorFlag() ||
-            character_->rightWallSensorFlag())
+        if ((character_->leftWallSensorFlag() ||
+             character_->rightWallSensorFlag()) &&
+             character_->wallSlideTechniqueFlag())
         {
             return StatePtr(new CharacterWallSlideState(character_));
         }
-        if (character_->downControlFlag()) {
+        if (character_->downControlFlag() && character_->stompTechniqueFlag())
+        {
             return StatePtr(new CharacterStompState(character_));
         }
         return StatePtr();
@@ -95,10 +97,11 @@ namespace monomi {
         {
             return StatePtr(new CharacterWalkState(character_));
         }
-        if (character_->leftWallSensorFlag() &&
-            character_->leftControlFlag() ||
-            character_->rightWallSensorFlag() &&
-            character_->rightControlFlag())
+        if ((character_->leftWallSensorFlag() &&
+             character_->leftControlFlag() ||
+             character_->rightWallSensorFlag() &&
+             character_->rightControlFlag()) &&
+            character_->wallRunTechniqueFlag())
         {
             return StatePtr(new CharacterWallRunState(character_));
         }
@@ -291,7 +294,9 @@ namespace monomi {
         {
             return StatePtr(new CharacterFallState(character_));
         }
-        if (character_->jumpControlFlag()) {
+        if (character_->jumpControlFlag() &&
+            character_->wallJumpTechniqueFlag())
+        {
             return StatePtr(new CharacterWallJumpState(character_));
         }
         return StatePtr();
@@ -331,7 +336,9 @@ namespace monomi {
         if (character_->floorSensorFlag()) {
             return StatePtr(new CharacterStandState(character_));
         }
-        if (character_->jumpControlFlag()) {
+        if (character_->jumpControlFlag() &&
+            character_->wallJumpTechniqueFlag())
+        {
             return StatePtr(new CharacterWallJumpState(character_));
         }
         return StatePtr();

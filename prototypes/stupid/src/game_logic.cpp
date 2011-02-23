@@ -27,7 +27,8 @@ namespace monomi {
 
     GameLogic::GameLogic() :
         time_(0.0f),
-        world_(new b2World(b2Vec2(0.0f, 0.0f), true))
+        world_(new b2World(b2Vec2(0.0f, 0.0f), true)),
+        playerCharacterName_("ninja")
     {
         b2BodyDef bodyDef;
         worldBody_ = world_->CreateBody(&bodyDef);
@@ -51,6 +52,12 @@ namespace monomi {
     void GameLogic::addCharacterType(CharacterTypePtr type)
     {
         characterTypes_[type->name()] = type;
+    }
+
+    GameLogic::CharacterTypePtr GameLogic::findCharacterType(std::string const &name) const
+    {
+        CharacterTypeMap::const_iterator i = characterTypes_.find(name);
+        return (i == characterTypes_.end()) ? CharacterTypePtr() : i->second;
     }
 
     void GameLogic::update(float dt)
@@ -157,7 +164,7 @@ namespace monomi {
     {
         if (!playerCharacter_&& !startPositions_.empty()) {
             Vector2 position = startPositions_.front();
-            playerCharacter_ = createCharacter("earth-master", position);
+            playerCharacter_ = createCharacter(playerCharacterName_, position);
             std::cerr << "DEBUG: Created player character." << std::endl;
         }
     }

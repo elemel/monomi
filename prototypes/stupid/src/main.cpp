@@ -85,6 +85,7 @@ namespace {
         loadCharacterType("air-master", tree, gameLogic);
         loadCharacterType("earth-master", tree, gameLogic);
         loadCharacterType("fire-master", tree, gameLogic);
+        loadCharacterType("grandmaster", tree, gameLogic);
         loadCharacterType("kunoichi", tree, gameLogic);
         loadCharacterType("ninja", tree, gameLogic);
         loadCharacterType("samurai", tree, gameLogic);
@@ -162,7 +163,9 @@ int main(int argc, char *argv[])
 {
     try {
         if (SDL_Init(SDL_INIT_VIDEO | SDL_INIT_NOPARACHUTE) == -1) {
-            throw std::runtime_error(StringBuffer() << "Failed to initialize SDL: " << SDL_GetError());
+            throw std::runtime_error(StringBuffer() <<
+                                     "Failed to initialize SDL: " <<
+                                     SDL_GetError());
         }
 
         if (SDL_GL_SetAttribute(SDL_GL_DOUBLEBUFFER, 1) == -1) {
@@ -171,7 +174,9 @@ int main(int argc, char *argv[])
         }
         SDL_Surface *videoSurface = SDL_SetVideoMode(0, 0, 0, SDL_OPENGL | SDL_FULLSCREEN);
         if (videoSurface == 0) {
-            throw std::runtime_error(StringBuffer() << "Failed to set SDL video mode: " << SDL_GetError());
+            throw std::runtime_error(StringBuffer() <<
+                                     "Failed to set SDL video mode: " <<
+                                     SDL_GetError());
         }
         if (SDL_GL_SetSwapInterval(1) == -1) {
             std::cerr << "WARNING: Failed to enable vertical sync: "
@@ -182,19 +187,29 @@ int main(int argc, char *argv[])
 
         std::ifstream characterConfig("../config/character.ini");
         loadCharacterTypes(characterConfig, gameLogic);
+        if (argc >= 3) {
+            std::string characterName = argv[2];
+            if (gameLogic->findCharacterType(characterName)) {
+                gameLogic->playerCharacterName(characterName);
+            } else {
+                std::cerr << "WARNING: Invalid character name \""
+                          << characterName << "\"." << std::endl;
+            }
+        }
+
+        std::string levelName = (argc >= 2) ? argv[1] : "../assets/level.svg";
 
         boost::shared_ptr<SvgParser> svgParser(new SvgParser);
-        SvgParser::ElementVector const &elements = svgParser->parse(argc == 2 ? argv[1] : "");
+        SvgParser::ElementVector const &elements = svgParser->parse(levelName);
         Matrix3 matrix(0.01f, 0.0f, 0.0f,
                        0.0f, -0.01f, 0.0f);
         createGameObjects(gameLogic, elements, matrix);
 
         GameLoop gameLoop(gameLogic);
         gameLoop.run();
-
-        SDL_Quit();
     } catch (std::exception const &e) {
-        std::cerr << e.what() << std::endl;
+        std::cerr << "ERROR: " << e.what() << std::endl;
     }
+    SDL_Quit();
     return 0;
 }
