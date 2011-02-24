@@ -51,6 +51,8 @@ namespace monomi {
         bool floorSensorFlag() const;
         bool rightWallSensorFlag() const;
 
+        float ceilingRunAcceleration() const;
+        float ceilingRunVelocity() const;
         float fallAcceleration() const;
         float fallVelocity() const;
         float jumpVelocity() const;
@@ -70,6 +72,7 @@ namespace monomi {
         CharacterTechniqueFlagSet const &techniqueFlags() const;
         void techniqueFlags(CharacterTechniqueFlagSet const &flags);
 
+        bool ceilingRunTechniqueFlag() const;
         bool doubleJumpTechniqueFlag() const;
         bool glideTechniqueFlag() const;
         bool slideTechniqueFlag() const;
@@ -248,6 +251,16 @@ namespace monomi {
         return sensorFlags_.test(CHARACTER_RIGHT_WALL_SENSOR);
     }
 
+    inline float CharacterActor::ceilingRunAcceleration() const
+    {
+        return type_->ceilingRunAcceleration();
+    }
+
+    inline float CharacterActor::ceilingRunVelocity() const
+    {
+        return type_->ceilingRunVelocity();
+    }
+
     inline float CharacterActor::fallAcceleration() const
     {
         return type_->fallAcceleration();
@@ -331,6 +344,11 @@ namespace monomi {
     inline void CharacterActor::techniqueFlags(CharacterTechniqueFlagSet const &flags)
     {
         techniqueFlags_ = flags;
+    }
+
+    inline bool CharacterActor::ceilingRunTechniqueFlag() const
+    {
+        return techniqueFlags_.test(CHARACTER_CEILING_RUN_TECHNIQUE);
     }
 
     inline bool CharacterActor::doubleJumpTechniqueFlag() const

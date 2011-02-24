@@ -5,6 +5,60 @@
 #include <Box2D/Dynamics/b2Fixture.h>
 
 namespace monomi {
+    // CEILING RUN ////////////////////////////////////////////////////////////
+
+    void CharacterCeilingRunState::enter()
+    { }
+
+    void CharacterCeilingRunState::leave()
+    { }
+
+    StatePtr CharacterCeilingRunState::transition()
+    {
+        if (!character_->ceilingSensorFlag()) {
+            return StatePtr(new CharacterFallState(character_));
+        }
+        if (character_->leftWallSensorFlag() &&
+            character_->leftControlFlag() ||
+            character_->rightWallSensorFlag() &&
+            character_->rightControlFlag())
+        {
+            if (character_->wallSlideTechniqueFlag()) {
+                return StatePtr(new CharacterWallSlideState(character_));
+            } else {
+                return StatePtr(new CharacterFallState(character_));
+            }
+        }
+        if (!character_->leftControlFlag() &&
+            !character_->rightControlFlag() &&
+            !character_->upControlFlag())
+        {
+            return StatePtr(new CharacterFallState(character_));
+        }
+        return StatePtr();
+    }
+
+    void CharacterCeilingRunState::update(float dt)
+    {
+        Vector2 velocity = character_->velocity();
+        float horizontalControl = sign(velocity.x);
+        if (character_->leftWallSensorFlag() ||
+            character_->rightWallSensorFlag())
+        {
+            horizontalControl = (float(character_->leftWallSensorFlag()) -
+                                 float(character_->rightWallSensorFlag()));
+        }
+        velocity.x += dt * horizontalControl * character_->ceilingRunAcceleration();
+        velocity.y += dt * character_->fallAcceleration();
+        velocity.clamp(character_->ceilingRunVelocity());
+        character_->velocity(velocity);
+    }
+
+    void CharacterCeilingRunState::print(std::ostream &out) const
+    {
+        out << "ceiling-run";
+    }
+
     // FALL ///////////////////////////////////////////////////////////////////
 
     void CharacterFallState::enter()
@@ -286,7 +340,11 @@ namespace monomi {
             return StatePtr(new CharacterFallState(character_));
         }
         if (character_->ceilingSensorFlag()) {
-            return StatePtr(new CharacterFallState(character_));
+            if (character_->ceilingRunTechniqueFlag()) {
+                return StatePtr(new CharacterCeilingRunState(character_));
+            } else {
+                return StatePtr(new CharacterFallState(character_));
+            }
         }
         if (!character_->leftControlFlag() &&
             !character_->rightControlFlag() &&

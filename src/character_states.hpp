@@ -18,6 +18,25 @@ namespace monomi {
         character_(character)
     { }
 
+    // CEILING RUN ////////////////////////////////////////////////////////////
+
+    class CharacterCeilingRunState : public CharacterState {
+    public:
+        explicit CharacterCeilingRunState(CharacterActor *character);
+
+        void enter();
+        void leave();
+
+        StatePtr transition();
+        void update(float dt);
+
+        void print(std::ostream &out) const;
+    };
+
+    inline CharacterCeilingRunState::CharacterCeilingRunState(CharacterActor *character) :
+        CharacterState(character)
+    { }
+
     // FALL ///////////////////////////////////////////////////////////////////
 
     class CharacterFallState : public CharacterState {

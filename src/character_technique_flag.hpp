@@ -5,6 +5,7 @@
 
 namespace monomi {
     enum CharacterTechniqueFlag {
+        CHARACTER_CEILING_RUN_TECHNIQUE,
         CHARACTER_DOUBLE_JUMP_TECHNIQUE,
         CHARACTER_GLIDE_TECHNIQUE,
         CHARACTER_SLIDE_TECHNIQUE,

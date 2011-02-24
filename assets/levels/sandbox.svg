@@ -14,7 +14,7 @@
    id="svg2"
    version="1.1"
    inkscape:version="0.48.0 r9654"
-   sodipodi:docname="level.svg">
+   sodipodi:docname="sandbox.svg">
   <defs
      id="defs4" />
   <sodipodi:namedview
@@ -45,7 +45,7 @@
         <dc:format>image/svg+xml</dc:format>
         <dc:type
            rdf:resource="http://purl.org/dc/dcmitype/StillImage" />
-        <dc:title />
+        <dc:title></dc:title>
       </cc:Work>
     </rdf:RDF>
   </metadata>
@@ -140,13 +140,13 @@ alfa beta</desc>
        id="rect3050"
        width="161.6244"
        height="383.85797"
-       x="1065.1498"
-       y="396.11279"
-       transform="matrix(0.95507848,-0.296353,0.296353,0.95507848,0,0)" />
+       x="1067.3644"
+       y="176.15987"
+       transform="matrix(0.98738036,-0.15836677,0.15836677,0.98738036,0,0)" />
     <rect
-       transform="matrix(0.99602887,0.08903082,-0.08903082,0.99602887,0,0)"
-       y="-418.57764"
-       x="1136.228"
+       transform="matrix(0.09591914,-0.99538913,0.99538913,0.09591914,0,0)"
+       y="860.49969"
+       x="-7.5940042"
        height="383.85797"
        width="161.6244"
        id="rect3052"

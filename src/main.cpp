@@ -35,6 +35,8 @@ namespace {
         GameLogic::CharacterTypePtr type(new CharacterType);
         type->name(name);
 
+        type->ceilingRunAcceleration(get<float>("ceiling-run-acceleration", values, defaults));
+        type->ceilingRunVelocity(get<float>("ceiling-run-velocity", values, defaults));
         type->fallAcceleration(get<float>("fall-acceleration", values, defaults));
         type->fallVelocity(get<float>("fall-velocity", values, defaults));
         type->jumpVelocity(get<float>("jump-velocity", values, defaults));
@@ -52,6 +54,7 @@ namespace {
         type->wallSlideVelocity(get<float>("wall-slide-velocity", values, defaults));
 
         CharacterTechniqueFlagSet techniqueFlags;
+        techniqueFlags.set(CHARACTER_CEILING_RUN_TECHNIQUE, get<bool>("ceiling-run-technique", values, defaults));
         techniqueFlags.set(CHARACTER_DOUBLE_JUMP_TECHNIQUE, get<bool>("double-jump-technique", values, defaults));
         techniqueFlags.set(CHARACTER_GLIDE_TECHNIQUE, get<bool>("glide-technique", values, defaults));
         techniqueFlags.set(CHARACTER_SLIDE_TECHNIQUE, get<bool>("slide-technique", values, defaults));

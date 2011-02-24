@@ -16,6 +16,12 @@ namespace monomi {
         std::string const &name() const;
         void name(std::string const &name);
 
+        float ceilingRunAcceleration() const;
+        void ceilingRunAcceleration(float ceilingRunAcceleration);
+
+        float ceilingRunVelocity() const;
+        void ceilingRunVelocity(float ceilingRunVelocity);
+
         float fallAcceleration() const;
         void fallAcceleration(float fallAcceleration);
 
@@ -70,6 +76,8 @@ namespace monomi {
     private:
         std::string name_;
 
+        float ceilingRunAcceleration_;
+        float ceilingRunVelocity_;
         float fallAcceleration_;
         float fallVelocity_;
         float jumpVelocity_;
@@ -91,6 +99,8 @@ namespace monomi {
     };
 
     inline CharacterType::CharacterType() :
+        ceilingRunAcceleration_(0.0f),
+        ceilingRunVelocity_(0.0f),
         fallAcceleration_(0.0f),
         fallVelocity_(0.0f),
         jumpVelocity_(0.0f),
@@ -116,6 +126,26 @@ namespace monomi {
     inline void CharacterType::name(std::string const &name)
     {
         name_ = name;
+    }
+
+    inline float CharacterType::ceilingRunAcceleration() const
+    {
+        return ceilingRunAcceleration_;
+    }
+
+    inline void CharacterType::ceilingRunAcceleration(float ceilingRunAcceleration)
+    {
+        ceilingRunAcceleration_ = ceilingRunAcceleration;
+    }
+
+    inline float CharacterType::ceilingRunVelocity() const
+    {
+        return ceilingRunVelocity_;
+    }
+
+    inline void CharacterType::ceilingRunVelocity(float ceilingRunVelocity)
+    {
+        ceilingRunVelocity_ = ceilingRunVelocity;
     }
 
     inline float CharacterType::fallAcceleration() const
