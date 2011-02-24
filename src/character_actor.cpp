@@ -35,7 +35,23 @@ namespace monomi {
         fixtureDef.restitution = 0.0f;
         fixtureDef.friction = 0.0f;
         fixtureDef.shape = &circleShape;
-        fixtureDef.filter.categoryBits = (1 << NEUTRAL_CATEGORY);
+        fixtureDef.filter.categoryBits = 1 << categoryFlag_;
+        switch (categoryFlag_) {
+        case FRIEND_CATEGORY:
+            fixtureDef.filter.maskBits = ~(1 << FRIEND_CATEGORY | 1 << NEUTRAL_CATEGORY);
+            break;
+
+        case NEUTRAL_CATEGORY:
+            fixtureDef.filter.maskBits = ~(1 << FRIEND_CATEGORY | 1 << NEUTRAL_CATEGORY | 1 << ENEMY_CATEGORY);
+            break;
+
+        case ENEMY_CATEGORY:
+            fixtureDef.filter.maskBits = ~(1 << NEUTRAL_CATEGORY | 1 << ENEMY_CATEGORY);
+            break;
+
+        default:
+            break;
+        }
         fixture_ = body_->CreateFixture(&fixtureDef);
 
         ceilingSensorFixture_ = createSensorFixture(Vector2(0.0f, 0.3f), 0.3f);
@@ -80,7 +96,7 @@ namespace monomi {
 
         b2FixtureDef fixtureDef;
         fixtureDef.shape = &circleShape;
-        fixtureDef.filter.categoryBits = (1 << NEUTRAL_CATEGORY);
+        fixtureDef.filter.categoryBits = (1 << DEFAULT_CATEGORY);
         fixtureDef.filter.maskBits = (1 << PLATFORM_CATEGORY);
         fixtureDef.isSensor = true;
 

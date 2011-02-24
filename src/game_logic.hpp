@@ -48,7 +48,8 @@ namespace monomi {
         void createGoal(Circle2 const &circle);
 
         CharacterPtr createCharacter(std::string const &name,
-                                     Vector2 const &position);
+                                     Vector2 const &position,
+                                     CategoryFlag category = NEUTRAL_CATEGORY);
         void destroyCharacter(CharacterPtr character);
 
     private:

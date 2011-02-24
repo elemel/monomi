@@ -198,6 +198,8 @@ int main(int argc, char *argv[])
                       << "\"." << std::endl;
         }
 
+        gameLogic->createCharacter("samurai", Vector2(7.0f, 0.0f), ENEMY_CATEGORY);
+
         std::string levelName = (argc >= 2) ? argv[1] : "../assets/levels/sandbox.svg";
 
         boost::shared_ptr<SvgParser> svgParser(new SvgParser);

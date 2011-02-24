@@ -17,7 +17,8 @@
 namespace monomi {
     class CharacterActor : public Actor {
     public:
-        CharacterActor(CharacterType const *type, int id = 0);
+        CharacterActor(CharacterType const *type,
+                       CategoryFlag category = NEUTRAL_CATEGORY, int id = 0);
 
         CharacterType const *type() const;
 
@@ -102,6 +103,7 @@ namespace monomi {
 
     private:
         CharacterType const *type_;
+        CategoryFlag categoryFlag_;
         int id_;
 
         GameLogic *logic_;
@@ -122,8 +124,10 @@ namespace monomi {
         void updateState(float dt);
     };
 
-    inline CharacterActor::CharacterActor(CharacterType const *type, int id) :
+    inline CharacterActor::CharacterActor(CharacterType const *type,
+                                          CategoryFlag category, int id) :
         type_(type),
+        categoryFlag_(category),
         id_(id),
         logic_(0),
         body_(0),
