@@ -28,71 +28,19 @@ else
 	$(error Invalid build platform "$(PLATFORM)", only "mac" is supported for now)
 endif
 
-objects := \
-	capitalize.o \
-	character_actor.o \
-	character_sensor_flag.o \
-	character_states.o \
-	color.o \
-	debug_graphics.o \
-	game_logic.o \
-	game_loop.o \
-	geometry.o \
-	main.o \
-	physics_debug_graphics_adapter.o \
-	string_buffer.o \
-	svg_parser.o \
-	svg_path_parser.o \
-	svg_style_parser.o \
-	svg_transform_parser.o \
-	type.o
+SRCS := $(wildcard *.cpp)
+OBJS := $(patsubst %.cpp,%.o,$(SRCS))
 
-monomi: $(objects)
-	g++ -o monomi $(objects) $(LDFLAGS)
+all: monomi
+
+run: monomi
+	./monomi
+
+depend:
+	makedepend -- $(CXXFLAGS) -- $(SRCS) > depend.log 2>&1
 
 clean:
-	rm -fr monomi monomi.dSYM $(objects)
+	rm -fr monomi monomi.dSYM $(OBJS)
 
-# DO NOT DELETE
-
-capitalize.o: capitalize.hpp
-character_actor.o: character_actor.hpp actor.hpp category_flag.hpp
-character_actor.o: character_control_flag.hpp character_sensor_flag.hpp
-character_actor.o: character_type.hpp character_technique_flag.hpp
-character_actor.o: character_tool_flag.hpp geometry.hpp state_fwd.hpp
-character_actor.o: capitalize.hpp character_states.hpp state.hpp
-character_actor.o: game_logic.hpp print_flags.hpp type.hpp
-character_sensor_flag.o: character_sensor_flag.hpp
-character_states.o: character_states.hpp state.hpp state_fwd.hpp
-character_states.o: character_actor.hpp actor.hpp category_flag.hpp
-character_states.o: character_control_flag.hpp character_sensor_flag.hpp
-character_states.o: character_type.hpp character_technique_flag.hpp
-character_states.o: character_tool_flag.hpp geometry.hpp
-color.o: color.hpp
-debug_graphics.o: debug_graphics.hpp
-game_logic.o: game_logic.hpp category_flag.hpp character_type.hpp
-game_logic.o: character_technique_flag.hpp character_tool_flag.hpp
-game_logic.o: geometry.hpp character_actor.hpp actor.hpp
-game_logic.o: character_control_flag.hpp character_sensor_flag.hpp
-game_logic.o: state_fwd.hpp character_states.hpp state.hpp
-game_logic.o: physics_debug_graphics_adapter.hpp
-game_loop.o: game_loop.hpp character_actor.hpp actor.hpp category_flag.hpp
-game_loop.o: character_control_flag.hpp character_sensor_flag.hpp
-game_loop.o: character_type.hpp character_technique_flag.hpp
-game_loop.o: character_tool_flag.hpp geometry.hpp state_fwd.hpp
-game_loop.o: debug_graphics.hpp game_logic.hpp
-geometry.o: geometry.hpp
-main.o: character_type.hpp character_technique_flag.hpp
-main.o: character_tool_flag.hpp color.hpp game_logic.hpp category_flag.hpp
-main.o: geometry.hpp game_loop.hpp string_buffer.hpp svg_parser.hpp
-main.o: svg_path_parser.hpp svg_style_parser.hpp svg_transform_parser.hpp
-physics_debug_graphics_adapter.o: physics_debug_graphics_adapter.hpp
-physics_debug_graphics_adapter.o: debug_graphics.hpp
-string_buffer.o: string_buffer.hpp
-svg_parser.o: svg_parser.hpp color.hpp geometry.hpp svg_path_parser.hpp
-svg_parser.o: svg_style_parser.hpp svg_transform_parser.hpp string_buffer.hpp
-svg_path_parser.o: svg_path_parser.hpp geometry.hpp string_buffer.hpp
-svg_style_parser.o: svg_style_parser.hpp geometry.hpp string_buffer.hpp
-svg_transform_parser.o: svg_transform_parser.hpp geometry.hpp
-svg_transform_parser.o: string_buffer.hpp
-type.o: type.hpp
+monomi: $(OBJS)
+	g++ -o monomi $(OBJS) $(LDFLAGS)
