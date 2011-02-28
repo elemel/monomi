@@ -13,8 +13,6 @@ ifeq ($(VARIANT), debug)
 	CXXFLAGS += -g -DDEBUG -W -Wall -Wextra -Werror
 else ifeq ($(VARIANT), release)
 	CXXFLAGS += -O3 -DNDEBUG
-else
-	$(error Invalid build variant "$(VARIANT)", please specify "debug" or "release")
 endif
 
 # Build platform.
@@ -24,26 +22,29 @@ PLATFORM := mac
 ifeq ($(PLATFORM), mac)
 	CPPFLAGS += -I$(BOOST_INCLUDE_DIR) -I$(BOX2D_INCLUDE_DIR) -I$(RAPIDXML_INCLUDE_DIR) -I$(SDL_INCLUDE_DIR)
 	LDFLAGS += -L$(BOX2D_LIB_DIR) -lBox2D -L$(SDL_LIB_DIR) -lSDL -framework OpenGL
-else
-	$(error Invalid build platform "$(PLATFORM)", only "mac" is supported for now)
 endif
 
 SRCS := $(wildcard *.cpp)
 OBJS := $(patsubst %.cpp,%.o,$(SRCS))
 
+.PHONY: all
 all: monomi
 
+.PHONY: run
 run: monomi
 	./monomi
 
+.PHONY: depend
 depend:
 	makedepend -- $(CXXFLAGS) -- $(SRCS) > depend.log 2>&1
 
+.PHONY: clean
 clean:
 	rm -fr monomi monomi.dSYM $(OBJS)
 
 monomi: $(OBJS)
 	g++ -o monomi $(OBJS) $(LDFLAGS)
+
 # DO NOT DELETE
 
 capitalize.o: capitalize.hpp
