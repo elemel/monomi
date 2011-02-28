@@ -9,6 +9,7 @@
 #include <stdexcept>
 #include <sstream>
 #include <SDL.h>
+#include <boost/timer.hpp>
 #include <boost/property_tree/ptree.hpp>
 #include <boost/property_tree/ini_parser.hpp>
 
@@ -82,6 +83,8 @@ namespace {
 
     void loadCharacterTypes(std::istream &config, boost::shared_ptr<GameLogic> gameLogic)
     {
+        boost::timer t1;
+
         boost::property_tree::ptree tree;
         boost::property_tree::read_ini(config, tree);
 
@@ -94,6 +97,8 @@ namespace {
         loadCharacterType("samurai", tree, gameLogic);
         loadCharacterType("void-master", tree, gameLogic);
         loadCharacterType("water-master", tree, gameLogic);
+
+        std::cerr << "DEBUG: Loaded character config in " << t1.elapsed() << " second(s)." << std::endl;
     }
 
     void createCircleGameObject(boost::shared_ptr<GameLogic> gameLogic,
@@ -165,6 +170,8 @@ namespace {
 int main(int argc, char *argv[])
 {
     try {
+        boost::timer t1;
+
         if (SDL_Init(SDL_INIT_VIDEO | SDL_INIT_NOPARACHUTE) == -1) {
             throw std::runtime_error(StringBuffer() <<
                                      "Failed to initialize SDL: " <<
@@ -186,6 +193,8 @@ int main(int argc, char *argv[])
                       << SDL_GetError() << std::endl;
         }
 
+        std::cerr << "DEBUG: Initialized SDL in " << t1.elapsed() << " second(s)." << std::endl;
+
         boost::shared_ptr<GameLogic> gameLogic(new GameLogic);
 
         std::ifstream characterConfig("../config/character.ini");
@@ -203,7 +212,13 @@ int main(int argc, char *argv[])
         std::string levelName = (argc >= 2) ? argv[1] : "../assets/levels/sandbox.svg";
 
         boost::shared_ptr<SvgParser> svgParser(new SvgParser);
+
+        boost::timer t2;
+
         SvgParser::ElementVector const &elements = svgParser->parse(levelName);
+
+        std::cerr << "DEBUG: Loaded level in " << t2.elapsed() << " second(s)." << std::endl;
+
         Matrix3 matrix(0.01f, 0.0f, 0.0f,
                        0.0f, -0.01f, 0.0f);
         createGameObjects(gameLogic, elements, matrix);

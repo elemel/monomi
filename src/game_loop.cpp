@@ -5,11 +5,11 @@
 #include "game_logic.hpp"
 #include "geometry.hpp"
 
-#include <SDL.h>
-#include <SDL_opengl.h>
-
 #include <cassert>
 #include <iostream>
+#include <SDL.h>
+#include <SDL_opengl.h>
+#include <boost/timer.hpp>
 
 namespace monomi {
     namespace {
@@ -129,12 +129,18 @@ namespace monomi {
 
     void GameLoop::updateLogic(float dt)
     {
+        boost::timer t1;
+
         gameLogic_->update(dt);
+
+        std::cerr << "DEBUG: Updated game logic in " << t1.elapsed() << " second(s)." << std::endl;
     }
 
     void GameLoop::updateView(float dt)
     {
         (void) dt;
+
+        boost::timer t1;
 
         // Set up camera.
         SDL_Surface *videoSurface = SDL_GetVideoSurface();
@@ -157,5 +163,7 @@ namespace monomi {
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
         gameLogic_->debugDraw(debugGraphics_.get());
         SDL_GL_SwapBuffers();
+
+        std::cerr << "DEBUG: Updated game view in " << t1.elapsed() << " second(s)." << std::endl;
     }
 }
