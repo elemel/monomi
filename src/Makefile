@@ -53,6 +53,10 @@ character_actor.o: character_type.hpp character_technique_flag.hpp
 character_actor.o: character_tool_flag.hpp geometry.hpp state_fwd.hpp
 character_actor.o: capitalize.hpp character_states.hpp state.hpp
 character_actor.o: game_logic.hpp print_flags.hpp type.hpp
+character_config_loader.o: character_config_loader.hpp game_logic.hpp
+character_config_loader.o: category_flag.hpp character_type.hpp
+character_config_loader.o: character_technique_flag.hpp
+character_config_loader.o: character_tool_flag.hpp geometry.hpp
 character_sensor_flag.o: character_sensor_flag.hpp
 character_states.o: character_states.hpp state.hpp state_fwd.hpp
 character_states.o: character_actor.hpp actor.hpp category_flag.hpp
@@ -73,10 +77,11 @@ game_loop.o: character_type.hpp character_technique_flag.hpp
 game_loop.o: character_tool_flag.hpp geometry.hpp state_fwd.hpp
 game_loop.o: debug_graphics.hpp game_logic.hpp
 geometry.o: geometry.hpp
-main.o: character_type.hpp character_technique_flag.hpp
-main.o: character_tool_flag.hpp color.hpp game_logic.hpp category_flag.hpp
-main.o: geometry.hpp game_loop.hpp string_buffer.hpp svg_parser.hpp
-main.o: svg_path_parser.hpp svg_style_parser.hpp svg_transform_parser.hpp
+main.o: character_config_loader.hpp character_type.hpp
+main.o: character_technique_flag.hpp character_tool_flag.hpp color.hpp
+main.o: game_logic.hpp category_flag.hpp geometry.hpp game_loop.hpp
+main.o: string_buffer.hpp svg_parser.hpp svg_path_parser.hpp
+main.o: svg_style_parser.hpp svg_transform_parser.hpp
 physics_debug_graphics_adapter.o: physics_debug_graphics_adapter.hpp
 physics_debug_graphics_adapter.o: debug_graphics.hpp
 string_buffer.o: string_buffer.hpp
