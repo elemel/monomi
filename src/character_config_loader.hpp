@@ -10,9 +10,9 @@ namespace monomi {
 
     class CharacterConfigLoader {
     public:
-        CharacterConfigLoader(GameLogic &gameLogic);
+        explicit CharacterConfigLoader(GameLogic &gameLogic);
 
-        void load(std::string const &configName);
+        void load(std::string const &path);
 
     private:
         GameLogic *gameLogic_;

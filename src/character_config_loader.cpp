@@ -19,11 +19,11 @@ namespace monomi {
         gameLogic_(&gameLogic)
     { }
 
-    void CharacterConfigLoader::load(std::string const &configName)
+    void CharacterConfigLoader::load(std::string const &path)
     {
         boost::timer t1;
 
-        std::ifstream config(configName.c_str());
+        std::ifstream config(path.c_str());
         boost::property_tree::ptree tree;
         boost::property_tree::read_ini(config, tree);
 

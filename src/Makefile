@@ -77,11 +77,16 @@ game_loop.o: character_type.hpp character_technique_flag.hpp
 game_loop.o: character_tool_flag.hpp geometry.hpp state_fwd.hpp
 game_loop.o: debug_graphics.hpp game_logic.hpp
 geometry.o: geometry.hpp
+level_loader.o: level_loader.hpp color.hpp geometry.hpp svg_parser.hpp
+level_loader.o: svg_path_parser.hpp svg_style_parser.hpp
+level_loader.o: svg_transform_parser.hpp game_logic.hpp category_flag.hpp
+level_loader.o: character_type.hpp character_technique_flag.hpp
+level_loader.o: character_tool_flag.hpp
 main.o: character_config_loader.hpp character_type.hpp
 main.o: character_technique_flag.hpp character_tool_flag.hpp color.hpp
 main.o: game_logic.hpp category_flag.hpp geometry.hpp game_loop.hpp
-main.o: string_buffer.hpp svg_parser.hpp svg_path_parser.hpp
-main.o: svg_style_parser.hpp svg_transform_parser.hpp
+main.o: level_loader.hpp svg_parser.hpp svg_path_parser.hpp
+main.o: svg_style_parser.hpp svg_transform_parser.hpp string_buffer.hpp
 physics_debug_graphics_adapter.o: physics_debug_graphics_adapter.hpp
 physics_debug_graphics_adapter.o: debug_graphics.hpp
 string_buffer.o: string_buffer.hpp
