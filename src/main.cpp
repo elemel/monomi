@@ -102,7 +102,7 @@ namespace {
     }
 
     void createCircleGameObject(boost::shared_ptr<GameLogic> gameLogic,
-                          Circle2 const &circle, ColorName colorName)
+                                Circle2 const &circle, ColorName colorName)
     {
         switch (colorName) {
         case LIME_COLOR:
@@ -119,7 +119,7 @@ namespace {
     }
 
     void createPolygonGameObject(boost::shared_ptr<GameLogic> gameLogic,
-                          Polygon2 const &polygon, ColorName colorName)
+                                 Polygon2 const &polygon, ColorName colorName)
     {
         switch (colorName) {
         case BLUE_COLOR:
