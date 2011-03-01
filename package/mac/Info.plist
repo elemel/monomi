@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist SYSTEM "file://localhost/System/Library/DTDs/PropertyList.dtd">
+<plist version="1.0">
+  <dict>
+    <key>CFBundleName</key>
+    <string>Monomi</string>
+    <key>CFBundleDisplayName</key>
+    <string>Monomi</string>
+    <key>CFBundleIdentifier</key>
+    <string>se.elemel.monomi</string>
+    <key>CFBundleVersion</key>
+    <string>1.0</string>
+    <key>CFBundlePackageType</key>
+    <string>APPL</string>
+    <key>CFBundleSignature</key>
+    <string>????</string>
+    <key>CFBundleExecutable</key>
+    <string>monomi</string>
+  </dict>
+</plist>
