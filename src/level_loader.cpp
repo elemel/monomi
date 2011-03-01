@@ -59,6 +59,8 @@ namespace monomi {
             break;
 
         default:
+            std::cerr << "WARNING: No game object created for " << color
+                      << " circle." << std::endl;
             break;
         }
     }
@@ -80,6 +82,8 @@ namespace monomi {
             break;
 
         default:
+            std::cerr << "WARNING: No game object created for " << color
+                      << " polygon." << std::endl;
             break;
         }
     }
