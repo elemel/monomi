@@ -47,8 +47,6 @@ int main(int argc, char *argv[])
 
         std::string assetsDir = (argc == 2) ? argv[1] : ".";
 
-        std::cerr << "DEBUG: " << assetsDir << std::endl;
-
         CharacterConfigLoader(*gameLogic).load(assetsDir + "/config/character.ini");
 
         std::string characterName = "grandmaster";

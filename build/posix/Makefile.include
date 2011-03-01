@@ -38,7 +38,7 @@ depend: $(SRCS)
 	makedepend -I$(MONOMI_SRC_DIR) -Y $(SRCS) > depend.log 2>&1
 
 clean:
-	rm -fr monomi monomi.dSYM *.cpp *.o
+	rm -fr monomi *.dSYM *.cpp *.o
 
 %.cpp: $(MONOMI_SRC_DIR)/%.cpp
 	cp $< $@
