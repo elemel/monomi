@@ -71,7 +71,7 @@ namespace monomi {
     void GameLogic::debugDraw(DebugGraphics *graphics)
     {
         PhysicsDebugGraphicsAdapter adapter(graphics);
-        adapter.SetFlags(b2DebugDraw::e_shapeBit);
+        adapter.SetFlags(b2Draw::e_shapeBit);
         world_->SetDebugDraw(&adapter);
         world_->DrawDebugData();
         world_->SetDebugDraw(0);

@@ -2,13 +2,13 @@
 #define MONOMI_PHYSICS_DEBUG_GRAPHICS_ADAPTER_HPP
 
 #include <vector>
+#include <Box2D/Common/b2Draw.h>
 #include <Box2D/Common/b2Math.h>
-#include <Box2D/Dynamics/b2WorldCallbacks.h>
 
 namespace monomi {
     class DebugGraphics;
 
-    class PhysicsDebugGraphicsAdapter : public b2DebugDraw {
+    class PhysicsDebugGraphicsAdapter : public b2Draw {
     public:
         explicit PhysicsDebugGraphicsAdapter(DebugGraphics *graphics);
 
