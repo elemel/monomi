@@ -1,9 +1,13 @@
+id.made: install.made
+	install_name_tool -id `pwd`/lib/libSDL.dylib lib/libSDL.dylib
+	touch id.made
+
 install.made: build.made
 	rm -fr include lib
 	mkdir include lib
 	cp src/include/*.h include
 	cp include/SDL_config_macosx.h include/SDL_config.h
-	cp src/build/libSDL.la lib
+	cp src/build/.libs/libSDL.dylib lib
 	touch install.made
 
 build.made: extract.made

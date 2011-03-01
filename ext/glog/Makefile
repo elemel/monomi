@@ -2,7 +2,7 @@ install.made: build.made
 	rm -fr include lib
 	mkdir -p include/glog lib
 	cp src/src/glog/*.h include/glog
-	cp src/libglog.la lib
+	cp src/.libs/libglog.a lib
 	touch install.made
 
 build.made: extract.made

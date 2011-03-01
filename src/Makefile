@@ -1,11 +1,13 @@
 # External dependencies.
-BOOST_INCLUDE_DIR := ext/boost/include
-BOOST_LIB_DIR := ext/boost/lib
-BOX2D_INCLUDE_DIR := ext/box2d/include
-BOX2D_LIB_DIR := ext/box2d/lib
-RAPIDXML_INCLUDE_DIR := ext/rapidxml/include
-SDL_INCLUDE_DIR := ext/sdl/include
-SDL_LIB_DIR := ext/sdl/lib
+BOOST_INCLUDE_DIR := ../ext/boost/include
+BOOST_LIB_DIR := ../ext/boost/lib
+BOX2D_INCLUDE_DIR := ../ext/box2d/include
+BOX2D_LIB_DIR := ../ext/box2d/lib
+GLOG_INCLUDE_DIR := ../ext/glog/include
+GLOG_LIB_DIR := ../ext/glog/lib
+RAPIDXML_INCLUDE_DIR := ../ext/rapidxml/include
+SDL_INCLUDE_DIR := ../ext/sdl/include
+SDL_LIB_DIR := ../ext/sdl/lib
 
 # Build variant.
 VARIANT := debug
@@ -20,8 +22,8 @@ endif
 # TODO: Autodetect.
 PLATFORM := mac
 ifeq ($(PLATFORM), mac)
-	CPPFLAGS += -I$(BOOST_INCLUDE_DIR) -I$(BOX2D_INCLUDE_DIR) -I$(RAPIDXML_INCLUDE_DIR) -I$(SDL_INCLUDE_DIR)
-	LDFLAGS += -L$(BOX2D_LIB_DIR) -lBox2D -L$(SDL_LIB_DIR) -lSDL -framework OpenGL
+	CPPFLAGS += -I$(BOOST_INCLUDE_DIR) -I$(BOX2D_INCLUDE_DIR) -I$(GLOG_INCLUDE_DIR) -I$(RAPIDXML_INCLUDE_DIR) -I$(SDL_INCLUDE_DIR)
+	LDFLAGS += -L$(BOX2D_LIB_DIR) -lBox2D -L$(GLOG_LIB_DIR) -lglog -L$(SDL_LIB_DIR) -lSDL -framework OpenGL
 endif
 
 SRCS := $(wildcard *.cpp)
