@@ -1,8 +1,7 @@
 #ifndef MONOMI_CHARACTER_TYPE_HPP
 #define MONOMI_CHARACTER_TYPE_HPP
 
-#include "character_technique_flag.hpp"
-#include "character_tool_flag.hpp"
+#include "character_flags.hpp"
 
 #include <bitset>
 #include <cmath>

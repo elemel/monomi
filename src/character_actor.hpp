@@ -3,8 +3,6 @@
 
 #include "actor.hpp"
 #include "category_flag.hpp"
-#include "character_control_flag.hpp"
-#include "character_sensor_flag.hpp"
 #include "character_type.hpp"
 #include "geometry.hpp"
 #include "state_fwd.hpp"

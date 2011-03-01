@@ -1,4 +1,4 @@
-#include "character_sensor_flag.hpp"
+#include "character_flags.hpp"
 
 namespace monomi {
     std::ostream &operator<<(std::ostream &out, CharacterSensorFlag flag)

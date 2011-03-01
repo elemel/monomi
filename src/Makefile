@@ -49,43 +49,32 @@ monomi: $(OBJS)
 
 capitalize.o: capitalize.hpp
 character_actor.o: character_actor.hpp actor.hpp category_flag.hpp
-character_actor.o: character_control_flag.hpp character_sensor_flag.hpp
-character_actor.o: character_type.hpp character_technique_flag.hpp
-character_actor.o: character_tool_flag.hpp geometry.hpp state_fwd.hpp
-character_actor.o: capitalize.hpp character_states.hpp state.hpp
-character_actor.o: game_logic.hpp print_flags.hpp type.hpp
+character_actor.o: character_type.hpp character_flags.hpp geometry.hpp
+character_actor.o: state_fwd.hpp capitalize.hpp character_states.hpp
+character_actor.o: state.hpp game_logic.hpp print_flags.hpp type.hpp
 character_config_loader.o: character_config_loader.hpp game_logic.hpp
 character_config_loader.o: category_flag.hpp character_type.hpp
-character_config_loader.o: character_technique_flag.hpp
-character_config_loader.o: character_tool_flag.hpp geometry.hpp
-character_sensor_flag.o: character_sensor_flag.hpp
+character_config_loader.o: character_flags.hpp geometry.hpp
+character_flags.o: character_flags.hpp
 character_states.o: character_states.hpp state.hpp state_fwd.hpp
 character_states.o: character_actor.hpp actor.hpp category_flag.hpp
-character_states.o: character_control_flag.hpp character_sensor_flag.hpp
-character_states.o: character_type.hpp character_technique_flag.hpp
-character_states.o: character_tool_flag.hpp geometry.hpp
+character_states.o: character_type.hpp character_flags.hpp geometry.hpp
 color.o: color.hpp
 debug_graphics.o: debug_graphics.hpp
 game_logic.o: game_logic.hpp category_flag.hpp character_type.hpp
-game_logic.o: character_technique_flag.hpp character_tool_flag.hpp
-game_logic.o: geometry.hpp character_actor.hpp actor.hpp
-game_logic.o: character_control_flag.hpp character_sensor_flag.hpp
+game_logic.o: character_flags.hpp geometry.hpp character_actor.hpp actor.hpp
 game_logic.o: state_fwd.hpp character_states.hpp state.hpp
 game_logic.o: physics_debug_graphics_adapter.hpp
 game_loop.o: game_loop.hpp character_actor.hpp actor.hpp category_flag.hpp
-game_loop.o: character_control_flag.hpp character_sensor_flag.hpp
-game_loop.o: character_type.hpp character_technique_flag.hpp
-game_loop.o: character_tool_flag.hpp geometry.hpp state_fwd.hpp
-game_loop.o: debug_graphics.hpp game_logic.hpp
+game_loop.o: character_type.hpp character_flags.hpp geometry.hpp
+game_loop.o: state_fwd.hpp debug_graphics.hpp game_logic.hpp
 geometry.o: geometry.hpp
 level_loader.o: level_loader.hpp color.hpp geometry.hpp svg_parser.hpp
 level_loader.o: svg_path_parser.hpp svg_style_parser.hpp
 level_loader.o: svg_transform_parser.hpp game_logic.hpp category_flag.hpp
-level_loader.o: character_type.hpp character_technique_flag.hpp
-level_loader.o: character_tool_flag.hpp
-main.o: character_config_loader.hpp character_type.hpp
-main.o: character_technique_flag.hpp character_tool_flag.hpp color.hpp
-main.o: game_logic.hpp category_flag.hpp geometry.hpp game_loop.hpp
+level_loader.o: character_type.hpp character_flags.hpp
+main.o: character_config_loader.hpp character_type.hpp character_flags.hpp
+main.o: color.hpp game_logic.hpp category_flag.hpp geometry.hpp game_loop.hpp
 main.o: level_loader.hpp svg_parser.hpp svg_path_parser.hpp
 main.o: svg_style_parser.hpp svg_transform_parser.hpp string_buffer.hpp
 physics_debug_graphics_adapter.o: physics_debug_graphics_adapter.hpp
