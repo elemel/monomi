@@ -34,21 +34,21 @@ namespace monomi {
         CharacterControlSet const &controls() const;
         void controls(CharacterControlSet const &controls);
 
-        bool upControlFlag() const;
-        bool leftControlFlag() const;
-        bool downControlFlag() const;
-        bool rightControlFlag() const;
+        bool upControl() const;
+        bool leftControl() const;
+        bool downControl() const;
+        bool rightControl() const;
 
-        bool runControlFlag() const;
-        bool jumpControlFlag() const;
-        bool actionControlFlag() const;
+        bool runControl() const;
+        bool jumpControl() const;
+        bool actionControl() const;
 
         CharacterSensorSet const &sensors() const;
 
-        bool ceilingSensorFlag() const;
-        bool leftWallSensorFlag() const;
-        bool floorSensorFlag() const;
-        bool rightWallSensorFlag() const;
+        bool ceilingSensor() const;
+        bool leftWallSensor() const;
+        bool floorSensor() const;
+        bool rightWallSensor() const;
 
         float ceilingRunAcceleration() const;
         float ceilingRunVelocity() const;
@@ -71,27 +71,27 @@ namespace monomi {
         CharacterTechniqueSet const &techniques() const;
         void techniques(CharacterTechniqueSet const &techniques);
 
-        bool ceilingRunTechniqueFlag() const;
-        bool doubleJumpTechniqueFlag() const;
-        bool glideTechniqueFlag() const;
-        bool slideTechniqueFlag() const;
-        bool stompTechniqueFlag() const;
-        bool teleportTechniqueFlag() const;
-        bool tripleJumpTechniqueFlag() const;
-        bool wallJumpTechniqueFlag() const;
-        bool wallRunTechniqueFlag() const;
-        bool wallSlideTechniqueFlag() const;
+        bool ceilingRunTechnique() const;
+        bool doubleJumpTechnique() const;
+        bool glideTechnique() const;
+        bool slideTechnique() const;
+        bool stompTechnique() const;
+        bool teleportTechnique() const;
+        bool tripleJumpTechnique() const;
+        bool wallJumpTechnique() const;
+        bool wallRunTechnique() const;
+        bool wallSlideTechnique() const;
 
         CharacterToolSet const &tools() const;
         void tools(CharacterToolSet const &tools);
 
-        bool bambooFluteToolFlag() const;
-        bool grapplingHookToolFlag() const;
-        bool ironFanToolFlag() const;
-        bool smokeBombsToolFlag() const;
-        bool strawBasketToolFlag() const;
-        bool throwingStarsToolFlag() const;
-        bool tigerClawsToolFlag() const;
+        bool bambooFluteTool() const;
+        bool grapplingHookTool() const;
+        bool ironFanTool() const;
+        bool smokeBombsTool() const;
+        bool strawBasketTool() const;
+        bool throwingStarsTool() const;
+        bool tigerClawsTool() const;
 
         void create(GameLogic *logic, Vector2 const &position);
         void destroy();
@@ -193,37 +193,37 @@ namespace monomi {
         controls_ = controls;
     }
 
-    inline bool CharacterActor::upControlFlag() const
+    inline bool CharacterActor::upControl() const
     {
         return controls_.test(CHARACTER_UP_CONTROL);
     }
 
-    inline bool CharacterActor::leftControlFlag() const
+    inline bool CharacterActor::leftControl() const
     {
         return controls_.test(CHARACTER_LEFT_CONTROL);
     }
 
-    inline bool CharacterActor::downControlFlag() const
+    inline bool CharacterActor::downControl() const
     {
         return controls_.test(CHARACTER_DOWN_CONTROL);
     }
 
-    inline bool CharacterActor::rightControlFlag() const
+    inline bool CharacterActor::rightControl() const
     {
         return controls_.test(CHARACTER_RIGHT_CONTROL);
     }
 
-    inline bool CharacterActor::runControlFlag() const
+    inline bool CharacterActor::runControl() const
     {
         return controls_.test(CHARACTER_RUN_CONTROL);
     }
 
-    inline bool CharacterActor::jumpControlFlag() const
+    inline bool CharacterActor::jumpControl() const
     {
         return controls_.test(CHARACTER_JUMP_CONTROL);
     }
 
-    inline bool CharacterActor::actionControlFlag() const
+    inline bool CharacterActor::actionControl() const
     {
         return controls_.test(CHARACTER_ACTION_CONTROL);
     }
@@ -233,22 +233,22 @@ namespace monomi {
         return sensors_;
     }
 
-    inline bool CharacterActor::ceilingSensorFlag() const
+    inline bool CharacterActor::ceilingSensor() const
     {
         return sensors_.test(CHARACTER_CEILING_SENSOR);
     }
 
-    inline bool CharacterActor::leftWallSensorFlag() const
+    inline bool CharacterActor::leftWallSensor() const
     {
         return sensors_.test(CHARACTER_LEFT_WALL_SENSOR);
     }
 
-    inline bool CharacterActor::floorSensorFlag() const
+    inline bool CharacterActor::floorSensor() const
     {
         return sensors_.test(CHARACTER_FLOOR_SENSOR);
     }
 
-    inline bool CharacterActor::rightWallSensorFlag() const
+    inline bool CharacterActor::rightWallSensor() const
     {
         return sensors_.test(CHARACTER_RIGHT_WALL_SENSOR);
     }
@@ -348,52 +348,52 @@ namespace monomi {
         techniques_ = techniques;
     }
 
-    inline bool CharacterActor::ceilingRunTechniqueFlag() const
+    inline bool CharacterActor::ceilingRunTechnique() const
     {
         return techniques_.test(CHARACTER_CEILING_RUN_TECHNIQUE);
     }
 
-    inline bool CharacterActor::doubleJumpTechniqueFlag() const
+    inline bool CharacterActor::doubleJumpTechnique() const
     {
         return techniques_.test(CHARACTER_DOUBLE_JUMP_TECHNIQUE);
     }
 
-    inline bool CharacterActor::glideTechniqueFlag() const
+    inline bool CharacterActor::glideTechnique() const
     {
         return techniques_.test(CHARACTER_GLIDE_TECHNIQUE);
     }
 
-    inline bool CharacterActor::slideTechniqueFlag() const
+    inline bool CharacterActor::slideTechnique() const
     {
         return techniques_.test(CHARACTER_SLIDE_TECHNIQUE);
     }
 
-    inline bool CharacterActor::stompTechniqueFlag() const
+    inline bool CharacterActor::stompTechnique() const
     {
         return techniques_.test(CHARACTER_STOMP_TECHNIQUE);
     }
 
-    inline bool CharacterActor::teleportTechniqueFlag() const
+    inline bool CharacterActor::teleportTechnique() const
     {
         return techniques_.test(CHARACTER_TELEPORT_TECHNIQUE);
     }
 
-    inline bool CharacterActor::tripleJumpTechniqueFlag() const
+    inline bool CharacterActor::tripleJumpTechnique() const
     {
         return techniques_.test(CHARACTER_TRIPLE_JUMP_TECHNIQUE);
     }
 
-    inline bool CharacterActor::wallJumpTechniqueFlag() const
+    inline bool CharacterActor::wallJumpTechnique() const
     {
         return techniques_.test(CHARACTER_WALL_JUMP_TECHNIQUE);
     }
 
-    inline bool CharacterActor::wallRunTechniqueFlag() const
+    inline bool CharacterActor::wallRunTechnique() const
     {
         return techniques_.test(CHARACTER_WALL_RUN_TECHNIQUE);
     }
 
-    inline bool CharacterActor::wallSlideTechniqueFlag() const
+    inline bool CharacterActor::wallSlideTechnique() const
     {
         return techniques_.test(CHARACTER_WALL_SLIDE_TECHNIQUE);
     }
@@ -408,37 +408,37 @@ namespace monomi {
         tools_ = tools;
     }
 
-    inline bool CharacterActor::bambooFluteToolFlag() const
+    inline bool CharacterActor::bambooFluteTool() const
     {
         return tools_.test(CHARACTER_BAMBOO_FLUTE_TOOL);
     }
 
-    inline bool CharacterActor::grapplingHookToolFlag() const
+    inline bool CharacterActor::grapplingHookTool() const
     {
         return tools_.test(CHARACTER_GRAPPLING_HOOK_TOOL);
     }
 
-    inline bool CharacterActor::ironFanToolFlag() const
+    inline bool CharacterActor::ironFanTool() const
     {
         return tools_.test(CHARACTER_IRON_FAN_TOOL);
     }
 
-    inline bool CharacterActor::smokeBombsToolFlag() const
+    inline bool CharacterActor::smokeBombsTool() const
     {
         return tools_.test(CHARACTER_SMOKE_BOMBS_TOOL);
     }
 
-    inline bool CharacterActor::strawBasketToolFlag() const
+    inline bool CharacterActor::strawBasketTool() const
     {
         return tools_.test(CHARACTER_STRAW_BASKET_TOOL);
     }
 
-    inline bool CharacterActor::throwingStarsToolFlag() const
+    inline bool CharacterActor::throwingStarsTool() const
     {
         return tools_.test(CHARACTER_THROWING_STARS_TOOL);
     }
 
-    inline bool CharacterActor::tigerClawsToolFlag() const
+    inline bool CharacterActor::tigerClawsTool() const
     {
         return tools_.test(CHARACTER_TIGER_CLAWS_TOOL);
     }
