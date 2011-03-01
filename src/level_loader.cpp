@@ -20,6 +20,32 @@ namespace monomi {
                   << std::endl;
     }
 
+    void LevelLoader::createGameObjects(SvgParser::ElementVector const &elements,
+                                        Matrix3 const &matrix)
+    {
+        typedef SvgParser::ElementVector::const_iterator Iterator;
+        for (Iterator i = elements.begin(); i != elements.end(); ++i) {
+            ColorTag color = i->color.tag();
+            if (Box2 const *box = boost::get<Box2>(&i->shape)) {
+                Polygon2 polygon(*box);
+                Polygon2 transformedPolygon = transform(polygon, matrix * i->matrix);
+                if (transformedPolygon.clockwise()) {
+                    transformedPolygon.reverse();
+                }
+                createPolygonGameObject(transformedPolygon, color);
+            } else if (Circle2 const *circle = boost::get<Circle2>(&i->shape)) {
+                Circle2 transformedCircle = transform(*circle, matrix * i->matrix);
+                createCircleGameObject(transformedCircle, color);
+            } else if (Polygon2 const *polygon = boost::get<Polygon2>(&i->shape)) {
+                Polygon2 transformedPolygon = transform(*polygon, matrix * i->matrix);
+                if (transformedPolygon.clockwise()) {
+                    transformedPolygon.reverse();
+                }
+                createPolygonGameObject(transformedPolygon, color);
+            }
+        }
+    }
+
     void LevelLoader::createCircleGameObject(Circle2 const &circle,
                                              ColorTag color)
     {
@@ -55,32 +81,6 @@ namespace monomi {
 
         default:
             break;
-        }
-    }
-
-    void LevelLoader::createGameObjects(std::vector<SvgParser::Element> const &elements,
-                                        Matrix3 const &matrix)
-    {
-        typedef std::vector<SvgParser::Element>::const_iterator Iterator;
-        for (Iterator i = elements.begin(); i != elements.end(); ++i) {
-            ColorTag color = i->color.tag();
-            if (Box2 const *box = boost::get<Box2>(&i->shape)) {
-                Polygon2 polygon(*box);
-                Polygon2 transformedPolygon = transform(polygon, matrix * i->matrix);
-                if (transformedPolygon.clockwise()) {
-                    transformedPolygon.reverse();
-                }
-                createPolygonGameObject(transformedPolygon, color);
-            } else if (Circle2 const *circle = boost::get<Circle2>(&i->shape)) {
-                Circle2 transformedCircle = transform(*circle, matrix * i->matrix);
-                createCircleGameObject(transformedCircle, color);
-            } else if (Polygon2 const *polygon = boost::get<Polygon2>(&i->shape)) {
-                Polygon2 transformedPolygon = transform(*polygon, matrix * i->matrix);
-                if (transformedPolygon.clockwise()) {
-                    transformedPolygon.reverse();
-                }
-                createPolygonGameObject(transformedPolygon, color);
-            }
         }
     }
 }

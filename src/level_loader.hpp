@@ -20,10 +20,10 @@ namespace monomi {
     private:
         GameLogic *gameLogic_;
 
+        void createGameObjects(SvgParser::ElementVector const &elements,
+                               Matrix3 const &matrix);
         void createCircleGameObject(Circle2 const &circle, ColorTag color);
         void createPolygonGameObject(Polygon2 const &polygon, ColorTag color);
-        void createGameObjects(std::vector<SvgParser::Element> const &elements,
-                               Matrix3 const &matrix);
     };
 
     inline LevelLoader::LevelLoader(GameLogic& gameLogic) :
