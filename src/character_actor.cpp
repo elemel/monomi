@@ -62,7 +62,7 @@ namespace monomi {
         state_.reset(new CharacterFallState(this));
         state_->enter();
 
-        controlFlags_.set(CHARACTER_RUN_CONTROL, true);
+        controls_.set(CHARACTER_RUN_CONTROL, true);
     }
 
     void CharacterActor::destroy()
@@ -107,7 +107,7 @@ namespace monomi {
     {
         (void) dt;
 
-        CharacterSensorFlagSet newSensorFlags;
+        CharacterSensorSet newSensors;
         for (b2ContactEdge *edge = body_->GetContactList(); edge != 0;
              edge = edge->next)
         {
@@ -115,25 +115,25 @@ namespace monomi {
                 b2Fixture *f1 = edge->contact->GetFixtureA();
                 b2Fixture *f2 = edge->contact->GetFixtureB();
                 if (f1 == ceilingSensorFixture_ || f2 == ceilingSensorFixture_) {
-                    newSensorFlags.set(CHARACTER_CEILING_SENSOR);
+                    newSensors.set(CHARACTER_CEILING_SENSOR);
                 }
                 if (f1 == leftWallSensorFixture_ || f2 == leftWallSensorFixture_) {
-                    newSensorFlags.set(CHARACTER_LEFT_WALL_SENSOR);
+                    newSensors.set(CHARACTER_LEFT_WALL_SENSOR);
                 }
                 if (f1 == floorSensorFixture_ || f2 == floorSensorFixture_) {
-                    newSensorFlags.set(CHARACTER_FLOOR_SENSOR);
+                    newSensors.set(CHARACTER_FLOOR_SENSOR);
                 }
                 if (f1 == rightWallSensorFixture_ || f2 == rightWallSensorFixture_) {
-                    newSensorFlags.set(CHARACTER_RIGHT_WALL_SENSOR);
+                    newSensors.set(CHARACTER_RIGHT_WALL_SENSOR);
                 }
             }
         }
 
-        if (newSensorFlags != sensorFlags_) {
-            sensorFlags_ = newSensorFlags;
+        if (newSensors != sensors_) {
+            sensors_ = newSensors;
             std::ostringstream out;
             out << "DEBUG: " << capitalize(*this) << " changed sensors to ";
-            printFlags<CharacterSensorFlag>(out, sensorFlags_);
+            printFlags<CharacterSensorFlag>(out, sensors_);
             out << ".";
             std::cerr << out.str() << std::endl;
         }

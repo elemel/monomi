@@ -17,7 +17,7 @@ namespace monomi {
         CHARACTER_CONTROL_COUNT
     };
 
-    typedef std::bitset<CHARACTER_CONTROL_COUNT> CharacterControlFlagSet;
+    typedef std::bitset<CHARACTER_CONTROL_COUNT> CharacterControlSet;
 
     enum CharacterSensorFlag {
         CHARACTER_CEILING_SENSOR,
@@ -28,7 +28,7 @@ namespace monomi {
         CHARACTER_SENSOR_COUNT
     };
 
-    typedef std::bitset<CHARACTER_SENSOR_COUNT> CharacterSensorFlagSet;
+    typedef std::bitset<CHARACTER_SENSOR_COUNT> CharacterSensorSet;
 
     std::ostream &operator<<(std::ostream &out, CharacterSensorFlag sensor);
 
@@ -47,7 +47,7 @@ namespace monomi {
         CHARACTER_TECHNIQUE_COUNT
     };
 
-    typedef std::bitset<CHARACTER_TECHNIQUE_COUNT> CharacterTechniqueFlagSet;
+    typedef std::bitset<CHARACTER_TECHNIQUE_COUNT> CharacterTechniqueSet;
 
     enum CharacterToolFlag {
         CHARACTER_AIR_SKIN_TOOL,
@@ -62,7 +62,7 @@ namespace monomi {
         CHARACTER_TOOL_COUNT
     };
 
-    typedef std::bitset<CHARACTER_TOOL_COUNT> CharacterToolFlagSet;
+    typedef std::bitset<CHARACTER_TOOL_COUNT> CharacterToolSet;
 }
 
 #endif // MONOMI_CHARACTER_FLAGS_HPP

@@ -66,11 +66,11 @@ namespace monomi {
         float stompVelocity() const;
         void stompVelocity(float stompVelocity);
 
-        CharacterTechniqueFlagSet const &techniqueFlags() const;
-        void techniqueFlags(CharacterTechniqueFlagSet const &flags);
+        CharacterTechniqueSet const &techniques() const;
+        void techniques(CharacterTechniqueSet const &techniques);
 
-        CharacterToolFlagSet const &toolFlags() const;
-        void toolFlags(CharacterToolFlagSet const &flags);
+        CharacterToolSet const &tools() const;
+        void tools(CharacterToolSet const &tools);
 
     private:
         std::string name_;
@@ -93,8 +93,8 @@ namespace monomi {
         float wallSlideAcceleration_;
         float wallSlideVelocity_;
 
-        CharacterTechniqueFlagSet techniqueFlags_;
-        CharacterToolFlagSet toolFlags_;
+        CharacterTechniqueSet techniques_;
+        CharacterToolSet tools_;
     };
 
     inline CharacterType::CharacterType() :
@@ -297,24 +297,24 @@ namespace monomi {
         stompVelocity_ = stompVelocity;
     }
 
-    inline CharacterTechniqueFlagSet const &CharacterType::techniqueFlags() const
+    inline CharacterTechniqueSet const &CharacterType::techniques() const
     {
-        return techniqueFlags_;
+        return techniques_;
     }
 
-    inline void CharacterType::techniqueFlags(CharacterTechniqueFlagSet const &flags)
+    inline void CharacterType::techniques(CharacterTechniqueSet const &techniques)
     {
-        techniqueFlags_ = flags;
+        techniques_ = techniques;
     }
 
-    inline CharacterToolFlagSet const &CharacterType::toolFlags() const
+    inline CharacterToolSet const &CharacterType::tools() const
     {
-        return toolFlags_;
+        return tools_;
     }
 
-    inline void CharacterType::toolFlags(CharacterToolFlagSet const &flags)
+    inline void CharacterType::tools(CharacterToolSet const &tools)
     {
-        toolFlags_ = flags;
+        tools_ = tools;
     }
 }
 

@@ -101,28 +101,28 @@ namespace monomi {
 
     void GameLoop::handleKeyDownEvent(SDL_Event const &event)
     {
-        CharacterControlFlag flag = mapKeyToControl(event.key.keysym.sym);
-        if (flag != CHARACTER_CONTROL_COUNT) {
+        CharacterControlFlag control = mapKeyToControl(event.key.keysym.sym);
+        if (control != CHARACTER_CONTROL_COUNT) {
             if (GameLogic::CharacterPtr character =
                 gameLogic_->playerCharacter())
             {
-                CharacterControlFlagSet flags = character->controlFlags();
-                flags.set(flag, true);
-                character->controlFlags(flags);
+                CharacterControlSet controls = character->controls();
+                controls.set(control, true);
+                character->controls(controls);
             }
         }
     }
 
     void GameLoop::handleKeyUpEvent(SDL_Event const &event)
     {
-        CharacterControlFlag flag = mapKeyToControl(event.key.keysym.sym);
-        if (flag != CHARACTER_CONTROL_COUNT) {
+        CharacterControlFlag control = mapKeyToControl(event.key.keysym.sym);
+        if (control != CHARACTER_CONTROL_COUNT) {
             if (GameLogic::CharacterPtr character =
                 gameLogic_->playerCharacter())
             {
-                CharacterControlFlagSet flags = character->controlFlags();
-                flags.set(flag, false);
-                character->controlFlags(flags);
+                CharacterControlSet controls = character->controls();
+                controls.set(control, false);
+                character->controls(controls);
             }
         }
     }
