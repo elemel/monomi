@@ -2,23 +2,23 @@
 
 namespace monomi {
     namespace {
-        unsigned char namedColors[] = {
-            0x00, 0xff, 0xff, // aqua
-            0x00, 0x00, 0x00, // black
-            0x00, 0x00, 0xff, // blue
-            0xff, 0x00, 0xff, // fuchsia
-            0x80, 0x80, 0x80, // gray
-            0x00, 0x80, 0x00, // green
-            0x00, 0xff, 0x00, // lime
-            0x80, 0x00, 0x00, // maroon
-            0x00, 0x00, 0x80, // navy
-            0x80, 0x80, 0x00, // olive
-            0x80, 0x00, 0x80, // purple
-            0xff, 0x00, 0x00, // red
-            0xc0, 0xc0, 0xc0, // silver
-            0x00, 0x80, 0x80, // teal
-            0xff, 0xff, 0xff, // white
-            0xff, 0xff, 0x00 // yellow
+        unsigned char COLORS[COLOR_COUNT][3] = {
+            { 0x00, 0xff, 0xff }, // aqua
+            { 0x00, 0x00, 0x00 }, // black
+            { 0x00, 0x00, 0xff }, // blue
+            { 0xff, 0x00, 0xff }, // fuchsia
+            { 0x80, 0x80, 0x80 }, // gray
+            { 0x00, 0x80, 0x00 }, // green
+            { 0x00, 0xff, 0x00 }, // lime
+            { 0x80, 0x00, 0x00 }, // maroon
+            { 0x00, 0x00, 0x80 }, // navy
+            { 0x80, 0x80, 0x00 }, // olive
+            { 0x80, 0x00, 0x80 }, // purple
+            { 0xff, 0x00, 0x00 }, // red
+            { 0xc0, 0xc0, 0xc0 }, // silver
+            { 0x00, 0x80, 0x80 }, // teal
+            { 0xff, 0xff, 0xff }, // white
+            { 0xff, 0xff, 0x00 } // yellow
         };
 
         inline int square(int i)
@@ -34,9 +34,9 @@ namespace monomi {
         }
     }
 
-    std::ostream &operator<<(std::ostream &out, ColorName colorName)
+    std::ostream &operator<<(std::ostream &out, ColorTag tag)
     {
-        switch (colorName) {
+        switch (tag) {
         case AQUA_COLOR:
             return out << "aqua";
 
@@ -90,24 +90,24 @@ namespace monomi {
         }
     }
 
-    Color3::Color3(ColorName name) :
-        red(namedColors[3 * int(name) + 0]),
-        green(namedColors[3 * int(name) + 1]),
-        blue(namedColors[3 * int(name) + 2])
+    Color3::Color3(ColorTag tag) :
+        red(COLORS[tag][0]),
+        green(COLORS[tag][1]),
+        blue(COLORS[tag][2])
     { }
 
-    ColorName Color3::name() const
+    ColorTag Color3::tag() const
     {
         int result = 0;
-        int minDistance = squaredDistance(*this, Color3(ColorName(result)));
+        int minDistance = squaredDistance(*this, Color3(ColorTag(result)));
         for (int i = 1; i < COLOR_COUNT; ++i) {
-            int distance = squaredDistance(*this, Color3(ColorName(i)));
+            int distance = squaredDistance(*this, Color3(ColorTag(i)));
             if (distance < minDistance) {
                 result = i;
                 minDistance = distance;
             }
         }
-        return ColorName(result);
+        return ColorTag(result);
     }
 
     std::ostream &operator<<(std::ostream &out, Color3 const &color)

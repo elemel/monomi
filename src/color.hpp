@@ -4,7 +4,7 @@
 #include <iostream>
 
 namespace monomi {
-    enum ColorName {
+    enum ColorTag {
         AQUA_COLOR,
         BLACK_COLOR,
         BLUE_COLOR,
@@ -25,7 +25,7 @@ namespace monomi {
         COLOR_COUNT
     };
 
-    std::ostream &operator<<(std::ostream &out, ColorName colorName);
+    std::ostream &operator<<(std::ostream &out, ColorTag tag);
 
     class Color3 {
     public:
@@ -35,9 +35,9 @@ namespace monomi {
 
         Color3();
         Color3(unsigned char red, unsigned char green, unsigned char blue);
-        Color3(ColorName name);
+        Color3(ColorTag tag);
 
-        ColorName name() const;
+        ColorTag tag() const;
     };
 
     inline Color3::Color3() :

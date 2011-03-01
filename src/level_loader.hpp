@@ -20,8 +20,8 @@ namespace monomi {
     private:
         GameLogic *gameLogic_;
 
-        void createCircleGameObject(Circle2 const &circle, ColorName colorName);
-        void createPolygonGameObject(Polygon2 const &polygon, ColorName colorName);
+        void createCircleGameObject(Circle2 const &circle, ColorTag color);
+        void createPolygonGameObject(Polygon2 const &polygon, ColorTag color);
         void createGameObjects(std::vector<SvgParser::Element> const &elements,
                                Matrix3 const &matrix);
     };
