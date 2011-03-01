@@ -36,7 +36,7 @@ run: monomi
 
 .PHONY: depend
 depend:
-	makedepend -- $(CXXFLAGS) -- $(SRCS) > depend.log 2>&1
+	makedepend -Y $(SRCS) > depend.log 2>&1
 
 .PHONY: clean
 clean:
