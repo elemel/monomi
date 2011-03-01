@@ -1,14 +1,9 @@
-package.made: src.made
-	cd package/mac && make
-	touch package.made
-
-src.made: ext.made
-	cd src && make
-	touch src.made
-
-ext.made:
+all:
 	cd ext && make
-	touch ext.made
-    
+	cd build/posix/release && make
+	cd package/mac && make clean && make
+
 clean:
-	rm -fr *.made
+	cd package/mac && make clean
+	cd build/posix/release && make clean
+	cd ext && make clean

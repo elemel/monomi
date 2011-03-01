@@ -1,0 +1,51 @@
+# Project directories.
+ifndef MONOMI_ROOT_DIR
+	MONOMI_ROOT_DIR := ../..
+endif
+MONOMI_ASSETS_DIR := $(MONOMI_ROOT_DIR)/assets
+MONOMI_EXT_DIR := $(MONOMI_ROOT_DIR)/ext
+MONOMI_SRC_DIR := $(MONOMI_ROOT_DIR)/src
+
+# External dependencies.
+BOOST_INCLUDE_DIR := $(MONOMI_EXT_DIR)/boost/include
+BOOST_LIB_DIR := $(MONOMI_EXT_DIR)/boost/lib
+BOX2D_INCLUDE_DIR := $(MONOMI_EXT_DIR)/box2d/include
+BOX2D_LIB_DIR := $(MONOMI_EXT_DIR)/box2d/lib
+GLOG_INCLUDE_DIR := $(MONOMI_EXT_DIR)/glog/include
+GLOG_LIB_DIR := $(MONOMI_EXT_DIR)/glog/lib
+RAPIDXML_INCLUDE_DIR := $(MONOMI_EXT_DIR)/rapidxml/include
+SDL_INCLUDE_DIR := $(MONOMI_EXT_DIR)/sdl/include
+SDL_LIB_DIR := $(MONOMI_EXT_DIR)/sdl/lib
+
+# Build platform.
+#
+# TODO: Autodetect.
+PLATFORM := mac
+ifeq ($(PLATFORM), mac)
+	CPPFLAGS += -I$(BOOST_INCLUDE_DIR) -I$(BOX2D_INCLUDE_DIR) -I$(GLOG_INCLUDE_DIR) -I$(RAPIDXML_INCLUDE_DIR) -I$(SDL_INCLUDE_DIR) -I$(MONOMI_SRC_DIR)
+	LDFLAGS += -L$(BOX2D_LIB_DIR) -lBox2D -L$(GLOG_LIB_DIR) -lglog -L$(SDL_LIB_DIR) -lSDL -framework OpenGL
+endif
+
+SRCS := $(notdir $(wildcard $(MONOMI_SRC_DIR)/*.cpp))
+OBJS := $(patsubst %.cpp,%.o,$(SRCS))
+
+all: monomi
+
+run: monomi
+	./monomi $(MONOMI_ASSETS_DIR)
+
+depend: $(SRCS)
+	makedepend -I$(MONOMI_SRC_DIR) -Y $(SRCS) > depend.log 2>&1
+
+clean:
+	rm -fr monomi monomi.dSYM *.cpp *.o
+
+%.cpp: $(MONOMI_SRC_DIR)/%.cpp
+	cp $< $@
+
+monomi: $(OBJS)
+	g++ -o monomi $(OBJS) $(LDFLAGS)
+
+.PHONY: all clean depend run
+
+# DO NOT DELETE

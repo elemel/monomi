@@ -15,6 +15,6 @@
     <key>CFBundleSignature</key>
     <string>????</string>
     <key>CFBundleExecutable</key>
-    <string>monomi</string>
+    <string>launch.sh</string>
   </dict>
 </plist>

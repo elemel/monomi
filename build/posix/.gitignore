@@ -1,3 +1,4 @@
 monomi
+*.cpp
 *.log
 *.o

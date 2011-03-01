@@ -45,9 +45,13 @@ int main(int argc, char *argv[])
 
         boost::shared_ptr<GameLogic> gameLogic(new GameLogic);
 
-        CharacterConfigLoader(*gameLogic).load("../config/character.ini");
+        std::string assetsDir = (argc == 2) ? argv[1] : ".";
 
-        std::string characterName = (argc >= 3) ? argv[2] : "grandmaster";
+        std::cerr << "DEBUG: " << assetsDir << std::endl;
+
+        CharacterConfigLoader(*gameLogic).load(assetsDir + "/config/character.ini");
+
+        std::string characterName = "grandmaster";
         if (gameLogic->findCharacterType(characterName)) {
             gameLogic->playerCharacterName(characterName);
         } else {
@@ -57,7 +61,7 @@ int main(int argc, char *argv[])
 
         boost::timer t2;
 
-        std::string levelPath = (argc >= 2) ? argv[1] : "../assets/levels/sandbox.svg";
+        std::string levelPath = assetsDir + "/levels/sandbox.svg";
         LevelLoader(*gameLogic).load(levelPath);
 
         gameLogic->createCharacter("samurai", Vector2(7.0f, 0.0f), ENEMY_CATEGORY);
