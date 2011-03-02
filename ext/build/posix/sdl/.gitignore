@@ -1,5 +1,3 @@
 include
 lib
-src
-*.tar.gz
 *.made

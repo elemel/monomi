@@ -1,3 +1,6 @@
 [submodule "ext/rapidxml"]
 	path = ext/rapidxml
 	url = git://github.com/elemel/rapidxml.git
+[submodule "ext/sdl"]
+	path = ext/sdl
+	url = git://github.com/elemel/sdl.git
