@@ -1,5 +1,4 @@
-MONOMI_ROOT_DIR := ../../..
-
+ROOT_DIR := ../../..
 CXXFLAGS += -O3 -DNDEBUG
 
 include ../Makefile.include

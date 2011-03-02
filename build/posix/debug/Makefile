@@ -1,6 +1,5 @@
-MONOMI_ROOT_DIR := ../../..
-
-CXXFLAGS += -g -DDEBUG -W -Wall -Wextra -Werror
+ROOT_DIR := ../../..
+CXXFLAGS := -g -DDEBUG -W -Wall -Wextra -Werror
 
 include ../Makefile.include
 
