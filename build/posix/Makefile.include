@@ -11,7 +11,7 @@ BOOST_INCLUDE_DIR := $(EXT_DIR)/boost/include
 BOOST_LIB_DIR := $(EXT_DIR)/boost/lib
 BOX2D_INCLUDE_DIR := $(EXT_DIR)/box2d/include
 BOX2D_LIB_DIR := $(EXT_DIR)/box2d/lib
-RAPIDXML_INCLUDE_DIR := $(EXT_DIR)/rapidxml
+RAPIDXML_INCLUDE_DIR := $(EXT_DIR)/rapidxml/include
 SDL_INCLUDE_DIR := $(EXT_DIR)/sdl/include
 SDL_LIB_DIR := $(EXT_DIR)/sdl/lib
 
@@ -36,7 +36,7 @@ depend: $(SRCS)
 	makedepend -I$(SRC_DIR) -Y $(SRCS) > depend.log 2>&1
 
 clean:
-	rm -fr monomi monomi.dSYM *.cpp *.o
+	rm -fr monomi monomi.dSYM *.cpp *.log *.o
 
 %.cpp: $(SRC_DIR)/%.cpp
 	cp $< $@
