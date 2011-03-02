@@ -1,4 +1,4 @@
-RAPIDXML_EXT_DIR := ../..
+RAPIDXML_EXT_DIR := ../../../../ext/rapidxml
 RAPIDXML_INCLUDE_DIR := $(RAPIDXML_EXT_DIR)/include
 RAPIDXML_SRC_DIR := $(RAPIDXML_EXT_DIR)/src
 
