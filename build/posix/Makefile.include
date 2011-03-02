@@ -11,7 +11,7 @@ BOOST_INCLUDE_DIR := $(EXT_DIR)/boost/include
 BOOST_LIB_DIR := $(EXT_DIR)/boost/lib
 BOX2D_INCLUDE_DIR := $(EXT_DIR)/box2d/include
 BOX2D_LIB_DIR := $(EXT_DIR)/box2d/lib
-RAPIDXML_INCLUDE_DIR := $(EXT_DIR)/rapidxml/include
+RAPIDXML_INCLUDE_DIR := $(EXT_DIR)/rapidxml
 SDL_INCLUDE_DIR := $(EXT_DIR)/sdl/include
 SDL_LIB_DIR := $(EXT_DIR)/sdl/lib
 
