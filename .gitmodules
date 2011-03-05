@@ -7,3 +7,6 @@
 [submodule "ext/sdl-1.3.0-5421/src"]
 	path = ext/sdl-1.3.0-5421/src
 	url = git://github.com/elemel/sdl-snapshots.git
+[submodule "ext/box2d-2.2.0-149/src"]
+	path = ext/box2d-2.2.0-149/src
+	url = git://github.com/elemel/box2d-snapshots.git
