@@ -1,7 +1,7 @@
 ROOT_DIR := ../../../..
 ASSETS_DIR := $(ROOT_DIR)/assets
 APP_DIR := Monomi.app
-SDL_LIB_DIR := $(ROOT_DIR)/ext/sdl/lib
+SDL_LIB_DIR := $(ROOT_DIR)/ext/sdl-1.3.0-5421/lib
 SDL_INSTALL_NAME := @executable_path/../Frameworks/libSDL.dylib
 
 all: app.made
