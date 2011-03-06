@@ -1,7 +1,7 @@
 ROOT_DIR := ../../..
 CXXFLAGS := -g -DDEBUG -W -Wall -Wextra -Werror
 
-include ../Makefile.include
+include ../Makefile.build
 
 # DO NOT DELETE
 

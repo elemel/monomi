@@ -1,7 +1,7 @@
 ROOT_DIR := ../../..
 CXXFLAGS += -O3 -DNDEBUG
 
-include ../Makefile.include
+include ../Makefile.build
 
 # DO NOT DELETE
 
