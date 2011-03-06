@@ -27,25 +27,26 @@ ifeq ($(PLATFORM), mac)
 endif
 
 SRCS := $(notdir $(wildcard $(SRC_DIR)/*.cpp))
-OBJS := $(patsubst %.cpp,%.o,$(SRCS))
+DEPS := $(SRCS:.cpp=.d)
+OBJS := $(SRCS:.cpp=.o)
 
 all: monomi
 
 run: monomi
 	./monomi $(ASSETS_DIR)
 
-depend: $(SRCS)
-	makedepend -I$(SRC_DIR) -Y $(SRCS) > depend.log 2>&1
-
 clean:
-	rm -fr monomi monomi.dSYM *.cpp *.log *.o
+	rm -fr monomi monomi.dSYM *.cpp *.d *.log *.o
 
 %.cpp: $(SRC_DIR)/%.cpp
 	cp $< $@
+
+%.d: %.cpp
+	$(CXX) -MM $(CPPFLAGS) $< | sed 's,\($*\)\.o[ :]*,\1.o $@ : ,g' > $@
 
 monomi: $(OBJS)
 	g++ -o monomi $(OBJS) $(LDFLAGS)
 
 .PHONY: all clean depend run
 
-# DO NOT DELETE
+include $(DEPS)
