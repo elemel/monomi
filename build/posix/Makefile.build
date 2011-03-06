@@ -36,7 +36,7 @@ run: monomi
 	./monomi $(ASSETS_DIR)
 
 clean:
-	rm -fr monomi monomi.dSYM *.o
+	rm -fr monomi monomi.dSYM *.d *.o
 
 %.d: $(SRC_DIR)/%.cpp
 	$(CXX) -MM -I$(SRC_DIR) $< | sed 's,\($*\)\.o[ :]*,\1.o $@ : ,g' > $@
@@ -49,4 +49,4 @@ monomi: $(OBJS)
 
 .PHONY: all clean depend run
 
-include $(DEPS)
+-include $(DEPS)
