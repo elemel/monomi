@@ -9,4 +9,4 @@
 	url = git://github.com/elemel/box2d-snapshots.git
 [submodule "ext/boost-1.46.0/src"]
 	path = ext/boost-1.46.0/src
-	url = git://github.com/elemel/boost-snapshots.git
+	url = git://github.com/elemel/boost-svn.git
