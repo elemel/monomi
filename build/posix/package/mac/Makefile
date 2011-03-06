@@ -6,7 +6,11 @@ APP_DIR := Monomi.app
 SDL_LIB_DIR := $(ROOT_DIR)/ext/sdl-$(SDL_VERSION)/lib
 SDL_INSTALL_NAME := @executable_path/../Frameworks/libSDL.dylib
 
-all: app.made
+all: image.made
+
+image.made: app.made
+	rm -f Monomi.dmg
+	hdiutil create -srcfolder $(APP_DIR) -volname Monomi Monomi.dmg
 
 app.made:
 	rm -fr $(APP_DIR)
@@ -29,6 +33,6 @@ run: app.made
 	open $(APP_DIR)
 
 clean:
-	rm -fr $(APP_DIR) *.made
+	rm -fr $(APP_DIR) Monomi.dmg *.made
 
 .PHONY: all clean run
