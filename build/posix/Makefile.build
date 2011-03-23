@@ -38,6 +38,6 @@ clean:
 monomi: $(OBJS)
 	g++ -o monomi $(OBJS) $(LDFLAGS)
 
-.PHONY: all clean depend run
+.PHONY: all clean run
 
 -include $(DEPS)
