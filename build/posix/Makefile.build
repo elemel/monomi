@@ -17,14 +17,8 @@ RAPIDXML_INCLUDE_DIR := $(EXT_DIR)/rapidxml-$(RAPIDXML_VERSION)/include
 SDL_INCLUDE_DIR := $(EXT_DIR)/sdl-$(SDL_VERSION)/include
 SDL_LIB_DIR := $(EXT_DIR)/sdl-$(SDL_VERSION)/lib
 
-# Build platform.
-#
-# TODO: Autodetect.
-PLATFORM := mac
-ifeq ($(PLATFORM), mac)
-	CPPFLAGS += -I$(BOOST_INCLUDE_DIR) -I$(BOX2D_INCLUDE_DIR) -I$(RAPIDXML_INCLUDE_DIR) -I$(SDL_INCLUDE_DIR) -I$(SRC_DIR)
-	LDFLAGS += -L$(BOX2D_LIB_DIR) -lBox2D -L$(SDL_LIB_DIR) -lSDL -framework OpenGL
-endif
+CPPFLAGS := -MMD -I$(BOOST_INCLUDE_DIR) -I$(BOX2D_INCLUDE_DIR) -I$(RAPIDXML_INCLUDE_DIR) -I$(SDL_INCLUDE_DIR) -I$(SRC_DIR)
+LDFLAGS := -L$(BOX2D_LIB_DIR) -lBox2D -L$(SDL_LIB_DIR) -lSDL -framework OpenGL
 
 SRCS := $(notdir $(wildcard $(SRC_DIR)/*.cpp))
 DEPS := $(SRCS:.cpp=.d)
@@ -37,9 +31,6 @@ run: monomi
 
 clean:
 	rm -fr monomi monomi.dSYM *.d *.o
-
-%.d: $(SRC_DIR)/%.cpp
-	$(CXX) -MM -I$(SRC_DIR) $< | sed 's,\($*\)\.o[ :]*,\1.o $@ : ,g' > $@
 
 %.o: $(SRC_DIR)/%.cpp
 	$(CXX) $(CPPFLAGS) $(CXXFLAGS) -c -o $@ $<
